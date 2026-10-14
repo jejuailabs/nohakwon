@@ -10,6 +10,7 @@ import { Modal } from "./modal";
 import { CONFIDENCES, StudyDialog } from "./study-dialog";
 import { useAccount } from "./account-provider";
 import { progressStorageKey } from "@/lib/account";
+import { LearningWorkspace } from "./learning-workspace";
 
 type View = "today" | "reviews" | "notes" | "records";
 type Design = "a" | "b";
@@ -24,6 +25,7 @@ type Update = (fn: (p: Progress) => Progress) => Progress;
 export function LearningApp({ design }: { design: Design }) {
   const account = useAccount();
   if (account.loading || account.error) return <div className={`app theme-${design} account-loading`}><Swords size={32} /><h1>{account.error ? "계정 연결을 확인해 주세요" : "오늘의 모험을 준비하고 있어요"}</h1><p>{account.error || "학습 프로필을 불러오는 중이에요."}</p>{account.error && <div><button className="primary-button" onClick={() => void account.refresh()}>다시 시도</button><Link className="secondary-button" href="/login">로그인 화면으로</Link></div>}</div>;
+  if (design === "b" && account.user && account.profile) return <LearningWorkspace key={account.profile.id} />;
   return <LearningContent key={progressStorageKey(account.user, account.profile)} design={design} />;
 }
 

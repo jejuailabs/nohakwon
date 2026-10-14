@@ -7,3 +7,5 @@ out/
 .local/
 coverage/
 .vercel/
+# User-provided mockups and private screenshots stay local.
+designs/

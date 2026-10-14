@@ -10,7 +10,7 @@ export async function readProfile(uid: string): Promise<LearnerProfile | null> {
   if (!user?.activeStudentId) return null;
   const student = await db.collection("students").doc(user.activeStudentId).get();
   const data = student.data();
-  if (!data || data.guardianUid !== uid) throw new AccountError(403, "프로필 접근 권한을 확인해 주세요.");
+  if (!data || data.guardianUid !== uid && data.linkedUid !== uid) throw new AccountError(403, "프로필 접근 권한을 확인해 주세요.");
   return { id: student.id, nickname: data.nickname, grade: data.grade, calm: data.ui?.lowStimulus === true };
 }
 

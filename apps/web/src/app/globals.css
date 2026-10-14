@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap');
 
 :root { font-family: 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif; font-synthesis: none; color-scheme: light; }
+textarea { font: inherit; }
 * { box-sizing: border-box; }
 body { margin: 0; }
 button, input, select { font: inherit; }

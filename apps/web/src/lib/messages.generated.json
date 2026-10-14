@@ -1,0 +1,2232 @@
+{
+  "오늘의 학습": {
+    "en": "Today’s Learning",
+    "ja": "今日の学習",
+    "zh": "今日学习"
+  },
+  "나의 교재": {
+    "en": "My Textbooks",
+    "ja": "自分の教材",
+    "zh": "我的教材"
+  },
+  "복습": {
+    "en": "Review",
+    "ja": "復習",
+    "zh": "复习"
+  },
+  "오답노트": {
+    "en": "Wrong Answer Notes",
+    "ja": "間違いノート",
+    "zh": "错题本"
+  },
+  "학습 리포트": {
+    "en": "Learning Report",
+    "ja": "学習レポート",
+    "zh": "学习报告"
+  },
+  "보호자": {
+    "en": "Parent/Guardian",
+    "ja": "保護者",
+    "zh": "家长"
+  },
+  "설정": {
+    "en": "Settings",
+    "ja": "設定",
+    "zh": "设置"
+  },
+  "나의 학습 공간을 불러오고 있어요": {
+    "en": "Loading your learning space",
+    "ja": "学習スペースを読み込んでいます",
+    "zh": "正在加载你的学习空间"
+  },
+  "다시 시도": {
+    "en": "Try Again",
+    "ja": "再試行",
+    "zh": "重试"
+  },
+  "본문으로 이동": {
+    "en": "Skip to Main Content",
+    "ja": "本文へ移動",
+    "zh": "跳转到正文"
+  },
+  "노학원": {
+    "en": "No Academy",
+    "ja": "塾なし",
+    "zh": "无补习班"
+  },
+  "테스트 구독": {
+    "en": "Test Subscription",
+    "ja": "テスト用サブスクリプション",
+    "zh": "测试订阅"
+  },
+  "구독 중": {
+    "en": "Subscribed",
+    "ja": "購読中",
+    "zh": "订阅中"
+  },
+  "체험 종료": {
+    "en": "Trial Ended",
+    "ja": "体験終了",
+    "zh": "试用已结束"
+  },
+  "중": {
+    "en": "In Progress",
+    "ja": "中",
+    "zh": "进行中"
+  },
+  "주 메뉴": {
+    "en": "Main Menu",
+    "ja": "メインメニュー",
+    "zh": "主菜单"
+  },
+  "관리자": {
+    "en": "Administrator",
+    "ja": "管理者",
+    "zh": "管理员"
+  },
+  "알림 닫기": {
+    "en": "Close Notifications",
+    "ja": "通知を閉じる",
+    "zh": "关闭通知"
+  },
+  "요청을 처리하고 있어요…": {
+    "en": "Processing your request…",
+    "ja": "リクエストを処理しています…",
+    "zh": "正在处理你的请求…"
+  },
+  "님, 오늘은 어디까지 가볼까요?": {
+    "en": "Where shall we go today?",
+    "ja": "今日はどこまで進みましょうか？",
+    "zh": "今天我们要学到哪里呢？"
+  },
+  "작은 배움이 쌓여, 더 단단한 나로.": {
+    "en": "Small lessons add up to make you stronger.",
+    "ja": "小さな学びを積み重ねて、もっと強い自分に。",
+    "zh": "点滴学习积累起来，让自己变得更强大。"
+  },
+  "계정에 자동 저장": {
+    "en": "Automatically saved to your account",
+    "ja": "アカウントに自動保存",
+    "zh": "自动保存到你的账号"
+  },
+  "나의 교재로,": {
+    "en": "With my textbooks,",
+    "ja": "自分の教材で、",
+    "zh": "用我的教材，"
+  },
+  "나만의 퀘스트.": {
+    "en": "My Own Quest.",
+    "ja": "自分だけのクエスト。",
+    "zh": "专属任务。"
+  },
+  "지금 배우는 단원에서": {
+    "en": "From the unit you’re learning now,",
+    "ja": "今学習中の単元から",
+    "zh": "从正在学习的单元中"
+  },
+  "한 문제씩 시작해요.": {
+    "en": "Let’s start with one question at a time.",
+    "ja": "1問ずつ始めましょう。",
+    "zh": "一道题一道题地开始吧。"
+  },
+  "어제의 발견이": {
+    "en": "Yesterday’s discoveries",
+    "ja": "昨日の発見が",
+    "zh": "昨天的发现"
+  },
+  "오늘의 자신감으로.": {
+    "en": "Become today’s confidence.",
+    "ja": "今日の自信に。",
+    "zh": "化作今天的自信。"
+  },
+  "문제 완료": {
+    "en": "Problem Completed",
+    "ja": "問題完了",
+    "zh": "题目已完成"
+  },
+  "등록한 교재의 선택 범위에서 출제합니다. 문제 수는 검증된 문항 수에 따라 달라집니다.": {
+    "en": "Questions are selected from the ranges you chose in your registered textbooks. The number of questions depends on how many verified questions are available.",
+    "ja": "登録した教材で選択した範囲から出題します。問題数は、確認済みの問題数によって異なります。",
+    "zh": "题目将从你已登记教材的所选范围内抽取。题目数量取决于已验证题目的数量。"
+  },
+  "기억 다지기": {
+    "en": "Strengthen Your Memory",
+    "ja": "記憶を定着させる",
+    "zh": "巩固记忆"
+  },
+  "개 개념": {
+    "en": "Concepts",
+    "ja": "概念",
+    "zh": "个概念"
+  },
+  "이해도와 정답 기록에 따라 복습 시점을 정했어요.": {
+    "en": "We’ve set your review schedule based on your understanding and answer history.",
+    "ja": "理解度と正答記録に基づいて、復習のタイミングを設定しました。",
+    "zh": "我们根据你的理解程度和答题记录安排了复习时间。"
+  },
+  "복습 시작": {
+    "en": "Start Review",
+    "ja": "復習を始める",
+    "zh": "开始复习"
+  },
+  "· 오늘의 도전": {
+    "en": "· Today’s Challenge",
+    "ja": "· 今日のチャレンジ",
+    "zh": "· 今日挑战"
+  },
+  "화면 테마": {
+    "en": "Screen theme",
+    "ja": "画面テーマ",
+    "zh": "屏幕主题"
+  },
+  "다크": {
+    "en": "Dark",
+    "ja": "ダーク",
+    "zh": "深色"
+  },
+  "라이트": {
+    "en": "Light",
+    "ja": "ライト",
+    "zh": "浅色"
+  },
+  "기기 설정": {
+    "en": "Device settings",
+    "ja": "端末の設定",
+    "zh": "设备设置"
+  },
+  "메뉴 언어": {
+    "en": "Menu language",
+    "ja": "メニューの言語",
+    "zh": "菜单语言"
+  },
+  "한국어": {
+    "en": "Korean",
+    "ja": "韓国語",
+    "zh": "韩语"
+  },
+  "과목별 하루 목표": {
+    "en": "Daily goal by subject",
+    "ja": "教科ごとの1日の目標",
+    "zh": "各科每日目标"
+  },
+  "문제": {
+    "en": "Questions",
+    "ja": "問題",
+    "zh": "题目"
+  },
+  "시작 난이도": {
+    "en": "Starting difficulty",
+    "ja": "開始時の難易度",
+    "zh": "初始难度"
+  },
+  "단계": {
+    "en": "Level",
+    "ja": "レベル",
+    "zh": "等级"
+  },
+  "학습 기록에 따라 난이도 자동 조절": {
+    "en": "Automatically adjust difficulty based on your learning history",
+    "ja": "学習記録に基づいて難易度を自動調整",
+    "zh": "根据学习记录自动调整难度"
+  },
+  "학교 시험일": {
+    "en": "School exam date",
+    "ja": "学校の試験日",
+    "zh": "学校考试日期"
+  },
+  "차분하게 학습하기": {
+    "en": "Reduce visual stimulation",
+    "ja": "刺激を抑えて学習",
+    "zh": "减少视觉刺激"
+  },
+  "메뉴 언어를 변경해도 교재와 한국 교육과정 문제는 원문 언어를 유지합니다.": {
+    "en": "Changing the menu language won’t change the original language of textbooks or questions based on the Korean curriculum.",
+    "ja": "メニューの言語を変更しても、教材や韓国の教育課程に基づく問題は原文のまま表示されます。",
+    "zh": "更改菜单语言不会改变教材及依据韩国教育课程编写的题目的原文语言。"
+  },
+  "나만의 배지": {
+    "en": "My badges",
+    "ja": "自分のバッジ",
+    "zh": "我的徽章"
+  },
+  "학습 포인트로 모험가 배지를 열어요. 포인트는 현금으로 거래되지 않아요.": {
+    "en": "Earn adventurer badges with learning points. Points have no cash value.",
+    "ja": "学習ポイントで冒険者バッジを獲得しましょう。ポイントは現金と交換できません。",
+    "zh": "用学习积分解锁冒险家徽章。积分不能兑换现金。"
+  },
+  "사용 중": {
+    "en": "In use",
+    "ja": "使用中",
+    "zh": "使用中"
+  },
+  "사용하기": {
+    "en": "Use",
+    "ja": "使う",
+    "zh": "使用"
+  },
+  "개인정보 안내": {
+    "en": "Privacy notice",
+    "ja": "プライバシーに関するお知らせ",
+    "zh": "隐私说明"
+  },
+  "내 데이터 다운로드": {
+    "en": "Download my data",
+    "ja": "自分のデータをダウンロード",
+    "zh": "下载我的数据"
+  },
+  "로그아웃": {
+    "en": "Log out",
+    "ja": "ログアウト",
+    "zh": "退出登录"
+  },
+  "오늘의 작은 배움, 내일의 더 큰 나.": {
+    "en": "A little learning today, a bigger you tomorrow.",
+    "ja": "今日の小さな学びが、明日の大きな自分に。",
+    "zh": "今天学一点，明天成长更多。"
+  },
+  "교재와 학습 기록은 계정에 저장됩니다.": {
+    "en": "Textbooks and learning records are saved to your account.",
+    "ja": "教材と学習記録はアカウントに保存されます。",
+    "zh": "教材和学习记录会保存到你的账号中。"
+  },
+  "나의 답:": {
+    "en": "My answer:",
+    "ja": "自分の答え：",
+    "zh": "我的答案："
+  },
+  "· 정답:": {
+    "en": "· Correct answer:",
+    "ja": "・正解：",
+    "zh": "· 正确答案："
+  },
+  "해설 확인": {
+    "en": "View explanation",
+    "ja": "解説を見る",
+    "zh": "查看解析"
+  },
+  "다음에는 이렇게 풀어요": {
+    "en": "How to solve it next time",
+    "ja": "次はこう解いてみよう",
+    "zh": "下次试试这样解题"
+  },
+  "개념 / 계산 / 문제 읽기 중 무엇이 어려웠나요?": {
+    "en": "What was difficult: the concept, the calculation, or understanding the question?",
+    "ja": "概念・計算・問題文の理解のうち、どれが難しかったですか？",
+    "zh": "概念、计算还是读题，哪部分比较难？"
+  },
+  "저장했어요": {
+    "en": "Saved",
+    "ja": "保存しました",
+    "zh": "已保存"
+  },
+  "메모 저장": {
+    "en": "Save note",
+    "ja": "メモを保存",
+    "zh": "保存笔记"
+  },
+  "다시 풀기": {
+    "en": "Try again",
+    "ja": "もう一度解く",
+    "zh": "再做一次"
+  },
+  "최근 7일 학습 리포트": {
+    "en": "Learning report for the past 7 days",
+    "ja": "直近7日間の学習レポート",
+    "zh": "最近7天学习报告"
+  },
+  "실제 답안 기록으로 계산한 나의 변화": {
+    "en": "My progress, calculated from my actual answer records",
+    "ja": "実際の解答記録から算出した自分の成長",
+    "zh": "根据实际答题记录计算的我的进步"
+  },
+  "인쇄·PDF 저장": {
+    "en": "Print / Save as PDF",
+    "ja": "印刷・PDFで保存",
+    "zh": "打印 / 保存为 PDF"
+  },
+  "정답률": {
+    "en": "Accuracy",
+    "ja": "正答率",
+    "zh": "正确率"
+  },
+  "이어서 학습하기": {
+    "en": "Continue learning",
+    "ja": "学習を続ける",
+    "zh": "继续学习"
+  },
+  "학습 시작하기": {
+    "en": "Start learning",
+    "ja": "学習を始める",
+    "zh": "开始学习"
+  },
+  "교재·학습 범위 바꾸기": {
+    "en": "Change textbook · learning range",
+    "ja": "教材・学習範囲を変更",
+    "zh": "更换教材·学习范围"
+  },
+  "배울 교재를 선택해 주세요": {
+    "en": "Select a textbook to study",
+    "ja": "学習する教材を選んでください",
+    "zh": "请选择要学习的教材"
+  },
+  "교재를 올리고 목차를 확인하면": {
+    "en": "Upload a textbook and check its table of contents",
+    "ja": "教材をアップロードして目次を確認すると",
+    "zh": "上传教材并查看目录后"
+  },
+  "그 순서대로 학습할 수 있어요.": {
+    "en": "You can learn in that order.",
+    "ja": "その順番で学習できます。",
+    "zh": "就可以按顺序学习。"
+  },
+  "교재 등록": {
+    "en": "Add textbook",
+    "ja": "教材を登録",
+    "zh": "添加教材"
+  },
+  "나의 모험 기록": {
+    "en": "My adventure log",
+    "ja": "冒険の記録",
+    "zh": "我的冒险记录"
+  },
+  "배움의 모험가": {
+    "en": "Learning adventurer",
+    "ja": "学びの冒険者",
+    "zh": "学习冒险家"
+  },
+  "학습 문항": {
+    "en": "Questions answered",
+    "ja": "学習問題数",
+    "zh": "学习题目数"
+  },
+  "최근 7일 정답률": {
+    "en": "Accuracy over the last 7 days",
+    "ja": "直近7日間の正答率",
+    "zh": "最近7天正确率"
+  },
+  "최근 7일 학습일": {
+    "en": "Study days in the last 7 days",
+    "ja": "直近7日間の学習日数",
+    "zh": "最近7天学习天数"
+  },
+  "학습 리포트 보기": {
+    "en": "View learning report",
+    "ja": "学習レポートを見る",
+    "zh": "查看学习报告"
+  },
+  "배운 내용을 점검해요": {
+    "en": "Check what you’ve learned",
+    "ja": "学んだ内容を確認しましょう",
+    "zh": "检查所学内容"
+  },
+  "학습한 개념을 바탕으로 과목별 최대 5문제를 풀어요.": {
+    "en": "Answer up to 5 questions per subject based on the concepts you’ve studied.",
+    "ja": "学習した概念をもとに、科目ごとに最大5問解きます。",
+    "zh": "根据学过的概念，每科最多做5道题。"
+  },
+  "주간 평가 시작": {
+    "en": "Start weekly assessment",
+    "ja": "週間テストを始める",
+    "zh": "开始周测"
+  },
+  "선택 과목 범위 평가": {
+    "en": "Assessment for selected subject range",
+    "ja": "選択した科目範囲のテスト",
+    "zh": "所选科目范围测评"
+  },
+  "기억을 단단하게": {
+    "en": "Strengthen your memory",
+    "ja": "記憶をしっかり定着",
+    "zh": "巩固记忆"
+  },
+  "모르거나 헷갈렸던 개념부터 차근차근.": {
+    "en": "Start with concepts you didn’t know or found confusing.",
+    "ja": "わからなかったり、迷ったりした概念から復習しましょう。",
+    "zh": "从不懂或容易混淆的概念开始复习。"
+  },
+  "오늘의 복습 시작": {
+    "en": "Start today’s review",
+    "ja": "今日の復習を始める",
+    "zh": "开始今日复习"
+  },
+  "오늘 복습": {
+    "en": "Review today",
+    "ja": "今日の復習",
+    "zh": "今日复习"
+  },
+  "예정": {
+    "en": "Scheduled",
+    "ja": "予定",
+    "zh": "计划中"
+  },
+  "다음 복습": {
+    "en": "Next review",
+    "ja": "次の復習",
+    "zh": "下次复习"
+  },
+  "· 간격": {
+    "en": "· Interval",
+    "ja": "・間隔",
+    "zh": "· 间隔"
+  },
+  "일": {
+    "en": "days",
+    "ja": "日",
+    "zh": "天"
+  },
+  "최근 정답": {
+    "en": "Most recent answer",
+    "ja": "直近の回答",
+    "zh": "最近一次作答"
+  },
+  "· 연속 복습 정답": {
+    "en": "· Correct reviews in a row",
+    "ja": "・連続正解した復習回数",
+    "zh": "· 连续复习答对次数"
+  },
+  "첫 학습을 시작해 주세요": {
+    "en": "Start your first study session",
+    "ja": "まずは学習を始めましょう",
+    "zh": "请开始首次学习"
+  },
+  "답안과 이해도가 쌓이면 개념별 복습 일정이 생겨요.": {
+    "en": "As you answer questions and build understanding, review schedules will be created for each concept.",
+    "ja": "回答や理解度が蓄積されると、概念ごとの復習予定が作成されます。",
+    "zh": "随着答题记录和理解度的积累，系统会为每个概念安排复习计划。"
+  },
+  "나의 오답노트": {
+    "en": "My incorrect answers",
+    "ja": "間違いノート",
+    "zh": "我的错题本"
+  },
+  "오답 과목": {
+    "en": "Subjects with incorrect answers",
+    "ja": "間違えた科目",
+    "zh": "错题科目"
+  },
+  "모든 과목": {
+    "en": "All subjects",
+    "ja": "すべての科目",
+    "zh": "所有科目"
+  },
+  "아직 오답노트가 비어 있어요": {
+    "en": "Your incorrect answers list is empty",
+    "ja": "間違いノートはまだ空です",
+    "zh": "错题本还是空的"
+  },
+  "틀린 문제와 저장한 문제가 이곳에 모여요.": {
+    "en": "Questions you got wrong and saved will appear here.",
+    "ja": "間違えた問題や保存した問題がここに表示されます。",
+    "zh": "答错和收藏的题目会显示在这里。"
+  },
+  "학습 설정": {
+    "en": "Learning settings",
+    "ja": "学習設定",
+    "zh": "学习设置"
+  },
+  "줄마다 단원으로 직접 입력": {
+    "en": "Enter units manually, one per line",
+    "ja": "1行ずつ単元を入力",
+    "zh": "每行手动输入一个单元"
+  },
+  "인식·출제 시 자료가 OpenAI API로 전송됩니다. 필요한 학습 내용만 올려 주세요. 원본 파일은 서버에 보관하지 않고, 확인한 텍스트만 계정에 저장합니다.": {
+    "en": "When content is recognized or questions are generated, it is sent to the OpenAI API. Upload only the learning materials you need. Original files aren't stored on our servers; only the reviewed text is saved to your account.",
+    "ja": "内容の認識や問題の作成時に、資料はOpenAI APIに送信されます。必要な学習内容のみアップロードしてください。元のファイルはサーバーに保存されず、確認済みのテキストのみアカウントに保存されます。",
+    "zh": "识别内容或生成题目时，资料会发送至 OpenAI API。请仅上传必要的学习材料。原始文件不会保存在服务器上，只有确认后的文本会保存到您的账户。"
+  },
+  "비슷한 등록 교재가 있어요": {
+    "en": "Similar registered textbooks found",
+    "ja": "類似の登録済み教材があります",
+    "zh": "找到相似的已登记教材"
+  },
+  "목차·제목 기준 추천입니다. 출판사와 판본을 직접 확인해 주세요.": {
+    "en": "Recommendations are based on the table of contents and titles. Please check the publisher and edition yourself.",
+    "ja": "目次とタイトルに基づくおすすめです。出版社と版を必ずご確認ください。",
+    "zh": "推荐结果基于目录和标题。请自行确认出版社和版本。"
+  },
+  "% 일치": {
+    "en": "% match",
+    "ja": "%一致",
+    "zh": "% 匹配"
+  },
+  "교재 편집": {
+    "en": "Edit textbook",
+    "ja": "教材を編集",
+    "zh": "编辑教材"
+  },
+  "인식 결과 확인·교재 등록": {
+    "en": "Review recognition results · Register textbook",
+    "ja": "認識結果を確認・教材を登録",
+    "zh": "确认识别结果·登记教材"
+  },
+  "편집 닫기": {
+    "en": "Close editor",
+    "ja": "編集を閉じる",
+    "zh": "关闭编辑器"
+  },
+  "교재명": {
+    "en": "Textbook name",
+    "ja": "教材名",
+    "zh": "教材名称"
+  },
+  "출판사·자료 출처": {
+    "en": "Publisher · Source",
+    "ja": "出版社・資料の出典",
+    "zh": "出版社·资料来源"
+  },
+  "판본·교육과정": {
+    "en": "Edition · Curriculum",
+    "ja": "版・教育課程",
+    "zh": "版本·课程标准"
+  },
+  "예: 2022 개정 / 2025년판": {
+    "en": "e.g. 2022 revised / 2025 edition",
+    "ja": "例：2022年改訂／2025年版",
+    "zh": "例如：2022年修订版 / 2025年版"
+  },
+  "과목": {
+    "en": "Subject",
+    "ja": "科目",
+    "zh": "科目"
+  },
+  "현재 시작 단원": {
+    "en": "Current starting unit",
+    "ja": "現在の開始単元",
+    "zh": "当前起始单元"
+  },
+  "단원명 입력": {
+    "en": "Enter unit name",
+    "ja": "単元名を入力",
+    "zh": "输入单元名称"
+  },
+  "학습 종료 단원": {
+    "en": "Last unit to study",
+    "ja": "学習する最後の単元",
+    "zh": "学习的最后一个单元"
+  },
+  "이 교재로 학습하기": {
+    "en": "Study with this textbook",
+    "ja": "この教材で学習する",
+    "zh": "使用这本教材学习"
+  },
+  "새 단원": {
+    "en": "New unit",
+    "ja": "新しい単元",
+    "zh": "新单元"
+  },
+  "본문 없음": {
+    "en": "No content",
+    "ja": "本文がありません",
+    "zh": "没有正文"
+  },
+  "단원 이름": {
+    "en": "Unit name",
+    "ja": "単元名",
+    "zh": "单元名称"
+  },
+  "핵심 개념 (쉼표로 구분)": {
+    "en": "Key concepts (separate with commas)",
+    "ja": "重要な概念（カンマ区切り）",
+    "zh": "核心概念（用逗号分隔）"
+  },
+  "이 단원의 정의, 설명, 예제, 지문을 넣어 주세요. 이 내용에 근거해 문제를 만듭니다.": {
+    "en": "Add definitions, explanations, examples, and passages for this unit. Questions will be based on this content.",
+    "ja": "この単元の定義、説明、例題、文章を入力してください。この内容に基づいて問題を作成します。",
+    "zh": "请输入本单元的定义、说明、例题和文章。系统将根据这些内容生成题目。"
+  },
+  "본문 사진·PDF 인식": {
+    "en": "Recognize text from photo · PDF",
+    "ja": "写真・PDFから本文を認識",
+    "zh": "识别照片·PDF中的正文"
+  },
+  "위로": {
+    "en": "Move up",
+    "ja": "上へ",
+    "zh": "上移"
+  },
+  "단원 삭제": {
+    "en": "Delete unit",
+    "ja": "単元を削除",
+    "zh": "删除单元"
+  },
+  "단원 추가": {
+    "en": "Add unit",
+    "ja": "単元を追加",
+    "zh": "添加单元"
+  },
+  "확인하고 저장": {
+    "en": "Review and save",
+    "ja": "確認して保存",
+    "zh": "确认并保存"
+  },
+  "출제 작업": {
+    "en": "Question generation task",
+    "ja": "問題作成タスク",
+    "zh": "出题任务"
+  },
+  "단원": {
+    "en": "Unit",
+    "ja": "単元",
+    "zh": "单元"
+  },
+  "문제 생성·재검증 중": {
+    "en": "Generating questions · Rechecking",
+    "ja": "問題を作成・再確認中",
+    "zh": "正在生成题目·重新检查"
+  },
+  "처리 대기 중": {
+    "en": "Waiting to be processed",
+    "ja": "処理待ち",
+    "zh": "等待处理"
+  },
+  "대기": {
+    "en": "Queued",
+    "ja": "待機中",
+    "zh": "排队中"
+  },
+  "진행 중": {
+    "en": "In progress",
+    "ja": "進行中",
+    "zh": "进行中"
+  },
+  "완료": {
+    "en": "Complete",
+    "ja": "完了",
+    "zh": "已完成"
+  },
+  "실패": {
+    "en": "Failed",
+    "ja": "失敗",
+    "zh": "失败"
+  },
+  "학습한 날": {
+    "en": "Days studied",
+    "ja": "学習した日",
+    "zh": "学习天数"
+  },
+  "문제 풀이 시간": {
+    "en": "Problem-solving time",
+    "ja": "問題を解いた時間",
+    "zh": "解题时间"
+  },
+  "매일의 발자국": {
+    "en": "Daily footprints",
+    "ja": "毎日の学習の足あと",
+    "zh": "每日学习足迹"
+  },
+  "과목별 학습": {
+    "en": "Learning by subject",
+    "ja": "教科別の学習",
+    "zh": "按科目学习"
+  },
+  "문제 ·": {
+    "en": "Questions ·",
+    "ja": "問題 ·",
+    "zh": "题目 ·"
+  },
+  "다음 한 걸음": {
+    "en": "Next step",
+    "ja": "次の一歩",
+    "zh": "下一步"
+  },
+  "아직 표본이 작아 성적 변화나 장기 성취를 판단하지 않습니다.": {
+    "en": "There’s not enough data yet to assess changes in grades or long-term achievement.",
+    "ja": "まだデータが少ないため、成績の変化や長期的な成果は判断できません。",
+    "zh": "目前数据还不足，无法判断成绩变化或长期学习成果。"
+  },
+  "· 복습": {
+    "en": "· Review",
+    "ja": "· 復習",
+    "zh": "· 复习"
+  },
+  "주간 평가로 확인": {
+    "en": "Check with a weekly assessment",
+    "ja": "週ごとのテストで確認",
+    "zh": "通过每周测评来确认"
+  },
+  "알겠어요": {
+    "en": "Got it",
+    "ja": "わかりました",
+    "zh": "知道了"
+  },
+  "· 헷갈려요": {
+    "en": "· I'm confused",
+    "ja": "· よくわかりません",
+    "zh": "· 不太明白"
+  },
+  "· 모르겠어요": {
+    "en": "· I don't know",
+    "ja": "· わかりません",
+    "zh": "· 不知道"
+  },
+  "프로필을 저장했어요.": {
+    "en": "Profile saved.",
+    "ja": "プロフィールを保存しました。",
+    "zh": "已保存个人资料。"
+  },
+  "보호자 학습 관리": {
+    "en": "Manage your child's learning",
+    "ja": "お子さまの学習管理",
+    "zh": "管理孩子的学习"
+  },
+  "자녀별 교재와 학습 기록을 구분해서 관리해요.": {
+    "en": "Manage each child’s learning materials and records separately.",
+    "ja": "お子さまごとに教材と学習記録を分けて管理できます。",
+    "zh": "可按孩子分别管理教材和学习记录。"
+  },
+  "중학교": {
+    "en": "Middle school",
+    "ja": "中学校",
+    "zh": "初中"
+  },
+  "학년": {
+    "en": "Grade",
+    "ja": "学年",
+    "zh": "年级"
+  },
+  "현재 학습 프로필": {
+    "en": "Current learning profile",
+    "ja": "現在の学習プロフィール",
+    "zh": "当前学习档案"
+  },
+  "이 프로필로 전환": {
+    "en": "Switch to this profile",
+    "ja": "このプロフィールに切り替える",
+    "zh": "切换到此档案"
+  },
+  "새 학습자 닉네임": {
+    "en": "New learner nickname",
+    "ja": "新しい学習者のニックネーム",
+    "zh": "新学习者昵称"
+  },
+  "학습 프로필 추가": {
+    "en": "Add a learning profile",
+    "ja": "学習プロフィールを追加",
+    "zh": "添加学习档案"
+  },
+  "체험·구독": {
+    "en": "Free trial · Subscription",
+    "ja": "無料体験・サブスクリプション",
+    "zh": "免费试用·订阅"
+  },
+  "무료 체험 종료: {0}": {
+    "en": "Free trial ends: {0}",
+    "ja": "無料体験終了：{0}",
+    "zh": "免费试用结束：{0}"
+  },
+  "무료 체험이 종료되었습니다.": {
+    "en": "Your free trial has ended.",
+    "ja": "無料体験が終了しました。",
+    "zh": "免费试用已结束。"
+  },
+  "학습자 1명당 월": {
+    "en": "Per learner, per month",
+    "ja": "学習者1人あたり・月額",
+    "zh": "每位学习者每月"
+  },
+  "원 · 자동 결제는 언제든 해지할 수 있어요.": {
+    "en": "won · Auto-renewal can be canceled anytime.",
+    "ja": "ウォン · 自動決済はいつでも解約できます。",
+    "zh": "韩元 · 自动扣费可随时取消。"
+  },
+  "구독·결제 관리": {
+    "en": "Manage subscription · Payments",
+    "ja": "サブスクリプション・決済の管理",
+    "zh": "管理订阅·支付"
+  },
+  "결제 연결 상태 확인": {
+    "en": "Check payment connection status",
+    "ja": "決済の接続状況を確認",
+    "zh": "检查支付连接状态"
+  },
+  "현재 프로필 닉네임·학년 수정": {
+    "en": "Edit current profile nickname · grade",
+    "ja": "現在のプロフィールのニックネーム・学年を編集",
+    "zh": "修改当前档案的昵称·年级"
+  },
+  "직접 등록": {
+    "en": "Add manually",
+    "ja": "手動で登録",
+    "zh": "手动添加"
+  },
+  "작업을 완료하지 못했어요.": {
+    "en": "Couldn't complete the task.",
+    "ja": "処理を完了できませんでした。",
+    "zh": "无法完成操作。"
+  },
+  "본문을 인식했어요. 내용과 수식을 확인한 뒤 저장해 주세요.": {
+    "en": "We recognized the text. Check the content and formulas, then save.",
+    "ja": "本文を認識しました。内容と数式を確認してから保存してください。",
+    "zh": "已识别正文。请检查内容和公式后保存。"
+  },
+  "인식 결과를 확인하고 단원 순서·개념을 수정한 뒤 저장해 주세요.": {
+    "en": "Check the recognition results, edit the unit order and concepts, then save.",
+    "ja": "認識結果を確認し、単元の順序や概念を修正してから保存してください。",
+    "zh": "请检查识别结果，调整单元顺序和概念后保存。"
+  },
+  "자료를 읽고 있어요. 분량에 따라 1~2분 걸릴 수 있어요.": {
+    "en": "Reading the material. This may take 1–2 minutes, depending on its length.",
+    "ja": "教材を読み込んでいます。分量によって1～2分かかることがあります。",
+    "zh": "正在读取资料。根据内容长度，可能需要1～2分钟。"
+  },
+  "교재를 저장하고 있어요": {
+    "en": "Saving the textbook",
+    "ja": "教材を保存しています",
+    "zh": "正在保存教材"
+  },
+  "교재와 학습 범위를 저장했어요. 본문을 넣은 단원은 AI 출제를 시작할 수 있어요.": {
+    "en": "Saved your textbook and study range. You can start AI question generation for units with content added.",
+    "ja": "教材と学習範囲を保存しました。本文を登録した単元はAIで問題を作成できます。",
+    "zh": "已保存教材和学习范围。已添加正文的单元可以开始 AI 出题。"
+  },
+  "교과서의 순서대로, 지금 배우는 범위에 맞춰.": {
+    "en": "In textbook order, matched to what you’re learning now.",
+    "ja": "教科書の順番で、今学んでいる範囲に合わせて。",
+    "zh": "按教材顺序，匹配当前学习范围。"
+  },
+  "등록한 교재": {
+    "en": "Registered textbooks",
+    "ja": "登録した教材",
+    "zh": "已登记的教材"
+  },
+  "교재 찾기": {
+    "en": "Find a textbook",
+    "ja": "教材を探す",
+    "zh": "查找教材"
+  },
+  "사진·PDF·텍스트": {
+    "en": "Photo · PDF · Text",
+    "ja": "写真・PDF・テキスト",
+    "zh": "照片・PDF・文本"
+  },
+  "첫 교재를 등록해 볼까요?": {
+    "en": "Register your first textbook?",
+    "ja": "最初の教材を登録してみませんか？",
+    "zh": "要登记第一本教材吗？"
+  },
+  "목차 사진이나 PDF를 올리거나, 기초 점검 교재로 바로 테스트해 보세요.": {
+    "en": "Upload a photo or PDF of the table of contents, or try a test with a basic review textbook.",
+    "ja": "目次の写真やPDFをアップロードするか、基礎チェック用教材ですぐにテストしてみましょう。",
+    "zh": "上传目录照片或 PDF，也可以用基础检查教材直接开始测试。"
+  },
+  "내 교재 올리기": {
+    "en": "Upload my textbook",
+    "ja": "教材をアップロード",
+    "zh": "上传我的教材"
+  },
+  "기초 교재 선택": {
+    "en": "Choose a basic textbook",
+    "ja": "基礎教材を選ぶ",
+    "zh": "选择基础教材"
+  },
+  "학습 중": {
+    "en": "Studying",
+    "ja": "学習中",
+    "zh": "学习中"
+  },
+  "보관 중": {
+    "en": "Archived",
+    "ja": "保管中",
+    "zh": "已归档"
+  },
+  "본문 등록됨": {
+    "en": "Content added",
+    "ja": "本文登録済み",
+    "zh": "已添加正文"
+  },
+  "목차만 등록됨": {
+    "en": "Table of contents only",
+    "ja": "目次のみ登録済み",
+    "zh": "仅登记了目录"
+  },
+  "출제 작업을 등록하고 있어요": {
+    "en": "Submitting question generation task",
+    "ja": "問題作成タスクを登録しています",
+    "zh": "正在提交出题任务"
+  },
+  "AI 출제를 시작했어요. 아래 작업 목록에서 결과를 확인할 수 있어요.": {
+    "en": "AI question generation has started. Check the results in the task list below.",
+    "ja": "AIでの問題作成を開始しました。下のタスク一覧で結果を確認できます。",
+    "zh": "AI 出题已开始。可在下方任务列表中查看结果。"
+  },
+  "출제": {
+    "en": "Generate questions",
+    "ja": "問題を作成",
+    "zh": "出题"
+  },
+  "목차·본문·범위 편집": {
+    "en": "Edit table of contents · content · range",
+    "ja": "目次・本文・範囲を編集",
+    "zh": "编辑目录・正文・范围"
+  },
+  "학습하기": {
+    "en": "Study",
+    "ja": "学習する",
+    "zh": "开始学习"
+  },
+  "기초 점검 자료와 출판사 공식 목차를 구분해 제공해요. 공식 목차는 대단원만 포함합니다. 국어는 1-1, 사회 ①은 학교 편성에 따라 학년을 수정해 주세요. 맞춤 출제에는 해당 단원의 본문이 필요합니다.": {
+    "en": "Basic review materials and publishers’ official tables of contents are provided separately. Official tables of contents include only major units. For Japanese Language 1-1 and Social Studies ①, adjust the grade to match your school’s curriculum. The unit content is required to generate custom questions.",
+    "ja": "基礎チェック資料と出版社公式の目次は分けて表示しています。公式の目次には大単元のみ含まれます。国語1-1と社会①は、学校のカリキュラムに合わせて学年を変更してください。オーダーメイドの問題作成には、該当単元の本文が必要です。",
+    "zh": "基础检查资料与出版社官方目录分开提供。官方目录仅包含大单元。国语 1-1 和社会①请根据学校课程安排调整年级。定制出题需要提供相应单元的正文。"
+  },
+  "공식 목차 출처 ↗": {
+    "en": "Official table of contents source ↗",
+    "ja": "公式目次の出典 ↗",
+    "zh": "官方目录来源 ↗"
+  },
+  "교재를 등록하고 있어요": {
+    "en": "Registering textbook",
+    "ja": "教材を登録しています",
+    "zh": "正在登记教材"
+  },
+  "등록됨": {
+    "en": "Registered",
+    "ja": "登録済み",
+    "zh": "已登记"
+  },
+  "이 교재 선택": {
+    "en": "Select this textbook",
+    "ja": "この教材を選択",
+    "zh": "选择此教材"
+  },
+  "내 교재 가져오기": {
+    "en": "Import my textbooks",
+    "ja": "教材を取り込む",
+    "zh": "导入我的教材"
+  },
+  "목차는 단원 순서를 정하고, 본문은 맞춤 문제의 근거가 됩니다. 인식 결과를 확인한 후 저장해 주세요.": {
+    "en": "The table of contents sets the unit order, and the content provides the basis for custom questions. Review the recognition results before saving.",
+    "ja": "目次で単元の順番を設定し、本文をもとにオーダーメイドの問題を作成します。認識結果を確認してから保存してください。",
+    "zh": "目录用于确定单元顺序，正文是定制题目的依据。请确认识别结果后再保存。"
+  },
+  "자료 종류": {
+    "en": "Material type",
+    "ja": "資料の種類",
+    "zh": "资料类型"
+  },
+  "목차": {
+    "en": "Table of contents",
+    "ja": "目次",
+    "zh": "目录"
+  },
+  "단원 본문·학습 노트": {
+    "en": "Unit content · study notes",
+    "ja": "単元本文・学習ノート",
+    "zh": "单元正文・学习笔记"
+  },
+  "사진·PDF·TXT 파일 선택": {
+    "en": "Choose photo · PDF · TXT file",
+    "ja": "写真・PDF・TXTファイルを選択",
+    "zh": "选择照片・PDF・TXT 文件"
+  },
+  "5MB 이하 · PDF는 한 단원씩 · PNG / JPG / WebP": {
+    "en": "Up to 5 MB · One unit per PDF · PNG / JPG / WebP",
+    "ja": "5MB以下・PDFは1単元ずつ・PNG / JPG / WebP",
+    "zh": "不超过 5MB・PDF 每次上传一个单元・PNG / JPG / WebP"
+  },
+  "교재 파일": {
+    "en": "Textbook file",
+    "ja": "教材ファイル",
+    "zh": "教材文件"
+  },
+  "텍스트 붙여넣기": {
+    "en": "Paste text",
+    "ja": "テキストを貼り付け",
+    "zh": "粘贴文本"
+  },
+  "예: 중1 수학\n1. 소인수분해\n2. 정수와 유리수\n3. 문자와 식\n\n본문 자료도 함께 넣을 수 있어요.": {
+    "en": "Example: Grade 7 Math\n1. Prime factorization\n2. Integers and rational numbers\n3. Expressions with variables\n\nYou can add study materials too.",
+    "ja": "例：中学1年 数学\n1. 素因数分解\n2. 整数と有理数\n3. 文字と式\n\n本文資料も一緒に追加できます。",
+    "zh": "例：初一数学\n1. 质因数分解\n2. 整数和有理数\n3. 字母与代数式\n\n也可以一并添加正文资料。"
+  },
+  "텍스트에서 단원을 인식하고 있어요": {
+    "en": "Recognizing units from text",
+    "ja": "テキストから単元を認識しています",
+    "zh": "正在从文本中识别单元"
+  },
+  "AI로 목차 인식": {
+    "en": "Recognize table of contents with AI",
+    "ja": "AIで目次を認識",
+    "zh": "使用 AI 识别目录"
+  },
+  "다시 시도합니다": {
+    "en": "Trying again",
+    "ja": "再試行中",
+    "zh": "正在重试"
+  },
+  "재시도": {
+    "en": "Retry",
+    "ja": "再試行",
+    "zh": "重试"
+  },
+  "주간 평가": {
+    "en": "Weekly assessment",
+    "ja": "週間テスト",
+    "zh": "每周测评"
+  },
+  "범위 평가": {
+    "en": "Unit assessment",
+    "ja": "单元测评",
+    "zh": "单元测评"
+  },
+  "학습 닫기": {
+    "en": "Close learning",
+    "ja": "学習を終了",
+    "zh": "结束学习"
+  },
+  "오늘의 한 걸음, 완료!": {
+    "en": "Today’s step complete!",
+    "ja": "今日の一歩、完了！",
+    "zh": "今天的一小步，完成！"
+  },
+  "문제 중": {
+    "en": "of questions",
+    "ja": "問中",
+    "zh": "题中"
+  },
+  "문제를 맞혔어요.": {
+    "en": "You got it right.",
+    "ja": "正解です。",
+    "zh": "答对了。"
+  },
+  "포인트": {
+    "en": "Points",
+    "ja": "ポイント",
+    "zh": "积分"
+  },
+  "기록과 복습 일정이 계정에 저장되었습니다.": {
+    "en": "Your progress and review schedule have been saved to your account.",
+    "ja": "学習記録と復習予定をアカウントに保存しました。",
+    "zh": "学习记录和复习计划已保存到你的账号。"
+  },
+  "학습 화면으로": {
+    "en": "Back to learning",
+    "ja": "学習画面に戻る",
+    "zh": "返回学习页面"
+  },
+  "답안": {
+    "en": "Your answer",
+    "ja": "回答",
+    "zh": "答案"
+  },
+  "답을 입력해 주세요": {
+    "en": "Please enter your answer",
+    "ja": "答えを入力してください",
+    "zh": "请输入答案"
+  },
+  "답을 확인하기 전에, 얼마나 이해했나요?": {
+    "en": "Before checking your answer, how well did you understand?",
+    "ja": "答えを確認する前に、どのくらい理解できましたか？",
+    "zh": "查看答案前，你觉得自己理解得怎么样？"
+  },
+  "자신 있게 풀었어요": {
+    "en": "I solved it confidently",
+    "ja": "自信を持って解けました",
+    "zh": "我很有把握地做出来了"
+  },
+  "헷갈려요": {
+    "en": "I’m confused",
+    "ja": "少し迷いました",
+    "zh": "我有点困惑"
+  },
+  "조금 더 생각해 볼래요": {
+    "en": "I want to think a little more",
+    "ja": "もう少し考えたいです",
+    "zh": "我想再想一想"
+  },
+  "모르겠어요": {
+    "en": "I don’t know",
+    "ja": "わかりません",
+    "zh": "我不知道"
+  },
+  "설명이 필요해요": {
+    "en": "I need an explanation",
+    "ja": "解説が必要です",
+    "zh": "我需要讲解"
+  },
+  "답안을 저장하고 있어요": {
+    "en": "Saving your answer",
+    "ja": "回答を保存しています",
+    "zh": "正在保存答案"
+  },
+  "정답 확인": {
+    "en": "Check answer",
+    "ja": "答えを確認",
+    "zh": "查看答案"
+  },
+  "빠르게 맞히는 것보다 솔직한 이해도가 중요해요.": {
+    "en": "Understanding honestly matters more than answering quickly.",
+    "ja": "早く正解することより、理解度を正直に伝えることが大切です。",
+    "zh": "诚实地反映自己的理解，比快速答对更重要。"
+  },
+  "정답이에요": {
+    "en": "Correct!",
+    "ja": "正解です！",
+    "zh": "答对了！"
+  },
+  "함께 다시 살펴봐요": {
+    "en": "Let’s review it together",
+    "ja": "一緒にもう一度確認しましょう",
+    "zh": "我们一起再看看"
+  },
+  "정답:": {
+    "en": "Correct answer:",
+    "ja": "正解：",
+    "zh": "正确答案："
+  },
+  "다음 복습: {0}": {
+    "en": "Next review: {0}",
+    "ja": "次回の復習：{0}",
+    "zh": "下次复习：{0}"
+  },
+  "다시 풀기는 복습 일정과 포인트를 바꾸지 않아요.": {
+    "en": "Retrying doesn’t change your review schedule or points.",
+    "ja": "もう一度解いても、復習予定やポイントは変わりません。",
+    "zh": "重新作答不会改变复习计划或积分。"
+  },
+  "저장됨": {
+    "en": "Saved",
+    "ja": "保存しました",
+    "zh": "已保存"
+  },
+  "오답노트에 저장": {
+    "en": "Save to incorrect answers",
+    "ja": "間違いノートに保存",
+    "zh": "保存到错题本"
+  },
+  "어떤 부분이 잘못되었나요? (최대 500자)": {
+    "en": "What was incorrect? (up to 500 characters)",
+    "ja": "どの部分が間違っていましたか？（500字以内）",
+    "zh": "哪里有误？（最多500字）"
+  },
+  "문항 검토 요청을 접수했어요.": {
+    "en": "Your question review request has been received.",
+    "ja": "問題の確認依頼を受け付けました。",
+    "zh": "已收到题目审核请求。"
+  },
+  "오류 신고": {
+    "en": "Report an issue",
+    "ja": "問題を報告",
+    "zh": "报告问题"
+  },
+  "다음으로": {
+    "en": "Next",
+    "ja": "次へ",
+    "zh": "下一步"
+  },
+  "저장한 주간 리포트": {
+    "en": "Saved weekly reports",
+    "ja": "保存した週間レポート",
+    "zh": "已保存的每周报告"
+  },
+  "이번 주 리포트를 저장했어요.": {
+    "en": "This week’s report has been saved.",
+    "ja": "今週のレポートを保存しました。",
+    "zh": "本周报告已保存。"
+  },
+  "결제 상태를 불러오는 중…": {
+    "en": "Loading payment status…",
+    "ja": "決済状況を読み込み中…",
+    "zh": "正在加载付款状态…"
+  },
+  "결제 내역": {
+    "en": "Payment history",
+    "ja": "決済履歴",
+    "zh": "付款记录"
+  },
+  "원 ·": {
+    "en": "KRW ·",
+    "ja": "ウォン・",
+    "zh": "韩元 ·"
+  },
+  "결과 다시 확인": {
+    "en": "Check results again",
+    "ja": "結果を再確認",
+    "zh": "重新查看结果"
+  },
+  "운영 관리": {
+    "en": "Operations management",
+    "ja": "運営管理",
+    "zh": "运营管理"
+  },
+  "학습 화면": {
+    "en": "Learning screen",
+    "ja": "学習画面",
+    "zh": "学习页面"
+  },
+  "새로고침": {
+    "en": "Refresh",
+    "ja": "更新",
+    "zh": "刷新"
+  },
+  "관리자 권한을 확인하고 있습니다. 권한이 없다면 학습 화면으로 돌아가 주세요.": {
+    "en": "Checking admin permissions. If you don’t have permission, please return to the learning screen.",
+    "ja": "管理者権限を確認しています。権限がない場合は、学習画面に戻ってください。",
+    "zh": "正在检查管理员权限。如果您没有权限，请返回学习页面。"
+  },
+  "학습 프로필 (최대 100개 조회)": {
+    "en": "Learning profiles (up to 100)",
+    "ja": "学習プロフィール（最大100件）",
+    "zh": "学习档案（最多查询100个）"
+  },
+  "문항 신고 대기": {
+    "en": "Pending question reports",
+    "ja": "問題の報告待ち",
+    "zh": "待处理的题目举报"
+  },
+  "최근 100회 AI 호출 추정 비용": {
+    "en": "Estimated cost of the last 100 AI calls",
+    "ja": "直近100回のAI呼び出しの推定費用",
+    "zh": "最近100次AI调用的预估费用"
+  },
+  "연결됨": {
+    "en": "Connected",
+    "ja": "接続済み",
+    "zh": "已连接"
+  },
+  "미설정": {
+    "en": "Not set",
+    "ja": "未設定",
+    "zh": "未设置"
+  },
+  "AI 출제 서비스": {
+    "en": "AI question generation service",
+    "ja": "AI問題作成サービス",
+    "zh": "AI出题服务"
+  },
+  "문제 검수": {
+    "en": "Review questions",
+    "ja": "問題を確認",
+    "zh": "题目审核"
+  },
+  "교재 목록": {
+    "en": "Textbook list",
+    "ja": "教材一覧",
+    "zh": "教材列表"
+  },
+  "신고": {
+    "en": "Reports",
+    "ja": "報告",
+    "zh": "举报"
+  },
+  "AI 비용·작업": {
+    "en": "AI costs · Tasks",
+    "ja": "AI費用・作業",
+    "zh": "AI费用·任务"
+  },
+  "학습자·권한": {
+    "en": "Learners · Permissions",
+    "ja": "学習者・権限",
+    "zh": "学习者·权限"
+  },
+  "운영 설정": {
+    "en": "Operations settings",
+    "ja": "運営設定",
+    "zh": "运营设置"
+  },
+  "관리 기록": {
+    "en": "Activity log",
+    "ja": "操作记录",
+    "zh": "操作记录"
+  },
+  "학습 프로필": {
+    "en": "Learning profiles",
+    "ja": "学習プロフィール",
+    "zh": "学习档案"
+  },
+  "공유 문제은행 (등록 교재)": {
+    "en": "Shared question bank (registered textbooks)",
+    "ja": "共有問題バンク（登録済み教材）",
+    "zh": "共享题库（已登记教材）"
+  },
+  "· 중": {
+    "en": "· Middle school",
+    "ja": "・中",
+    "zh": "· 初中"
+  },
+  "문항 상태": {
+    "en": "Question status",
+    "ja": "問題の状態",
+    "zh": "题目状态"
+  },
+  "전체": {
+    "en": "All",
+    "ja": "すべて",
+    "zh": "全部"
+  },
+  "검수 대기": {
+    "en": "Pending review",
+    "ja": "確認待ち",
+    "zh": "待审核"
+  },
+  "승인": {
+    "en": "Approved",
+    "ja": "承認済み",
+    "zh": "已批准"
+  },
+  "비활성": {
+    "en": "Inactive",
+    "ja": "無効",
+    "zh": "未启用"
+  },
+  "개인 교재 문제는 해당 학습자만 사용합니다. 관리자의 문제은행 조회·편집은 기록됩니다.": {
+    "en": "Questions from personal textbooks are only available to that learner. Admin access to view or edit the question bank is logged.",
+    "ja": "個人教材の問題は該当する学習者のみ利用できます。管理者による問題バンクの閲覧・編集は記録されます。",
+    "zh": "个人教材中的题目仅供对应学习者使用。管理员查看或编辑题库的操作会被记录。"
+  },
+  "새 문항 등록": {
+    "en": "Add a new question",
+    "ja": "新しい問題を登録",
+    "zh": "添加新题目"
+  },
+  "JSON 내보내기": {
+    "en": "Export JSON",
+    "ja": "JSONをエクスポート",
+    "zh": "导出JSON"
+  },
+  "상태": {
+    "en": "Status",
+    "ja": "状態",
+    "zh": "状态"
+  },
+  "개념·문제": {
+    "en": "Concept · Question",
+    "ja": "概念・問題",
+    "zh": "概念·题目"
+  },
+  "정답·난이도": {
+    "en": "Answer · Difficulty",
+    "ja": "正解・難易度",
+    "zh": "答案·难度"
+  },
+  "이번 주 리포트 저장": {
+    "en": "Save this week’s report",
+    "ja": "今週のレポートを保存",
+    "zh": "保存本周报告"
+  },
+  "일 학습 ·": {
+    "en": "Daily learning ·",
+    "ja": "日々の学習 ·",
+    "zh": "每日学习 ·"
+  },
+  "리포트를 저장하면 이전 주와 비교할 수 있어요.": {
+    "en": "Save your report to compare it with previous weeks.",
+    "ja": "レポートを保存すると、前の週と比較できます。",
+    "zh": "保存报告后，即可与之前的周报告进行比较。"
+  },
+  "삭제 요청을 접수했습니다.": {
+    "en": "Your deletion request has been received.",
+    "ja": "削除リクエストを受け付けました。",
+    "zh": "已收到您的删除请求。"
+  },
+  "계정 삭제": {
+    "en": "Delete account",
+    "ja": "アカウントを削除",
+    "zh": "删除账号"
+  },
+  "소유한 학습 프로필, 교재와 답안이 삭제되며 복구할 수 없습니다. 먼저 데이터를 다운로드해 주세요. 결제 이력이 있으면 운영자 확인 후 처리합니다.": {
+    "en": "Your learning profiles, workbooks, and answers will be deleted and cannot be recovered. Please download your data first. If you have a payment history, we’ll process the request after an administrator reviews it.",
+    "ja": "所有している学習プロフィール、教材、解答は削除され、復元できません。先にデータをダウンロードしてください。お支払い履歴がある場合は、管理者が確認してから処理します。",
+    "zh": "您拥有的学习档案、教材和答案将被删除，且无法恢复。请先下载您的数据。如果有付款记录，我们会在管理员确认后处理。"
+  },
+  "계속하려면 ‘계정 삭제’를 입력하세요": {
+    "en": "Type “Delete account” to continue",
+    "ja": "続けるには「アカウントを削除」と入力してください",
+    "zh": "请输入“删除账号”以继续"
+  },
+  "처리 중": {
+    "en": "Processing",
+    "ja": "処理中",
+    "zh": "处理中"
+  },
+  "Google로 본인 확인 후 삭제": {
+    "en": "Verify your identity with Google, then delete",
+    "ja": "Googleで本人確認してから削除",
+    "zh": "通过 Google 验证身份后删除"
+  },
+  "결제창을 불러오지 못했어요.": {
+    "en": "Couldn’t load the payment window.",
+    "ja": "決済画面を読み込めませんでした。",
+    "zh": "无法加载支付窗口。"
+  },
+  "결제창 연결을 확인해 주세요.": {
+    "en": "Please check your payment window connection.",
+    "ja": "決済画面の接続を確認してください。",
+    "zh": "请检查支付窗口连接。"
+  },
+  "결제가 완료되었어요. 이용 기간이 적용되었습니다.": {
+    "en": "Payment complete. Your access period is now active.",
+    "ja": "お支払いが完了しました。利用期間が適用されました。",
+    "zh": "支付已完成，服务使用期限已生效。"
+  },
+  "← 보호자 화면으로": {
+    "en": "← Parent view",
+    "ja": "← 保護者画面へ",
+    "zh": "← 返回家长页面"
+  },
+  "학습 구독 관리": {
+    "en": "Manage learning subscription",
+    "ja": "学習サブスクリプションを管理",
+    "zh": "管理学习订阅"
+  },
+  "테스트 환경 · 실제 청구 없음": {
+    "en": "Test environment · No actual charges",
+    "ja": "テスト環境 · 実際の請求はありません",
+    "zh": "测试环境 · 不会实际扣款"
+  },
+  "실결제 환경": {
+    "en": "Live payment environment",
+    "ja": "実決済環境",
+    "zh": "正式支付环境"
+  },
+  "원": {
+    "en": "won",
+    "ja": "ウォン",
+    "zh": "韩元"
+  },
+  "/ 월 · 학습자 1명": {
+    "en": "/ month · 1 learner",
+    "ja": "/ 月 · 学習者1人",
+    "zh": "/ 月 · 1名学习者"
+  },
+  "교재에 맞춘 새 문제, 복습 일정, 학습 리포트를 이용합니다.": {
+    "en": "Get new workbook-aligned questions, review schedules, and learning reports.",
+    "ja": "教材に合わせた新しい問題、復習スケジュール、学習レポートを利用できます。",
+    "zh": "可使用与教材匹配的新题目、复习计划和学习报告。"
+  },
+  "결제 서비스 미연결: 토스페이먼츠의 테스트 클라이언트 키·시크릿 키를 연결하면 카드 등록부터 결제·해지까지 테스트할 수 있어요.": {
+    "en": "Payment service not connected: Connect Toss Payments test client and secret keys to test everything from card registration to payment and cancellation.",
+    "ja": "決済サービス未接続：Toss Paymentsのテスト用クライアントキーとシークレットキーを接続すると、カード登録から決済・解約までテストできます。",
+    "zh": "支付服务尚未连接：连接 Toss Payments 测试客户端密钥和密钥后，即可测试从银行卡登记到支付和取消的整个流程。"
+  },
+  "카드 인증이 끝났어요. 아래 버튼을 누르면 첫 달 구독료를 결제하고 구독을 시작합니다.": {
+    "en": "Card verification is complete. Tap the button below to pay for the first month and start your subscription.",
+    "ja": "カード認証が完了しました。下のボタンを押すと、初月分をお支払いいただき、サブスクリプションが開始します。",
+    "zh": "银行卡验证已完成。点击下方按钮支付首月费用并开始订阅。"
+  },
+  "결제 확인 중": {
+    "en": "Confirming payment",
+    "ja": "お支払いを確認中",
+    "zh": "正在确认支付"
+  },
+  "테스트 결제 완료하기": {
+    "en": "Complete test payment",
+    "ja": "テスト決済を完了",
+    "zh": "完成测试支付"
+  },
+  "첫 달 결제하고 구독 시작": {
+    "en": "Pay for the first month and start subscription",
+    "ja": "初月分を支払ってサブスクリプションを開始",
+    "zh": "支付首月费用并开始订阅"
+  },
+  "까지 이용할 수 있어요.": {
+    "en": "Available until",
+    "ja": "利用期限：",
+    "zh": "可使用至"
+  },
+  "해지 예약됨 · 다음 결제 없음": {
+    "en": "Cancellation scheduled · No next payment",
+    "ja": "解約予約済み · 次回の決済なし",
+    "zh": "已预约取消 · 下次不会扣款"
+  },
+  "매월 자동 결제됩니다.": {
+    "en": "Automatically billed every month.",
+    "ja": "毎月自動でお支払いが発生します。",
+    "zh": "每月自动扣款。"
+  },
+  "다음 자동 결제를 중단할까요? 결제한 기간까지 이용할 수 있어요.": {
+    "en": "Stop the next automatic payment? You can keep using the service until the end of your paid period.",
+    "ja": "次回の自動決済を停止しますか？お支払い済みの期間までは利用できます。",
+    "zh": "要停止下次自动扣款吗？您仍可使用服务至已付款期限结束。"
+  },
+  "해지 예약을 완료했어요.": {
+    "en": "Cancellation scheduled.",
+    "ja": "解約を予約しました。",
+    "zh": "已预约取消订阅。"
+  },
+  "자동 결제 해지": {
+    "en": "Cancel automatic payments",
+    "ja": "自動決済を解約",
+    "zh": "取消自动扣款"
+  },
+  "월": {
+    "en": "month",
+    "ja": "月",
+    "zh": "月"
+  },
+  "테스트 카드 등록": {
+    "en": "Register test card",
+    "ja": "テストカード登録",
+    "zh": "注册测试卡"
+  },
+  "카드 등록하고 구독 준비": {
+    "en": "Register card for subscription",
+    "ja": "カード登録・購読準備",
+    "zh": "注册卡片准备订阅"
+  },
+  "검수": {
+    "en": "Review",
+    "ja": "審査",
+    "zh": "审核"
+  },
+  "편집·승인": {
+    "en": "Edit / approve",
+    "ja": "編集・承認",
+    "zh": "编辑并批准"
+  },
+  "JSON 형식을 확인해 주세요.": {
+    "en": "Check the JSON format.",
+    "ja": "JSON形式を確認してください。",
+    "zh": "请检查JSON格式。"
+  },
+  "검수 내용 저장": {
+    "en": "Save review",
+    "ja": "審査を保存",
+    "zh": "保存审核"
+  },
+  "등록 교재": {
+    "en": "Registered books",
+    "ja": "登録教材",
+    "zh": "已注册教材"
+  },
+  "새 교재": {
+    "en": "New book",
+    "ja": "新しい教材",
+    "zh": "新建教材"
+  },
+  "내보내기": {
+    "en": "Export",
+    "ja": "エクスポート",
+    "zh": "导出"
+  },
+  "JSON 가져오기": {
+    "en": "Import JSON",
+    "ja": "JSON読み込み",
+    "zh": "导入JSON"
+  },
+  "편집": {
+    "en": "Edit",
+    "ja": "編集",
+    "zh": "编辑"
+  },
+  "교재 JSON": {
+    "en": "Book JSON",
+    "ja": "教材JSON",
+    "zh": "教材JSON"
+  },
+  "저장하고 목록에 공개": {
+    "en": "Save and publish to catalog",
+    "ja": "保存して一覧に公開",
+    "zh": "保存并发布到目录"
+  },
+  "해당 문제은행 열기": {
+    "en": "Open question bank",
+    "ja": "問題バンクを開く",
+    "zh": "打开题库"
+  },
+  "검토 결과를 입력하세요": {
+    "en": "Enter review outcome",
+    "ja": "審査結果を入力",
+    "zh": "输入审核结果"
+  },
+  "검토 완료": {
+    "en": "Complete review",
+    "ja": "審査完了",
+    "zh": "完成审核"
+  },
+  "접수된 신고가 없습니다.": {
+    "en": "No reports received.",
+    "ja": "報告はありません。",
+    "zh": "暂无报告。"
+  },
+  "AI 호출 기록": {
+    "en": "AI request log",
+    "ja": "AIリクエスト記録",
+    "zh": "AI请求记录"
+  },
+  "시각": {
+    "en": "Time",
+    "ja": "日時",
+    "zh": "时间"
+  },
+  "용도": {
+    "en": "Purpose",
+    "ja": "用途",
+    "zh": "用途"
+  },
+  "모델": {
+    "en": "Model",
+    "ja": "モデル",
+    "zh": "模型"
+  },
+  "입력 / 출력": {
+    "en": "Input / output",
+    "ja": "入力 / 出力",
+    "zh": "输入 / 输出"
+  },
+  "추정 USD": {
+    "en": "Estimated USD",
+    "ja": "推定USD",
+    "zh": "估算美元"
+  },
+  "선택 학습자 작업": {
+    "en": "Selected learner jobs",
+    "ja": "選択した学習者のタスク",
+    "zh": "所选学生的任务"
+  },
+  "· 승인": {
+    "en": "· approved",
+    "ja": "・承認",
+    "zh": "· 已批准"
+  },
+  "/ 대기": {
+    "en": "/ pending",
+    "ja": "/ 待機",
+    "zh": "/ 待审核"
+  },
+  "닉네임": {
+    "en": "Nickname",
+    "ja": "ニックネーム",
+    "zh": "昵称"
+  },
+  "보호자 UID": {
+    "en": "Guardian UID",
+    "ja": "保護者UID",
+    "zh": "家长UID"
+  },
+  "유료 이용 종료": {
+    "en": "Paid access ends",
+    "ja": "有料利用終了",
+    "zh": "付费期限"
+  },
+  "체험": {
+    "en": "Trial",
+    "ja": "体験",
+    "zh": "试用"
+  },
+  "· 해지 예약": {
+    "en": "· cancellation scheduled",
+    "ja": "・解約予約済み",
+    "zh": "· 已预约取消"
+  },
+  "관리자 역할 지정": {
+    "en": "Assign administrator role",
+    "ja": "管理者権限の設定",
+    "zh": "设置管理员角色"
+  },
+  "Google 계정 UID": {
+    "en": "Google account UID",
+    "ja": "GoogleアカウントUID",
+    "zh": "Google账号UID"
+  },
+  "역할": {
+    "en": "Role",
+    "ja": "権限",
+    "zh": "角色"
+  },
+  "역할 저장": {
+    "en": "Save role",
+    "ja": "権限を保存",
+    "zh": "保存角色"
+  },
+  "학습·사용량 설정": {
+    "en": "Learning and usage settings",
+    "ja": "学習・使用量設定",
+    "zh": "学习与用量设置"
+  },
+  "과목별 새 문제 상한": {
+    "en": "New questions per subject",
+    "ja": "科目別の新規問題上限",
+    "zh": "每科新题上限"
+  },
+  "하루 전체 문제 상한": {
+    "en": "Total daily question limit",
+    "ja": "1日の問題数上限",
+    "zh": "每日总题数上限"
+  },
+  "보상 최소 풀이 시간(초)": {
+    "en": "Minimum reward time (seconds)",
+    "ja": "報酬の最低解答時間（秒）",
+    "zh": "获得奖励的最短答题时间（秒）"
+  },
+  "개념별 진도 최소 새 문제": {
+    "en": "Minimum new questions per concept",
+    "ja": "概念別の進度に必要な新規問題数",
+    "zh": "每个概念推进所需新题数"
+  },
+  "월 구독료(원)": {
+    "en": "Monthly price (KRW)",
+    "ja": "月額料金（ウォン）",
+    "zh": "月费（韩元）"
+  },
+  "계정당 AI 일일 호출 한도": {
+    "en": "Daily AI requests per account",
+    "ja": "アカウント別の1日AI利用上限",
+    "zh": "每个账号每日AI请求上限"
+  },
+  "설정 저장": {
+    "en": "Save settings",
+    "ja": "設定を保存",
+    "zh": "保存设置"
+  },
+  "작업": {
+    "en": "Action",
+    "ja": "操作",
+    "zh": "操作"
+  },
+  "대상": {
+    "en": "Target",
+    "ja": "対象",
+    "zh": "对象"
+  },
+  "배움이 모험이 되는 곳.": {
+    "en": "Where learning becomes an adventure.",
+    "ja": "学びが冒険になる場所。",
+    "zh": "让学习成为冒险。"
+  },
+  "함께, 한 걸음씩.": {
+    "en": "Together, one step at a time.",
+    "ja": "一緒に、一歩ずつ。",
+    "zh": "一起，一步一步。"
+  },
+  "국어부터 과학까지, 다섯 명의 동료와": {
+    "en": "Five companions, from Korean to science.",
+    "ja": "国語から科学まで、5人の仲間と",
+    "zh": "从语文到科学，五位伙伴同行"
+  },
+  "매일 조금 더 단단한 나를 만나요.": {
+    "en": "Grow a little stronger every day.",
+    "ja": "毎日少しずつ成長しよう。",
+    "zh": "每天成长一点点。"
+  },
+  "다섯 과목을 함께 모험하는 캐릭터 동료들": {
+    "en": "Companions for five subjects",
+    "ja": "5教科を冒険する仲間たち",
+    "zh": "五科冒险伙伴"
+  },
+  "오늘의 작은 도전이 내일의 실력으로.": {
+    "en": "Today's small challenge builds tomorrow's skills.",
+    "ja": "今日の挑戦が明日の力に。",
+    "zh": "今天的小挑战，成就明天的实力。"
+  },
+  "5과목 · 하루 50문제": {
+    "en": "5 subjects · 50 questions a day",
+    "ja": "5教科・1日50問",
+    "zh": "5科·每日50题"
+  },
+  "나만의 속도로 성장": {
+    "en": "Grow at your own pace",
+    "ja": "自分のペースで成長",
+    "zh": "按自己的节奏成长"
+  },
+  "시작 단계": {
+    "en": "Getting started",
+    "ja": "開始手順",
+    "zh": "开始步骤"
+  },
+  "보호자 로그인": {
+    "en": "Guardian sign-in",
+    "ja": "保護者ログイン",
+    "zh": "家长登录"
+  },
+  "2 프로필 설정": {
+    "en": "2 Set up profile",
+    "ja": "2 プロフィール設定",
+    "zh": "2 设置资料"
+  },
+  "작은 배움을 쌓아가는 우리들의 공간, 노학원.": {
+    "en": "Nohakwon, a space for everyday learning.",
+    "ja": "小さな学びを積み重ねる場所、ノハグォン。",
+    "zh": "积累每日所学的空间，Nohakwon。"
+  },
+  "우리의 첫 번째 퀘스트": {
+    "en": "Our first quest",
+    "ja": "最初のクエスト",
+    "zh": "我们的第一个任务"
+  },
+  "보호자 Google 계정으로 로그인하고,": {
+    "en": "Sign in with a guardian's Google account,",
+    "ja": "保護者のGoogleアカウントでログインして、",
+    "zh": "使用家长Google账号登录，"
+  },
+  "아이만의 학습 프로필을 만들어 주세요.": {
+    "en": "and create your child's learning profile.",
+    "ja": "お子さまの学習プロフィールを作成してください。",
+    "zh": "为孩子创建学习资料。"
+  },
+  "이어서 시작하기": {
+    "en": "Continue",
+    "ja": "続ける",
+    "zh": "继续"
+  },
+  "Google 계정을 확인하고 있어요…": {
+    "en": "Checking your Google account…",
+    "ja": "Googleアカウントを確認中…",
+    "zh": "正在验证Google账号…"
+  },
+  "Google로 시작하기": {
+    "en": "Continue with Google",
+    "ja": "Googleで始める",
+    "zh": "通过Google开始"
+  },
+  "로그인 연결을 준비 중이에요. 아래에서 먼저 학습을 체험할 수 있어요.": {
+    "en": "Sign-in is being set up. Try a lesson below.",
+    "ja": "ログイン準備中です。下から学習を体験できます。",
+    "zh": "正在准备登录。您可以先体验学习。"
+  },
+  "먼저 둘러보고 싶다면": {
+    "en": "Want to explore first?",
+    "ja": "まず見てみたい方へ",
+    "zh": "想先看看？"
+  },
+  "로그인 없이 학습 체험": {
+    "en": "Try without signing in",
+    "ja": "ログインせず体験",
+    "zh": "无需登录体验"
+  },
+  "학생 개인 Google 계정 없이 시작할 수 있어요.": {
+    "en": "A student Google account is not required.",
+    "ja": "学生本人のGoogleアカウントは不要です。",
+    "zh": "无需学生个人Google账号。"
+  },
+  "프로필은 보호자 계정에 저장됩니다.": {
+    "en": "Profiles are saved to the guardian account.",
+    "ja": "プロフィールは保護者アカウントに保存されます。",
+    "zh": "资料保存在家长账号中。"
+  },
+  "로그인 후 교재와 문제 풀이 기록은": {
+    "en": "After sign-in, books and learning records",
+    "ja": "ログイン後、教材と学習記録は",
+    "zh": "登录后，教材和答题记录"
+  },
+  "계정에 저장되어 다른 기기에서도 이어집니다.": {
+    "en": "are saved to your account across devices.",
+    "ja": "アカウントに保存され、別の端末でも続けられます。",
+    "zh": "将保存在账号中，可跨设备继续。"
+  },
+  "나의 학습 프로필": {
+    "en": "My learning profile",
+    "ja": "学習プロフィール",
+    "zh": "我的学习资料"
+  },
+  "어떤 모험가로 시작할까요?": {
+    "en": "What kind of adventurer are you?",
+    "ja": "どんな冒険者で始めますか？",
+    "zh": "你想成为怎样的冒险家？"
+  },
+  "실명 대신 좋아하는 닉네임도 좋아요.": {
+    "en": "A nickname is fine instead of your real name.",
+    "ja": "本名ではなくニックネームで大丈夫です。",
+    "zh": "可以用喜欢的昵称代替真名。"
+  },
+  "학습할 학생의 프로필을 설정해 주세요.": {
+    "en": "Set up the learner's profile.",
+    "ja": "学習する学生のプロフィールを設定してください。",
+    "zh": "请设置学生资料。"
+  },
+  "프로필을 저장하지 못했어요.": {
+    "en": "Could not save the profile.",
+    "ja": "プロフィールを保存できませんでした。",
+    "zh": "无法保存资料。"
+  },
+  "예: 별빛 모험가": {
+    "en": "e.g. Starlight Adventurer",
+    "ja": "例：星空の冒険者",
+    "zh": "例如：星光冒险家"
+  },
+  "언제든지 설정에서 바꿀 수 있어요. (최대 20자)": {
+    "en": "Change it in settings anytime. (Up to 20 characters)",
+    "ja": "設定からいつでも変更できます。（20文字まで）",
+    "zh": "可随时在设置中更改。（最多20字）"
+  },
+  "현재 학년": {
+    "en": "Current grade",
+    "ja": "現在の学年",
+    "zh": "当前年级"
+  },
+  "장식과 움직임을 줄여 집중해요.": {
+    "en": "Reduce decoration and motion to focus.",
+    "ja": "装飾や動きを抑えて集中できます。",
+    "zh": "减少装饰和动画，专心学习。"
+  },
+  "등록한 교재와 선택한 학년·단원에 맞춰": {
+    "en": "Based on your book, grade and selected unit,",
+    "ja": "登録教材と選択した学年・単元に合わせて、",
+    "zh": "根据教材、年级和所选单元，"
+  },
+  "검증된 문제를 배정합니다.": {
+    "en": "you receive verified questions.",
+    "ja": "検証済みの問題を出題します。",
+    "zh": "分配已验证的题目。"
+  },
+  "프로필 저장 중…": {
+    "en": "Saving profile…",
+    "ja": "プロフィールを保存中…",
+    "zh": "正在保存资料…"
+  },
+  "프로필 저장하기": {
+    "en": "Save profile",
+    "ja": "プロフィールを保存",
+    "zh": "保存资料"
+  },
+  "나의 모험 시작하기": {
+    "en": "Start my adventure",
+    "ja": "冒険を始める",
+    "zh": "开始我的冒险"
+  },
+  "성취기준·개념": {
+    "en": "Standards and concepts",
+    "ja": "学習基準・概念",
+    "zh": "课程标准与概念"
+  },
+  "리포트·결제": {
+    "en": "Reports and billing",
+    "ja": "レポート・決済",
+    "zh": "报告与付款"
+  },
+  "학습자 선택": {
+    "en": "Select learner",
+    "ja": "学習者を選択",
+    "zh": "选择学生"
+  },
+  "단가 미확인": {
+    "en": "Price unavailable",
+    "ja": "単価未確認",
+    "zh": "单价未确认"
+  },
+  "학생 Google 계정 연결": {
+    "en": "Link student Google account",
+    "ja": "学生のGoogleアカウントを連携",
+    "zh": "关联学生Google账号"
+  },
+  "학생 Google 이메일": {
+    "en": "Student Google email",
+    "ja": "学生のGoogleメール",
+    "zh": "学生Google邮箱"
+  },
+  "24시간 초대 코드 만들기": {
+    "en": "Create 24-hour invite code",
+    "ja": "24時間の招待コードを作成",
+    "zh": "创建24小时邀请码"
+  },
+  "학생 계정 연결 해제": {
+    "en": "Unlink student account",
+    "ja": "学生アカウントの連携解除",
+    "zh": "解除学生账号关联"
+  },
+  "연결 승인": {
+    "en": "Approve link",
+    "ja": "連携を承認",
+    "zh": "批准关联"
+  },
+  "거절": {
+    "en": "Reject",
+    "ja": "拒否",
+    "zh": "拒绝"
+  },
+  "연결 요청 새로고침": {
+    "en": "Refresh link requests",
+    "ja": "連携申請を更新",
+    "zh": "刷新关联请求"
+  },
+  "학생 계정으로 초대 코드 입력": {
+    "en": "Enter a student invite code",
+    "ja": "学生の招待コードを入力",
+    "zh": "输入学生邀请码"
+  },
+  "보호자 초대 코드": {
+    "en": "Guardian invite code",
+    "ja": "保護者の招待コード",
+    "zh": "家长邀请码"
+  },
+  "연결 요청": {
+    "en": "Request access",
+    "ja": "連携を申請",
+    "zh": "申请关联"
+  },
+  "승인 후 이어서 시작": {
+    "en": "Continue after approval",
+    "ja": "承認後に続ける",
+    "zh": "批准后继续"
+  },
+  "학생 학습 계정": {
+    "en": "Student learning account",
+    "ja": "学生の学習アカウント",
+    "zh": "学生学习账号"
+  },
+  "정기 작업": {
+    "en": "Scheduled tasks",
+    "ja": "定期タスク",
+    "zh": "定时任务"
+  },
+  "마지막 실행:": {
+    "en": "Last run:",
+    "ja": "最終実行：",
+    "zh": "上次执行："
+  },
+  "실행 기록 없음": {
+    "en": "No runs yet",
+    "ja": "実行記録なし",
+    "zh": "暂无执行记录"
+  },
+  "정기 작업 실행": {
+    "en": "Run scheduled tasks",
+    "ja": "定期タスクを実行",
+    "zh": "执行定时任务"
+  },
+  "주간 리포트 재생성": {
+    "en": "Regenerate weekly report",
+    "ja": "週間レポートを再生成",
+    "zh": "重新生成周报"
+  },
+  "체험 기간 연장": {
+    "en": "Extend trial",
+    "ja": "体験期間を延長",
+    "zh": "延长试用期"
+  },
+  "최근 답안 50개": {
+    "en": "50 recent answers",
+    "ja": "最近の解答50件",
+    "zh": "最近50条答题记录"
+  },
+  "구독·결제 내역": {
+    "en": "Subscription and payments",
+    "ja": "購読・決済履歴",
+    "zh": "订阅与付款记录"
+  },
+  "결제 내역이 없습니다.": {
+    "en": "No payment history.",
+    "ja": "決済履歴はありません。",
+    "zh": "暂无付款记录。"
+  },
+  "계정 삭제 요청": {
+    "en": "Account deletion requests",
+    "ja": "アカウント削除申請",
+    "zh": "账号删除请求"
+  },
+  "검토 메모 저장": {
+    "en": "Save review note",
+    "ja": "審査メモを保存",
+    "zh": "保存审核备注"
+  },
+  "삭제 요청이 없습니다.": {
+    "en": "No deletion requests.",
+    "ja": "削除申請はありません。",
+    "zh": "暂无删除请求。"
+  },
+  "새 개념": {
+    "en": "New concept",
+    "ja": "新しい概念",
+    "zh": "新概念"
+  },
+  "개념 편집": {
+    "en": "Edit concept",
+    "ja": "概念を編集",
+    "zh": "编辑概念"
+  },
+  "개념 JSON": {
+    "en": "Concept JSON",
+    "ja": "概念JSON",
+    "zh": "概念JSON"
+  },
+  "개념 저장": {
+    "en": "Save concept",
+    "ja": "概念を保存",
+    "zh": "保存概念"
+  },
+  "개념을 저장했어요.": {
+    "en": "Concept saved.",
+    "ja": "概念を保存しました。",
+    "zh": "已保存概念。"
+  },
+  "국어": {
+    "en": "Korean",
+    "ja": "国語",
+    "zh": "语文"
+  },
+  "영어": {
+    "en": "English",
+    "ja": "英語",
+    "zh": "英语"
+  },
+  "수학": {
+    "en": "Math",
+    "ja": "数学",
+    "zh": "数学"
+  },
+  "사회": {
+    "en": "Social studies",
+    "ja": "社会",
+    "zh": "社会"
+  },
+  "과학": {
+    "en": "Science",
+    "ja": "科学",
+    "zh": "科学"
+  },
+  "체험 {0}일 남음": {
+    "en": "{0} trial days left",
+    "ja": "体験残り{0}日",
+    "zh": "试用剩余{0}天"
+  },
+  "중학교 {0}학년": {
+    "en": "Middle school grade {0}",
+    "ja": "中学{0}年",
+    "zh": "初中{0}年级"
+  },
+  "{0}문제": {
+    "en": "{0} questions",
+    "ja": "{0}問",
+    "zh": "{0}题"
+  },
+  "{0}단계": {
+    "en": "Level {0}",
+    "ja": "レベル{0}",
+    "zh": "等级{0}"
+  },
+  "{0}문제 완료": {
+    "en": "{0} questions completed",
+    "ja": "{0}問完了",
+    "zh": "已完成{0}题"
+  },
+  "별빛 배지": {
+    "en": "Starlight badge",
+    "ja": "星光バッジ",
+    "zh": "星光徽章"
+  },
+  "숲의 수호자": {
+    "en": "Forest guardian",
+    "ja": "森の守護者",
+    "zh": "森林守护者"
+  },
+  "오로라 탐험가": {
+    "en": "Aurora explorer",
+    "ja": "オーロラ探検家",
+    "zh": "极光探险家"
+  },
+  "검증 통과 {0}문항 · 검수 대기 {1}문항": {
+    "en": "{0} verified · {1} awaiting review",
+    "ja": "検証済み{0}問・審査待ち{1}問",
+    "zh": "{0}题已验证·{1}题待审核"
+  },
+  "{0}자 본문": {
+    "en": "{0} characters",
+    "ja": "本文{0}文字",
+    "zh": "正文{0}字"
+  },
+  "{0} 개념을 먼저 복습하고 새 단원으로 이어가세요.": {
+    "en": "Review {0} before starting a new unit.",
+    "ja": "{0}を復習してから次の単元に進みましょう。",
+    "zh": "先复习{0}，再进入新单元。"
+  },
+  "체험 마지막 날이에요. 주간 평가와 리포트로 배운 내용을 확인해 보세요.": {
+    "en": "It is the last trial day. Review your progress with an assessment and report.",
+    "ja": "体験最終日です。評価とレポートで学習を振り返りましょう。",
+    "zh": "今天是试用最后一天。通过测评和报告回顾学习。"
+  },
+  "체험 마무리 평가": {
+    "en": "Trial assessment",
+    "ja": "体験のまとめ評価",
+    "zh": "试用总结测评"
+  }
+}

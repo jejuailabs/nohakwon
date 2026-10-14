@@ -12,7 +12,7 @@ export function mutationGuard(request: Request) {
   const expected = process.env.APP_ORIGIN || `${url.protocol}//${request.headers.get("host") || url.host}`;
   assertSameOrigin(request.headers.get("origin"), expected, request.headers.get("x-nohakwon-client"));
 }
-export async function bodyJson(request: Request): Promise<unknown> {
+export async function bodyJson(request: Request, maximum = 16_384): Promise<unknown> {
   if (!request.headers.get("content-type")?.startsWith("application/json")) throw new AccountError(415, "JSON 요청이 필요합니다.");
   const reader = request.body?.getReader();
   if (!reader) throw new AccountError(400, "요청 내용이 없습니다.");
@@ -22,7 +22,7 @@ export async function bodyJson(request: Request): Promise<unknown> {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.byteLength;
-    if (size > 16_384) { await reader.cancel(); throw new AccountError(413, "요청 내용이 너무 큽니다."); }
+    if (size > maximum) { await reader.cancel(); throw new AccountError(413, "요청 내용이 너무 큽니다."); }
     chunks.push(value);
   }
   try { return JSON.parse(Buffer.concat(chunks).toString("utf8")); }
