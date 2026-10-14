@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // All application data goes through the authorized server endpoints.
+    // Admin SDK bypasses these rules; each endpoint must validate ownership.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
