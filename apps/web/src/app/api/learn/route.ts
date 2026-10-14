@@ -4,6 +4,7 @@ import {
   createAssignment,
   openQuestion,
   answerQuestion,
+  assessQuestion,
   updateNote,
   updateSettings,
   replenishQuestions,
@@ -51,6 +52,8 @@ export async function POST(request: Request) {
         );
       case "answer":
         return json(await answerQuestion(user.uid, v));
+      case "assess":
+        return json(await assessQuestion(user.uid, v));
       case "note":
         return json(await updateNote(user.uid, v));
       case "settings":

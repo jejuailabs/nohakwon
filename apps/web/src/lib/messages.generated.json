@@ -2228,5 +2228,55 @@
     "en": "Trial assessment",
     "ja": "体験のまとめ評価",
     "zh": "试用总结测评"
+  },
+  "정답과 해설을 확인한 뒤 이해도를 선택해 주세요.": {
+    "en": "Check the answer and explanation, then rate your understanding.",
+    "ja": "正解と解説を確認してから、理解度を選んでください。",
+    "zh": "查看答案和解析后，请选择理解程度。"
+  },
+  "해설을 읽어 봤나요? 지금 얼마나 이해했나요?": {
+    "en": "After reading the explanation, how well do you understand?",
+    "ja": "解説を読んで、今どのくらい理解できましたか？",
+    "zh": "看完解析后，现在理解了多少？"
+  },
+  "해설 확인 후 이해도": {
+    "en": "Understanding after the explanation",
+    "ja": "解説確認後の理解度",
+    "zh": "查看解析后的理解程度"
+  },
+  "이제 스스로 풀 수 있어요": {
+    "en": "I can solve it on my own now",
+    "ja": "今なら自分で解けます",
+    "zh": "现在能自己解答了"
+  },
+  "한 번 더 복습하고 싶어요": {
+    "en": "I would like to review it again",
+    "ja": "もう一度復習したいです",
+    "zh": "想再复习一次"
+  },
+  "해설을 봐도 아직 어려워요": {
+    "en": "It is still difficult after reading the explanation",
+    "ja": "解説を読んでもまだ難しいです",
+    "zh": "看了解析还是觉得难"
+  },
+  "이해도를 저장하고 있어요": {
+    "en": "Saving your understanding",
+    "ja": "理解度を保存しています",
+    "zh": "正在保存理解程度"
+  },
+  "이해도 저장": {
+    "en": "Save understanding",
+    "ja": "理解度を保存",
+    "zh": "保存理解程度"
+  },
+  "이해도를 저장하면 학습 기록과 복습 일정에 반영돼요.": {
+    "en": "Saving updates your learning record and review schedule.",
+    "ja": "保存すると学習記録と復習予定に反映されます。",
+    "zh": "保存后将更新学习记录和复习计划。"
+  },
+  "정답과 해설을 먼저 확인해 주세요.": {
+    "en": "Please check the answer and explanation first.",
+    "ja": "先に正解と解説を確認してください。",
+    "zh": "请先查看答案和解析。"
   }
 }

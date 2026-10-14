@@ -4,6 +4,7 @@ import {
   parseBook,
   parseQuestion,
   publicQuestion,
+  checkAnswer,
   gradeAnswer,
   reviewInterval,
   makeReport,
@@ -53,6 +54,22 @@ test("assigned question payload never exposes answer, explanation or evidence", 
   assert.equal("explanation" in publicQuestion(q), false);
   assert.equal("evidence" in publicQuestion(q), false);
   assert.equal(publicQuestion(q).choices.length, 4);
+});
+test("answer checking is independent of understanding and validates the answer type", () => {
+  assert.equal(checkAnswer(q, 2), true);
+  assert.equal(checkAnswer(q, 0), false);
+  assert.throws(() => checkAnswer(q, "2"));
+  assert.throws(() => checkAnswer(q, 4));
+  const short = {
+    ...q,
+    kind: "short" as const,
+    answer: "x = 3",
+    acceptable: ["3"],
+  };
+  assert.equal(checkAnswer(short, " X=3 "), true);
+  assert.equal(checkAnswer(short, "3"), true);
+  assert.equal(checkAnswer(short, "4"), false);
+  assert.throws(() => checkAnswer(short, ""));
 });
 test("book range and duplicate units cannot be forged", () => {
   const b = {

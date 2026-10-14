@@ -11,6 +11,7 @@ async function main() {
     createAssignment,
     openQuestion,
     answerQuestion,
+    assessQuestion,
     queueJob,
     runJob,
     updateSettings,
@@ -68,6 +69,14 @@ async function main() {
     );
     check("answer before opening rejected");
     await openQuestion(uid, a.id, q.id);
+    await assert.rejects(() =>
+      assessQuestion(uid, {
+        assignmentId: a.id,
+        questionId: q.id,
+        confidence: "known",
+      }),
+    );
+    check("understanding cannot be saved before the answer is revealed");
     const assignmentRef = student.collection("assignments").doc(a.id);
     const assignment = (await assignmentRef.get()).data()!;
     await assignmentRef.update({
@@ -80,17 +89,86 @@ async function main() {
       assignmentId: a.id,
       questionId: q.id,
       answer: 0,
-      confidence: "unknown",
     };
-    const results = await Promise.all([
+    const feedbacks = await Promise.all([
       answerQuestion(uid, input),
       answerQuestion(uid, input),
       answerQuestion(uid, input),
     ]);
+    assert.deepEqual(feedbacks[0], feedbacks[1]);
+    assert.deepEqual(feedbacks[0], feedbacks[2]);
+    assert.equal(typeof feedbacks[0].correct, "boolean");
+    assert.ok(feedbacks[0].explanation);
+    assert.equal("confidence" in feedbacks[0], false);
+    assert.equal("points" in feedbacks[0], false);
+    assert.equal((await student.collection("attempts").get()).size, 0);
+    assert.equal((await student.collection("ledger").get()).size, 0);
+    assert.equal(
+      (await student.collection("state").doc("learning").get()).exists,
+      false,
+    );
+    assert.equal(
+      (await student.collection("days").doc(a.date).get()).data()?.count,
+      0,
+    );
+    check(
+      "answer reveals explanation without understanding, progress or rewards",
+    );
+    assert.deepEqual(
+      await answerQuestion(uid, { ...input, answer: 3 }),
+      feedbacks[0],
+    );
+    const resumed = await createAssignment(uid, {
+      mode: "daily",
+      bookId: book.id,
+    });
+    assert.deepEqual(resumed.answers[q.id], feedbacks[0]);
+    assert.equal(resumed.results[q.id], undefined);
+    assert.deepEqual(
+      (await openQuestion(uid, a.id, q.id)).answer,
+      feedbacks[0],
+    );
+    check("revealed answer is locked and resumes after reopening");
+    const assessment = {
+      assignmentId: a.id,
+      questionId: q.id,
+      confidence: "unknown",
+    };
+    await assert.rejects(() =>
+      assessQuestion(uid, { ...assessment, confidence: "invalid" }),
+    );
+    // The second phase must use the frozen solving time, not time spent reading.
+    await assignmentRef.update({
+      opened: {
+        ...assignment.opened,
+        [q.id]: new Date(Date.now() - 120000).toISOString(),
+      },
+    });
+    const results = await Promise.all([
+      assessQuestion(uid, { ...assessment, answer: 3, seconds: 999 }),
+      assessQuestion(uid, assessment),
+      assessQuestion(uid, assessment),
+    ]);
     assert.equal(new Set(results.map((r) => r.id)).size, 1);
+    assert.equal(results[0].answer, feedbacks[0].answer);
+    assert.equal(results[0].seconds, feedbacks[0].seconds);
+    assert.equal(results[0].at, feedbacks[0].at);
+    assert.equal(results[0].confidence, "unknown");
+    assert.equal(results[0].points, 3);
     assert.equal((await student.collection("attempts").get()).size, 1);
     assert.equal((await student.collection("ledger").get()).size, 1);
-    check("parallel answer creates one attempt and one point ledger");
+    assert.equal(
+      (await student.collection("days").doc(a.date).get()).data()?.count,
+      1,
+    );
+    assert.deepEqual(
+      await assessQuestion(uid, { ...assessment, confidence: "known" }),
+      results[0],
+    );
+    assert.deepEqual((await openQuestion(uid, a.id, q.id)).result, results[0]);
+    check(
+      "parallel understanding saves one attempt and reward with locked answer and solving time",
+    );
     const isolatedRef = db.collection("students").doc(sid + "-isolated");
     await isolatedRef.set({
       guardianUid: uid,
@@ -105,9 +183,14 @@ async function main() {
       "a second learner starts without another learner's concepts or points",
     );
     await assert.rejects(() => answerQuestion(other, input));
-    check("cross-owner grading blocked");
+    await assert.rejects(() => assessQuestion(other, assessment));
+    check("cross-owner answer and understanding submissions blocked");
     await assert.rejects(() => updateSettings(uid, { cosmetic: "aurora" }));
     check("cosmetic cannot overspend");
+    if (process.argv.includes("--learning-only")) {
+      console.log("Completed " + passed + " learning integration checks");
+      return;
+    }
     const source =
       "일차방정식은 미지수의 차수가 1인 방정식이다. 등식의 양변에 같은 수를 더하거나 빼도 등식은 성립한다. 등식의 양변에 0이 아닌 같은 수를 곱하거나 나누어도 등식은 성립한다. 2x + 3 = 11에서 양변에서 3을 빼면 2x = 8이고 양변을 2로 나누면 x = 4이다. 해는 방정식을 참이 되게 하는 미지수의 값이다. 구한 해는 원래 방정식에 대입하여 검산한다. 이항할 때는 항의 부호가 바뀐다.";
     const extracted = await extractMaterial(

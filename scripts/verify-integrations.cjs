@@ -1,4 +1,4 @@
-// Explicit opt-in: this creates disposable Firestore fixtures and makes paid AI requests.
+// Explicit opt-in: disposable Firestore fixtures; --learning-only skips paid AI.
 const { spawnSync } = require("node:child_process");
 const path = require("node:path");
 if (!process.argv.includes("--live")) {
@@ -15,6 +15,7 @@ if (!process.argv.includes("--live")) {
       "--tsconfig",
       "apps/web/tsconfig.json",
       "scripts/verify-integrations.ts",
+      ...process.argv.slice(2),
     ],
     {
       stdio: "inherit",

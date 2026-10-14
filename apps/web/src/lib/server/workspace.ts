@@ -16,6 +16,7 @@ import {
   text,
   integer,
   publicQuestion,
+  checkAnswer,
   gradeAnswer,
   conceptKey,
   COSMETICS,
@@ -24,6 +25,7 @@ import {
   type Entitlement,
   type BankQuestion,
   type Result,
+  type AnswerFeedback,
   type Job,
   type LearnMode,
   type LearningConfig,
@@ -386,6 +388,7 @@ type Assignment = {
   mode: LearnMode;
   questions: BankQuestion[];
   results: Record<string, Result>;
+  answers?: Record<string, AnswerFeedback>;
   opened: Record<string, string>;
   createdAt: string;
 };
@@ -396,6 +399,7 @@ function assignmentView(a: Assignment) {
     mode: a.mode,
     questions: a.questions.map(publicQuestion),
     results: a.results,
+    answers: a.answers ?? {},
   };
 }
 export async function createAssignment(uid: string, raw: unknown) {
@@ -661,6 +665,7 @@ export async function openQuestion(
     return {
       openedAt: opened[questionId],
       result: a.results[questionId] ?? null,
+      answer: a.answers?.[questionId] ?? null,
     };
   });
 }
@@ -671,8 +676,57 @@ export async function answerQuestion(uid: string, raw: unknown) {
     answer =
       typeof input.answer === "string"
         ? text(input.answer, 200, "답안")
-        : integer(input.answer, 0, 3, "답안"),
+        : integer(input.answer, 0, 3, "답안");
+  const { ref } = await studentFor(uid),
+    aRef = ref.collection("assignments").doc(aid),
+    now = new Date();
+  return adminDb().runTransaction(async (tx) => {
+    const [aSnap, liveQuestion] = await Promise.all([
+      tx.get(aRef),
+      tx.get(ref.collection("questions").doc(qid)),
+    ]);
+    const a = aSnap.data() as Assignment | undefined,
+      q = a?.questions.find((q) => q.id === qid);
+    if (!a || !q) throw new AccountError(404, "배정된 문제가 없어요.");
+    // Replays return the locked answer, even if another tab submits a new choice.
+    if (a.results[qid]) return a.results[qid];
+    if (a.answers?.[qid]) return a.answers[qid];
+    if (liveQuestion.data()?.status !== "approved")
+      throw new AccountError(
+        409,
+        "검수 중인 문항입니다. 교재 관리에서 다른 학습을 선택해 주세요.",
+      );
+    if (a.date !== seoulDate(now))
+      throw new AccountError(
+        409,
+        "날짜가 바뀌었어요. 오늘 학습을 다시 열어 주세요.",
+      );
+    if (!a.opened[qid]) throw new AccountError(409, "문제를 먼저 열어 주세요.");
+    const feedback: AnswerFeedback = {
+      answer,
+      correctAnswer: q.answer,
+      correct: checkAnswer(q, answer),
+      explanation: q.explanation,
+      seconds: Math.max(
+        0,
+        Math.min(
+          3600,
+          Math.floor((now.getTime() - Date.parse(a.opened[qid])) / 1000),
+        ),
+      ),
+      at: now.toISOString(),
+    };
+    tx.update(aRef, { answers: { ...a.answers, [qid]: feedback } });
+    return feedback;
+  });
+}
+export async function assessQuestion(uid: string, raw: unknown) {
+  const input = object(raw),
+    aid = id(input.assignmentId),
+    qid = id(input.questionId),
     confidence = input.confidence as Confidence;
+  if (!["known", "unsure", "unknown"].includes(confidence))
+    throw new AccountError(400, "이해도를 선택해 주세요.");
   const { ref } = await studentFor(uid),
     db = adminDb(),
     aRef = ref.collection("assignments").doc(aid),
@@ -704,13 +758,10 @@ export async function answerQuestion(uid: string, raw: unknown) {
         "날짜가 바뀌었어요. 오늘 학습을 다시 열어 주세요.",
       );
     if (!a.opened[qid]) throw new AccountError(409, "문제를 먼저 열어 주세요.");
-    const seconds = Math.max(
-        0,
-        Math.min(
-          3600,
-          Math.floor((now.getTime() - Date.parse(a.opened[qid])) / 1000),
-        ),
-      ),
+    const feedback = a.answers?.[qid];
+    if (!feedback)
+      throw new AccountError(409, "정답과 해설을 먼저 확인해 주세요.");
+    const { answer, seconds } = feedback,
       state = loadLearningState(sSnap.data()),
       previous = state.concepts[conceptKey(q)],
       out = gradeAnswer(
@@ -744,7 +795,7 @@ export async function answerQuestion(uid: string, raw: unknown) {
       concept: q.concept,
       subject: q.subject,
       date,
-      at: now.toISOString(),
+      at: feedback.at,
       answer,
       correctAnswer: q.answer,
       correct: out.correct,

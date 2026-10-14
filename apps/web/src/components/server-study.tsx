@@ -1,5 +1,5 @@
 "use client";
-import { Localize, LocaleProvider, PersistedLocale } from "./localize";
+import { Localize } from "./localize";
 import { useEffect, useState, useRef } from "react";
 import { CheckCircle2, ChevronRight, X, Bookmark, Flag } from "lucide-react";
 import type { Confidence } from "@nohakwon/core";
@@ -8,6 +8,7 @@ import {
   answerLabel,
   type ServedQuestion,
   type Result,
+  type AnswerFeedback,
   type LearnMode,
 } from "@/lib/learning";
 import { accountRequest } from "./account-provider";
@@ -17,6 +18,7 @@ export type StudyAssignment = {
   mode: LearnMode;
   questions: ServedQuestion[];
   results: Record<string, Result>;
+  answers?: Record<string, AnswerFeedback>;
 };
 export function ServerStudy({
   assignment,
@@ -29,6 +31,7 @@ export function ServerStudy({
 }) {
   const dialog = useRef<HTMLElement>(null);
   const [results, setResults] = useState(assignment.results),
+    [answers, setAnswers] = useState(assignment.answers ?? {}),
     [index, setIndex] = useState(() =>
       Math.max(
         0,
@@ -44,18 +47,27 @@ export function ServerStudy({
       assignment.questions.every((q) => assignment.results[q.id]),
     );
   const q = assignment.questions[index],
-    result = results[q.id];
+    result = results[q.id],
+    feedback = result ?? answers[q.id],
+    selectedAnswer = feedback?.answer ?? choice;
   useEffect(() => {
     let active = true;
     setOpened(false);
     setError("");
-    accountRequest("/api/learn", "POST", {
-      action: "open",
-      assignmentId: assignment.id,
-      questionId: q.id,
-    })
-      .then(() => {
-        if (active) setOpened(true);
+    accountRequest<{ result: Result | null; answer: AnswerFeedback | null }>(
+      "/api/learn",
+      "POST",
+      {
+        action: "open",
+        assignmentId: assignment.id,
+        questionId: q.id,
+      },
+    )
+      .then((r) => {
+        if (!active) return;
+        if (r.result) setResults((prev) => ({ ...prev, [q.id]: r.result! }));
+        if (r.answer) setAnswers((prev) => ({ ...prev, [q.id]: r.answer! }));
+        setOpened(true);
       })
       .catch((e) => {
         if (active) setError(e.message);
@@ -93,15 +105,32 @@ export function ServerStudy({
     };
   }, [onClose]);
   async function submit() {
-    if (choice === null || !confidence) return;
+    if (choice === null || choice === "" || feedback || busy || !opened) return;
     setBusy(true);
     setError("");
     try {
-      const r = await accountRequest<Result>("/api/learn", "POST", {
+      const r = await accountRequest<AnswerFeedback>("/api/learn", "POST", {
         action: "answer",
         assignmentId: assignment.id,
         questionId: q.id,
         answer: choice,
+      });
+      setAnswers((prev) => ({ ...prev, [q.id]: r }));
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function assess() {
+    if (!feedback || !confidence || result || busy || !opened) return;
+    setBusy(true);
+    setError("");
+    try {
+      const r = await accountRequest<Result>("/api/learn", "POST", {
+        action: "assess",
+        assignmentId: assignment.id,
+        questionId: q.id,
         confidence,
       });
       setResults((prev) => ({ ...prev, [q.id]: r }));
@@ -113,6 +142,7 @@ export function ServerStudy({
     }
   }
   function next() {
+    if (!result) return;
     const nextIndex = assignment.questions.findIndex(
       (q, i) => i > index && !results[q.id],
     );
@@ -199,8 +229,10 @@ export function ServerStudy({
                 <label className="short-answer">
                   답안
                   <input
-                    value={typeof choice === "string" ? choice : ""}
-                    disabled={!!result || busy || !opened}
+                    value={
+                      typeof selectedAnswer === "string" ? selectedAnswer : ""
+                    }
+                    disabled={!!feedback || busy || !opened}
                     maxLength={200}
                     onChange={(e) => setChoice(e.target.value)}
                     placeholder="답을 입력해 주세요"
@@ -211,9 +243,9 @@ export function ServerStudy({
                   {q.choices.map((c, i) => (
                     <button
                       key={i}
-                      disabled={!!result || busy || !opened}
-                      aria-pressed={choice === i}
-                      className={`${choice === i ? "selected" : ""} ${result?.correctAnswer === i ? "correct" : ""} ${result && result.answer === i && !result.correct ? "incorrect" : ""}`}
+                      disabled={!!feedback || busy || !opened}
+                      aria-pressed={selectedAnswer === i}
+                      className={`${selectedAnswer === i ? "selected" : ""} ${feedback?.correctAnswer === i ? "correct" : ""} ${feedback && feedback.answer === i && !feedback.correct ? "incorrect" : ""}`}
                       onClick={() => setChoice(i)}
                     >
                       <b>{i + 1}</b>
@@ -222,113 +254,134 @@ export function ServerStudy({
                   ))}
                 </div>
               )}
-              {!result ? (
+              {!feedback ? (
                 <>
-                  <h3 className="confidence-heading">
-                    답을 확인하기 전에, 얼마나 이해했나요?
-                  </h3>
-                  <div className="server-confidence">
-                    {(
-                      [
-                        ["known", "알겠어요", "자신 있게 풀었어요"],
-                        ["unsure", "헷갈려요", "조금 더 생각해 볼래요"],
-                        ["unknown", "모르겠어요", "설명이 필요해요"],
-                      ] as const
-                    ).map(([id, title, desc]) => (
-                      <button
-                        key={id}
-                        className={confidence === id ? "selected" : ""}
-                        aria-pressed={confidence === id}
-                        onClick={() => setConfidence(id)}
-                        disabled={busy}
-                      >
-                        <strong>{title}</strong>
-                        <small>{desc}</small>
-                      </button>
-                    ))}
-                  </div>
                   <button
                     className="primary-button full-width"
                     disabled={
-                      choice === null ||
-                      choice === "" ||
-                      !confidence ||
-                      busy ||
-                      !opened
+                      choice === null || choice === "" || busy || !opened
                     }
                     onClick={() => void submit()}
                   >
                     {busy ? "답안을 저장하고 있어요" : "정답 확인"}
                   </button>
                   <p className="muted small center">
-                    빠르게 맞히는 것보다 솔직한 이해도가 중요해요.
+                    정답과 해설을 확인한 뒤 이해도를 선택해 주세요.
                   </p>
                 </>
               ) : (
                 <div className="server-feedback" aria-live="polite">
                   <span className="tag">
-                    {result.correct ? "정답이에요" : "함께 다시 살펴봐요"} · +
-                    {result.points}P
+                    {feedback.correct ? "정답이에요" : "함께 다시 살펴봐요"}
+                    {result && ` · +${result.points}P`}
                   </span>
                   <h3>
-                    정답: {answerLabel(result.correctAnswer, result.choices)}
+                    정답: {answerLabel(feedback.correctAnswer, q.choices)}
                   </h3>
-                  <p data-localize="off">{result.explanation}</p>
-                  <p className="muted small">
-                    {assignment.mode !== "practice"
-                      ? `다음 복습: ${result.dueDate}`
-                      : "다시 풀기는 복습 일정과 포인트를 바꾸지 않아요."}
-                  </p>
-                  <div className="workspace-actions">
-                    <button
-                      className="secondary-button"
-                      onClick={() =>
-                        void accountRequest("/api/learn", "POST", {
-                          action: "note",
-                          id: result.id,
-                          reason: result.reason,
-                          bookmarked: !result.bookmarked,
-                        })
-                          .then(() =>
-                            setResults((prev) => ({
-                              ...prev,
-                              [q.id]: {
-                                ...result,
-                                bookmarked: !result.bookmarked,
-                              },
-                            })),
-                          )
-                          .catch((e) => setError(e.message))
-                      }
-                    >
-                      <Bookmark size={16} />
-                      {result.bookmarked ? "저장됨" : "오답노트에 저장"}
-                    </button>
-                    <button
-                      className="secondary-button"
-                      onClick={() => {
-                        const reason = window.prompt(
-                          "어떤 부분이 잘못되었나요? (최대 500자)",
-                        );
-                        if (reason)
-                          void accountRequest("/api/disputes", "POST", {
-                            attemptId: result.id,
-                            reason,
-                          })
-                            .then(() =>
-                              setError("문항 검토 요청을 접수했어요."),
-                            )
-                            .catch((e) => setError(e.message));
-                      }}
-                    >
-                      <Flag size={16} />
-                      오류 신고
-                    </button>
-                    <button className="primary-button" onClick={next}>
-                      다음으로
-                      <ChevronRight size={17} />
-                    </button>
-                  </div>
+                  <p data-localize="off">{feedback.explanation}</p>
+                  {!result ? (
+                    <>
+                      <h3 className="confidence-heading">
+                        해설을 읽어 봤나요? 지금 얼마나 이해했나요?
+                      </h3>
+                      <div
+                        className="server-confidence"
+                        role="group"
+                        aria-label="해설 확인 후 이해도"
+                      >
+                        {(
+                          [
+                            ["known", "알겠어요", "이제 스스로 풀 수 있어요"],
+                            ["unsure", "헷갈려요", "한 번 더 복습하고 싶어요"],
+                            [
+                              "unknown",
+                              "모르겠어요",
+                              "해설을 봐도 아직 어려워요",
+                            ],
+                          ] as const
+                        ).map(([id, title, desc]) => (
+                          <button
+                            key={id}
+                            className={confidence === id ? "selected" : ""}
+                            aria-pressed={confidence === id}
+                            onClick={() => setConfidence(id)}
+                            disabled={busy || !opened}
+                          >
+                            <strong>{title}</strong>
+                            <small>{desc}</small>
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        className="primary-button full-width"
+                        disabled={!confidence || busy || !opened}
+                        onClick={() => void assess()}
+                      >
+                        {busy ? "이해도를 저장하고 있어요" : "이해도 저장"}
+                      </button>
+                      <p className="muted small center">
+                        이해도를 저장하면 학습 기록과 복습 일정에 반영돼요.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="muted small">
+                        {assignment.mode !== "practice"
+                          ? `다음 복습: ${result.dueDate}`
+                          : "다시 풀기는 복습 일정과 포인트를 바꾸지 않아요."}
+                      </p>
+                      <div className="workspace-actions">
+                        <button
+                          className="secondary-button"
+                          onClick={() =>
+                            void accountRequest("/api/learn", "POST", {
+                              action: "note",
+                              id: result.id,
+                              reason: result.reason,
+                              bookmarked: !result.bookmarked,
+                            })
+                              .then(() =>
+                                setResults((prev) => ({
+                                  ...prev,
+                                  [q.id]: {
+                                    ...result,
+                                    bookmarked: !result.bookmarked,
+                                  },
+                                })),
+                              )
+                              .catch((e) => setError(e.message))
+                          }
+                        >
+                          <Bookmark size={16} />
+                          {result.bookmarked ? "저장됨" : "오답노트에 저장"}
+                        </button>
+                        <button
+                          className="secondary-button"
+                          onClick={() => {
+                            const reason = window.prompt(
+                              "어떤 부분이 잘못되었나요? (최대 500자)",
+                            );
+                            if (reason)
+                              void accountRequest("/api/disputes", "POST", {
+                                attemptId: result.id,
+                                reason,
+                              })
+                                .then(() =>
+                                  setError("문항 검토 요청을 접수했어요."),
+                                )
+                                .catch((e) => setError(e.message));
+                          }}
+                        >
+                          <Flag size={16} />
+                          오류 신고
+                        </button>
+                        <button className="primary-button" onClick={next}>
+                          다음으로
+                          <ChevronRight size={17} />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
               {error && (

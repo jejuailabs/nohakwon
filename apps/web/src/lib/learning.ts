@@ -94,6 +94,11 @@ export type Result = {
   reason: string;
   bookmarked: boolean;
 };
+// Stored when the answer is revealed; understanding and rewards are saved later.
+export type AnswerFeedback = Pick<
+  Result,
+  "answer" | "correctAnswer" | "correct" | "seconds" | "explanation" | "at"
+>;
 export type ConceptProgress = {
   key: string;
   bookId: string;
@@ -490,6 +495,15 @@ export function reviewInterval(
   if (streak >= 3) n *= 1.2;
   return Math.min(60, Math.max(1, Math.round(n)));
 }
+export function checkAnswer(q: BankQuestion, answer: number | string): boolean {
+  if (q.kind === "short") text(answer, 200, "답안");
+  else integer(answer, 0, q.choices.length - 1, "답안");
+  return q.kind === "short"
+    ? [String(q.answer), ...(q.acceptable ?? [])].some(
+        (a) => normalizeShortAnswer(a) === normalizeShortAnswer(String(answer)),
+      )
+    : answer === q.answer;
+}
 export function gradeAnswer(
   q: BankQuestion,
   previous: ConceptProgress | undefined,
@@ -502,17 +516,9 @@ export function gradeAnswer(
   config = DEFAULT_CONFIG,
   preferences = { baseDifficulty: 2, autoDifficulty: true },
 ) {
-  if (q.kind === "short") text(answer, 200, "답안");
-  else integer(answer, 0, 3, "답안");
   if (!["known", "unsure", "unknown"].includes(confidence))
     throw new AccountError(400, "이해도를 선택해 주세요.");
-  const correct =
-      q.kind === "short"
-        ? [String(q.answer), ...(q.acceptable ?? [])].some(
-            (a) =>
-              normalizeShortAnswer(a) === normalizeShortAnswer(String(answer)),
-          )
-        : answer === q.answer,
+  const correct = checkAnswer(q, answer),
     date = seoulDate(now),
     key = conceptKey(q);
   const reviewStreak =
