@@ -26,6 +26,11 @@ import {
   parseTextbookRecognition,
   type TextbookRecognition,
 } from "@/lib/textbook-recognition";
+import {
+  unitRevision,
+  type UnitPlan,
+  type LearningSkill,
+} from "@/lib/adaptive-learning";
 
 const string = { type: "string" },
   number = { type: "integer" },
@@ -54,6 +59,7 @@ const answerSchema = { type: ["integer", "string"] };
 const qSchema = schema({
   kind: { type: "string", enum: ["mcq", "short"] },
   concept: string,
+  skillType: string,
   prompt: string,
   choices: { type: "array", items: string },
   answer: answerSchema,
@@ -325,41 +331,127 @@ export async function identifyTextbook(
   return result.identities[0];
 }
 
+export async function generateUnitPlan(
+  uid: string,
+  book: Book,
+  unit: Unit,
+  preserveConcepts = false,
+): Promise<UnitPlan> {
+  if (!unit.source.trim())
+    throw new AccountError(422, "학습지도를 만들 단원 본문이 필요해요.");
+  const explicit =
+    preserveConcepts ||
+    !(
+      unit.concepts.length === 1 &&
+      unit.concepts[0].replace(/\s/g, "") === unit.title.replace(/\s/g, "")
+    );
+  const { value } = await aiJson(
+    uid,
+    "unit-plan",
+    `${gradeLabel(book)} ${SUBJECT_NAMES[book.subject]}, 단원 ${unit.title}. 등록한 본문 범위에서 확인해야 할 핵심 개념과 서로 다른 문제 유형을 분석하라. 목차 제목만 넓고 본문은 일부인 경우 본문에 없는 단원을 추측하지 말라. ${explicit ? `기존 문항·학습 기록과 연결할 수 있도록 concept은 반드시 기존 핵심개념 ${JSON.stringify(unit.concepts)} 중 하나를 정확히 사용하고 모든 개념을 포함하라. 세부 학습 차이는 skillType에서 구분하라.` : `핵심개념 ${JSON.stringify(unit.concepts)}은 포괄적인 목차명이다. 본문에 근거한 세부 개념으로 나누라.`} 한 개념에 기본 이해, 적용, 관계 해석 등 내용상 구분되는 유형 1~3개를 정하라. 형식(mcq/short)이나 숫자만 바꾼 것은 유형으로 나누지 말라. 분량에 맞게 총 1~24개 항목을 작성하고 억지로 늘리지 말라. concept과 skillType은 짧은 한국어 이름, evidence는 해당 개념이 등장하는 본문의 짧은 원문 인용이다.\n<material>${unit.source}</material>`,
+    schema({
+      skills: {
+        type: "array",
+        minItems: 1,
+        maxItems: 24,
+        items: schema({
+          concept: explicit ? { type: "string", enum: unit.concepts } : string,
+          skillType: string,
+          evidence: string,
+        }),
+      },
+    }),
+  );
+  const rows = object(value).skills;
+  if (!Array.isArray(rows) || !rows.length || rows.length > 24)
+    throw new AccountError(502, "학습지도 분석 결과를 확인하지 못했어요.");
+  const skills = rows.map((row) => {
+    const r = object(row),
+      quote = text(r.evidence, 1000, "개념 근거");
+    if (!unit.source.replace(/\s+/g, "").includes(quote.replace(/\s+/g, "")))
+      throw new AccountError(
+        502,
+        "본문 근거가 없는 학습지도입니다. 자료를 확인한 뒤 다시 시도해 주세요.",
+      );
+    const concept = text(r.concept, 80, "개념");
+    if (explicit && !unit.concepts.includes(concept))
+      throw new AccountError(
+        502,
+        "학습지도에 등록한 핵심개념과 다른 이름이 있어요. 핵심개념을 확인하고 다시 분석해 주세요.",
+      );
+    return { concept, type: text(r.skillType, 80, "문제 유형") };
+  });
+  if (
+    explicit &&
+    unit.concepts.some((c) => !skills.some((s) => s.concept === c))
+  )
+    throw new AccountError(
+      502,
+      "학습지도에 빠진 핵심개념이 있어요. 본문에 해당 내용이 포함됐는지 확인해 주세요.",
+    );
+  if (new Set(skills.map((s) => JSON.stringify(s))).size !== skills.length)
+    throw new AccountError(
+      502,
+      "학습지도에 중복된 유형이 있어요. 다시 분석해 주세요.",
+    );
+  return {
+    id: `${book.id}:${unit.id}:${unitRevision(book, unit)}`,
+    bookId: book.id,
+    unitId: unit.id,
+    revision: unitRevision(book, unit),
+    skills,
+    origin: "ai",
+    createdAt: new Date().toISOString(),
+  };
+}
+
 export async function generateQuestions(
   uid: string,
   book: Book,
   unit: Unit,
+  request?: { targets: LearningSkill[]; exclude: string[] },
 ): Promise<{ questions: BankQuestion[]; usage: AiUsage }> {
   if (!unit.source.trim())
     throw new AccountError(
       422,
       "맞춤 출제를 위해 이 단원의 본문·학습 내용도 등록해 주세요. 목차만으로 교과서 지문을 추측하지 않습니다.",
     );
+  const targets =
+    request?.targets ??
+    Array.from({ length: 8 }, (_, i) => ({
+      concept: unit.concepts[i % unit.concepts.length],
+      type: "기본 확인",
+    }));
+  const count = Math.min(8, targets.length);
+  if (!count)
+    throw new AccountError(
+      409,
+      "현재 유형에 필요한 새 문제가 충분히 준비되어 있어요.",
+    );
+  const concepts = [...new Set(targets.map((s) => s.concept))];
   const { value, usage } = await aiJson(
     uid,
     "generate",
-    `${gradeLabel(book)} ${SUBJECT_NAMES[book.subject]}. ${schoolLevelOf(book) === "elementary" ? "짧고 쉬운 문장과 익숙한 낱말을 사용하고, 해당 학년의 사칙연산·분수 등 제공된 자료 범위 안에서 출제하라. 중학교 방정식·전문 용어 등 선수학습을 요구하지 말라. 해설은 계산이나 생각 과정을 한 단계씩 설명하라." : "중학교 해당 학년의 표현과 개념을 사용하라."} 단원 ${unit.title}. 핵심개념 ${unit.concepts.join(", ")}. 아래 자료만 근거로 서로 다른 문항 8개를 작성하라. 객관식 6개(kind=mcq, choices 4개, answer는 0~3 정수, acceptable 빈 배열)와 단답형 2개(kind=short, choices 빈 배열, answer는 짧은 문자열, acceptable은 동등한 정답 표기 배열)를 포함하라. 단답형은 숫자 또는 짧은 용어로만 답할 수 있어야 한다. difficulty는 1~5, expectedSeconds는 30~180. concept은 제공한 핵심개념 중 정확히 하나이며 가능한 한 개념별 균등하게 출제. evidence는 아래 본문에서 정답 근거를 짧게 그대로 인용. 독해는 필요한 지문을 prompt에 포함. 원문 문항을 그대로 복사하지 말고 새로운 문제를 구성. variant는 문항 내용과 수치가 같은 문제를 식별하는 짧은 문자열. 모든 정답과 계산을 검산하라.\n<material>\n${unit.source}\n</material>`,
+    `${gradeLabel(book)} ${SUBJECT_NAMES[book.subject]}. ${schoolLevelOf(book) === "elementary" ? "짧고 쉬운 문장과 익숙한 낱말을 사용하고, 해당 학년의 사칙연산·분수 등 제공된 자료 범위 안에서 출제하라. 중학교 방정식·전문 용어 등 선수학습을 요구하지 말라. 해설은 계산이나 생각 과정을 한 단계씩 설명하라." : "중학교 해당 학년의 표현과 개념을 사용하라."} 단원 ${unit.title}. 아래 자료만 근거로 서로 다른 문항 ${count}개를 작성하라. 다음 목표 목록의 각 항목에 문항 하나씩 순서대로 대응하라. concept과 skillType은 해당 항목의 concept/type과 정확히 일치해야 한다.\n<targets>${JSON.stringify(targets.slice(0, count))}</targets>\n객관식(kind=mcq, choices 4개, answer 0~3 정수, acceptable 빈 배열) 위주로 하되 4문항 이상이면 단답형(kind=short, choices 빈 배열, answer 짧은 문자열, acceptable 동등한 정답 표기)도 1~2개 포함하라. difficulty는 1~5, expectedSeconds는 30~180. evidence는 본문에서 정답 근거를 짧게 그대로 인용. 독해는 필요한 지문을 prompt에 포함. 원문이나 기존 문항을 그대로 복사하지 말고 해당 유형의 새로운 문제를 구성하라. 기존 문제의 단순 어순 변경이나 보기 순서 변경은 금지. variant는 내용과 수치가 같은 문제를 식별하는 짧은 문자열. 모든 정답과 계산을 검산하라.\n<already-used>${JSON.stringify(request?.exclude.slice(-60) ?? [])}</already-used>\n<material>\n${unit.source}\n</material>`,
     schema({
       questions: {
         type: "array",
+        minItems: count,
+        maxItems: count,
         items: {
           ...qSchema,
           properties: {
             ...qSchema.properties,
-            concept: { type: "string", enum: unit.concepts },
+            concept: { type: "string", enum: concepts },
           },
         },
       },
     }),
   );
   const v = object(value);
-  if (
-    !Array.isArray(v.questions) ||
-    v.questions.length < 1 ||
-    v.questions.length > 10
-  )
+  if (!Array.isArray(v.questions) || v.questions.length !== count)
     throw new AccountError(502, "출제 수량을 확인하지 못했어요.");
-  const questions = v.questions.map((raw) =>
+  const questions = v.questions.map((raw, i) =>
     parseQuestion({
       ...object(raw),
       id: randomUUID(),
@@ -370,13 +462,17 @@ export async function generateQuestions(
       schoolLevel: schoolLevelOf(book),
       status: "pending",
       origin: "ai",
+      revision: unitRevision(book, unit),
     }),
   );
   // One unsupported question must not discard the independently valid questions.
   // Keep unsupported items pending, so they cannot reach a learner assignment.
   const sourceIssue = (q: BankQuestion) =>
-    !unit.concepts.includes(q.concept)
-      ? "등록된 핵심개념과 일치하지 않습니다."
+    !(
+      targets[questions.indexOf(q)]?.concept === q.concept &&
+      targets[questions.indexOf(q)]?.type === q.skillType
+    )
+      ? "등록된 핵심개념·유형과 일치하지 않습니다."
       : !q.evidence ||
           !unit.source
             .replace(/\s+/g, "")

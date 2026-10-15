@@ -12,7 +12,7 @@ import {
 } from "@/lib/server/workspace";
 import { after } from "next/server";
 import { AccountError } from "@/lib/account";
-import { id, object } from "@/lib/learning";
+import { id, object, text, type LearnMode } from "@/lib/learning";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 export async function POST(request: Request) {
@@ -23,10 +23,22 @@ export async function POST(request: Request) {
     switch (v.action) {
       case "start": {
         let jobs: { id: string; studentId: string }[] = [];
-        if (!v.mode || v.mode === "daily") {
+        if (
+          !v.mode ||
+          ["daily", "extra", "reinforce"].includes(String(v.mode))
+        ) {
           jobs = await replenishQuestions(
             user.uid,
             v.bookId ? id(v.bookId) : undefined,
+            {
+              mode: (v.mode ?? "daily") as LearnMode,
+              ...(v.requestId ? { requestId: id(v.requestId) } : {}),
+              ...(v.unitId ? { unitId: id(v.unitId) } : {}),
+              ...(v.concept ? { concept: text(v.concept, 80, "개념") } : {}),
+              ...(v.skillType
+                ? { skillType: text(v.skillType, 80, "문제 유형") }
+                : {}),
+            },
           );
           if (jobs.length)
             after(async () => {

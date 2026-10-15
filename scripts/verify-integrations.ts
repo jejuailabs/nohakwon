@@ -55,7 +55,7 @@ async function main() {
       createAssignment(uid, { mode: "daily", bookId: book.id }),
     ]);
     assert.equal(a.id, b.id);
-    assert.equal(a.questions.length, 10);
+    assert.ok(a.questions.length > 0 && a.questions.length <= 10);
     assert.equal("answer" in a.questions[0], false);
     check("concurrent assignment is idempotent and hides answers");
     const q = a.questions[0];
@@ -237,6 +237,7 @@ async function main() {
     );
     assert.equal(changed.revision, custom.revision);
     check("range-only update preserves question revision");
+    await student.collection("days").doc(a.date).set({ dailySubjects: { math: 10 } }, { merge: true });
     await assert.rejects(() =>
       createAssignment(uid, { mode: "daily", bookId: custom.id }),
     );

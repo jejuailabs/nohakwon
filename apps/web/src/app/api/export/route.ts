@@ -27,7 +27,16 @@ export async function GET() {
             createdAt: s.createdAt,
           },
         };
-      for (const name of ["books", "state", "attempts", "ledger"]) {
+      for (const name of [
+        "books",
+        "state",
+        "attempts",
+        "ledger",
+        "answerEvents",
+        "unitPlans",
+        "skillProgress",
+        "questionExposures",
+      ]) {
         const rows = await student.ref.collection(name).get();
         content[name] = rows.docs.map((d) => ({ id: d.id, ...d.data() }));
       }

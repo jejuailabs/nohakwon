@@ -170,13 +170,17 @@ export function ServerStudy({
               {SUBJECT_NAMES[q.subject]} ·{" "}
               {assignment.mode === "review"
                 ? "복습"
-                : assignment.mode === "assessment"
-                  ? "주간 평가"
-                  : assignment.mode === "exam"
-                    ? "범위 평가"
-                    : assignment.mode === "practice"
-                      ? "다시 풀기"
-                      : "오늘의 학습"}
+                : assignment.mode === "reinforce"
+                  ? "취약 유형 보강"
+                  : assignment.mode === "extra"
+                    ? "단원 추가 문제"
+                    : assignment.mode === "assessment"
+                      ? "주간 평가"
+                      : assignment.mode === "exam"
+                        ? "범위 평가"
+                        : assignment.mode === "practice"
+                          ? "다시 풀기"
+                          : "오늘의 학습"}
             </span>
             <button
               autoFocus
@@ -218,6 +222,9 @@ export function ServerStudy({
                 <div>
                   <span className="eyebrow">ONE STEP AT A TIME</span>
                   <p>한 문제씩, 나만의 속도로.</p>
+                  {q.selectionReason && (
+                    <p className="small muted">{q.selectionReason.label}</p>
+                  )}
                 </div>
               </div>
               <div className="row-between small">
@@ -345,6 +352,19 @@ export function ServerStudy({
                           ? `다음 복습: ${result.dueDate}`
                           : "다시 풀기는 복습 일정과 포인트를 바꾸지 않아요."}
                       </p>
+                      {result.reviewChange &&
+                        assignment.mode !== "practice" && (
+                          <p className="small muted">
+                            {result.reviewChange.nextMastery === "needs-work"
+                              ? "이 유형은 정기 복습 전에도 새 문제로 보강할 수 있어요."
+                              : result.reviewChange.nextMastery ===
+                                  "awaiting-check"
+                                ? "오늘의 확인을 마쳤어요. 다른 날의 새 문제로 기억을 확인해요."
+                                : result.reviewChange.nextMastery === "secure"
+                                  ? "서로 다른 문항과 날짜에서 이 유형을 확인했어요."
+                                  : "새 문항의 기록을 쌓으며 유형별 이해를 확인하고 있어요."}
+                          </p>
+                        )}
                       <div className="workspace-actions">
                         <button
                           className="secondary-button"

@@ -26,6 +26,7 @@ import {
   Plus,
   Download,
   LogOut,
+  History,
 } from "lucide-react";
 import { seoulDate, type SubjectId } from "@nohakwon/core";
 import { SUBJECTS } from "@/lib/questions";
@@ -62,6 +63,7 @@ import {
   SubjectCompanion,
   companionStyle,
 } from "./adventure";
+import { LearningHistory } from "./learning-history";
 
 const NAV = [
   { id: "today", label: "오늘의 학습", Icon: Home },
@@ -69,14 +71,42 @@ const NAV = [
   { id: "reviews", label: "복습", Icon: RotateCcw },
   { id: "notes", label: "오답노트", Icon: NotebookPen },
   { id: "reports", label: "학습 리포트", Icon: BarChart3 },
+  { id: "history", label: "풀이 기록", Icon: History },
   { id: "family", label: "보호자", Icon: Users },
   { id: "settings", label: "설정", Icon: Settings2 },
 ];
 const LABELS = {
   ko: NAV.map((n) => n.label),
-  en: ["Today", "My books", "Review", "Notes", "Reports", "Family", "Settings"],
-  ja: ["今日の学習", "教材", "復習", "ノート", "レポート", "保護者", "設定"],
-  zh: ["今日学习", "我的教材", "复习", "错题本", "学习报告", "家长", "设置"],
+  en: [
+    "Today",
+    "My books",
+    "Review",
+    "Notes",
+    "Reports",
+    "History",
+    "Family",
+    "Settings",
+  ],
+  ja: [
+    "今日の学習",
+    "教材",
+    "復習",
+    "ノート",
+    "レポート",
+    "学習履歴",
+    "保護者",
+    "設定",
+  ],
+  zh: [
+    "今日学习",
+    "我的教材",
+    "复习",
+    "错题本",
+    "学习报告",
+    "答题记录",
+    "家长",
+    "设置",
+  ],
 };
 export function LearningWorkspace() {
   const navigation = useRef<HTMLElement>(null);
@@ -130,10 +160,14 @@ export function LearningWorkspace() {
     const timer = setInterval(() => void refresh(), 6000);
     return () => clearInterval(timer);
   }, [pending, refresh]);
-  function navigate(next: string) {
+  function navigate(next: string, tab?: string) {
     setView(next);
     setError("");
-    window.history.pushState({}, "", `/b?view=${next}`);
+    window.history.pushState(
+      {},
+      "",
+      `/b?view=${next}${tab === "map" ? "&tab=map" : ""}`,
+    );
     window.scrollTo({ top: 0, behavior: "instant" });
   }
   async function action(fn: () => Promise<void>) {
@@ -151,12 +185,15 @@ export function LearningWorkspace() {
     mode: LearnMode = "daily",
     bookId?: string,
     questionId?: string,
+    options: { concept?: string; skillType?: string; unitId?: string } = {},
   ) {
     await action(async () =>
       setAssignment(
         await accountRequest<StudyAssignment>("/api/learn", "POST", {
           action: "start",
           mode,
+          requestId: crypto.randomUUID(),
+          ...options,
           ...(bookId ? { bookId } : {}),
           ...(questionId ? { questionId } : {}),
         }),
@@ -193,6 +230,34 @@ export function LearningWorkspace() {
     selectedBook = data.books.find((b) => b.active && b.subject === subject),
     remaining = data.state.points - data.state.spent,
     locale = data.state.locale,
+    adaptive = data.adaptive ?? { plans: [], skills: [] },
+    selectedLearningUnit = selectedBook
+      ? learningUnit(
+          selectedBook,
+          data.state,
+          data.config.minimumNewPerConcept,
+          adaptive,
+        )
+      : undefined,
+    weak = Object.values(data.state.concepts).filter(
+      (c) =>
+        data.books.some((b) => b.id === c.bookId && b.active) &&
+        (adaptive.skills.some(
+          (s) =>
+            s.bookId === c.bookId &&
+            s.unitId === c.unitId &&
+            s.concept === c.concept &&
+            s.status === "needs-work",
+        ) ||
+          (!adaptive.skills.some(
+            (s) =>
+              s.bookId === c.bookId &&
+              s.unitId === c.unitId &&
+              s.concept === c.concept,
+          ) &&
+            (!c.history.at(-1)?.correct ||
+              c.history.at(-1)?.confidence !== "known"))),
+    ),
     savedNotes = data.results.filter((r) => !r.correct || r.bookmarked),
     visibleNotes = savedNotes.filter(
       (r) => filter === "all" || r.subject === filter,
@@ -435,20 +500,12 @@ export function LearningWorkspace() {
                       <>
                         <span className="tag">{selectedBook.title}</span>
                         <h3>
-                          {
-                            learningUnit(
-                              selectedBook,
-                              data.state,
-                              data.config.minimumNewPerConcept,
-                            )?.title
-                          }
+                          {selectedLearningUnit?.title ??
+                            "선택한 범위의 확인을 마쳤어요"}
                         </h3>
                         <p className="muted">
-                          {learningUnit(
-                            selectedBook,
-                            data.state,
-                            data.config.minimumNewPerConcept,
-                          )?.concepts.join(" · ")}
+                          {selectedLearningUnit?.concepts.join(" · ") ??
+                            "학습지도에서 단원별 새 문제를 더 풀거나 학습 범위를 바꿀 수 있어요."}
                         </p>
                         <div className="quest-orb">
                           <BookOpen size={54} />
@@ -457,12 +514,18 @@ export function LearningWorkspace() {
                         <button
                           className="primary-button full-width"
                           disabled={busy}
-                          onClick={() => void start("daily", selectedBook.id)}
+                          onClick={() =>
+                            selectedLearningUnit
+                              ? void start("daily", selectedBook.id)
+                              : navigate("books", "map")
+                          }
                         >
                           <Play size={17} />
-                          {today.some((r) => r.bookId === selectedBook.id)
-                            ? "이어서 학습하기"
-                            : "학습 시작하기"}
+                          {!selectedLearningUnit
+                            ? "단원별 새 문제 보기"
+                            : today.some((r) => r.bookId === selectedBook.id)
+                              ? "이어서 학습하기"
+                              : "학습 시작하기"}
                         </button>
                         <button
                           className="secondary-button full-width"
@@ -556,8 +619,15 @@ export function LearningWorkspace() {
                 books={data.books}
                 jobs={data.jobs}
                 aiConfigured={data.aiConfigured}
+                adaptive={adaptive}
                 onChange={refresh}
                 onStudy={(id) => void start("daily", id)}
+                onExtra={(id, unitId) =>
+                  void start("extra", id, undefined, { unitId })
+                }
+                onReinforce={(id, concept, skillType) =>
+                  void start("reinforce", id, undefined, { concept, skillType })
+                }
               />
             )}
             {view === "reviews" && (
@@ -579,6 +649,24 @@ export function LearningWorkspace() {
                     {`전체 ${Object.keys(data.state.concepts).length}개 개념`}
                   </span>
                 </AdventureHeader>
+                <section className="panel reinforcement-callout">
+                  <div>
+                    <span className="eyebrow">
+                      A DIFFERENT PATH TO UNDERSTANDING
+                    </span>
+                    <h2>취약 유형은 지금, 새 문제로</h2>
+                    <p className="muted">
+                      {`${weak.length}개 개념에서 보강이 필요해요. 정기 복습일을 기다리지 않고 아직 보지 않은 문제로 연습할 수 있어요.`}
+                    </p>
+                  </div>
+                  <button
+                    className="secondary-button"
+                    disabled={!weak.length || busy}
+                    onClick={() => void start("reinforce")}
+                  >
+                    취약 유형 보강 시작
+                  </button>
+                </section>
                 <div className="book-grid">
                   {Object.values(data.state.concepts)
                     .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
@@ -656,6 +744,12 @@ export function LearningWorkspace() {
                     onPractice={() =>
                       void start("practice", r.bookId, r.questionId)
                     }
+                    onReinforce={() =>
+                      void start("reinforce", r.bookId, undefined, {
+                        concept: r.concept,
+                        ...(r.skillType ? { skillType: r.skillType } : {}),
+                      })
+                    }
                   />
                 ))}
                 {!visibleNotes.length && (
@@ -689,8 +783,15 @@ export function LearningWorkspace() {
                   onAssessment={() => void start("assessment")}
                 />
                 <SavedReports />
+                <button
+                  className="secondary-button"
+                  onClick={() => navigate("history")}
+                >
+                  날짜별 문제와 복습 분기 기록 보기
+                </button>
               </div>
             )}
+            {view === "history" && <LearningHistory books={data.books} />}
             {view === "family" && data.guardian && (
               <FamilyView
                 onChange={async () => {
@@ -957,11 +1058,13 @@ function NoteCard({
   book,
   onChange,
   onPractice,
+  onReinforce,
 }: {
   result: Result;
   book?: Book;
   onChange: () => Promise<void>;
   onPractice: () => void;
+  onReinforce: () => void;
 }) {
   const [reason, setReason] = useState(r.reason),
     [message, setMessage] = useState("");
@@ -1015,6 +1118,13 @@ function NoteCard({
           </button>
           <button className="primary-button" onClick={onPractice}>
             다시 풀기
+          </button>
+          <button
+            className="secondary-button"
+            onClick={onReinforce}
+            disabled={r.correct && r.confidence === "known"}
+          >
+            이 유형 새 문제로 보강
           </button>
           <span role="status" className="muted small">
             {message}

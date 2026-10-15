@@ -22,6 +22,8 @@ import {
   SubjectCompanion,
   companionStyle,
 } from "./adventure";
+import { AdaptiveMap } from "./adaptive-map";
+import type { AdaptiveSnapshot } from "@/lib/adaptive-learning";
 
 type Props = {
   books: Book[];
@@ -29,6 +31,9 @@ type Props = {
   aiConfigured: boolean;
   onChange: () => Promise<void>;
   onStudy: (bookId: string) => void;
+  adaptive: AdaptiveSnapshot;
+  onExtra: (bookId: string, unitId: string) => void;
+  onReinforce: (bookId: string, concept: string, skillType: string) => void;
 };
 type Draft = Omit<Book, "id" | "createdAt" | "revision" | "origin">;
 const blank: Draft = {
@@ -47,6 +52,9 @@ export function BookManager({
   aiConfigured,
   onChange,
   onStudy,
+  adaptive,
+  onExtra,
+  onReinforce,
 }: Props) {
   const { profile } = useAccount();
   const blankForLearner = (): Draft => ({
@@ -59,8 +67,13 @@ export function BookManager({
     [draft, setDraft] = useState<Draft | null>(null),
     [editing, setEditing] = useState(""),
     [catalogId, setCatalogId] = useState(""),
-    [tab, setTab] = useState<"mine" | "catalog" | "upload">(
-      books.length ? "mine" : "catalog",
+    [tab, setTab] = useState<"mine" | "catalog" | "upload" | "map">(
+      typeof window !== "undefined" &&
+        new URLSearchParams(window.location.search).get("tab") === "map"
+        ? "map"
+        : books.length
+          ? "mine"
+          : "catalog",
     ),
     [input, setInput] = useState(""),
     [kind, setKind] = useState("content"),
@@ -205,6 +218,7 @@ export function BookManager({
               ["mine", "등록한 교재"],
               ["catalog", "교재 찾기"],
               ["upload", "학습 자료 올리기"],
+              ["map", "개념·유형 학습지도"],
             ] as const
           ).map(([key, label]) => (
             <button
@@ -230,6 +244,16 @@ export function BookManager({
           <div className="workspace-notice" role="status">
             <span className="loading-dot" /> {busy}
           </div>
+        )}
+        {!draft && tab === "map" && (
+          <AdaptiveMap
+            books={books}
+            adaptive={adaptive}
+            aiConfigured={aiConfigured}
+            onChange={onChange}
+            onExtra={onExtra}
+            onReinforce={onReinforce}
+          />
         )}
         {!draft && tab === "mine" && (
           <div className="book-grid">

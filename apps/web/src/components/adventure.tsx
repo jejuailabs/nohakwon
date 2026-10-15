@@ -48,6 +48,15 @@ const CHAPTERS = {
     quote: "작은 발자국도 모이면, 나만의 길이 되지.",
     Icon: Compass,
   },
+  history: {
+    number: "07",
+    label: "모험의 발자국",
+    title: "문제 풀이 기록",
+    description: "어떤 문제를 풀었고, 다음 배움으로 어떻게 이어졌는지.",
+    subject: "social",
+    quote: "지나온 발자국에는, 다음 길의 힌트가 있어.",
+    Icon: Feather,
+  },
   family: {
     number: "05",
     label: "함께하는 베이스캠프",

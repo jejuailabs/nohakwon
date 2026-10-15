@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./workspace.css";
 import "./adventure.css";
+import "./adaptive.css";
 import { AccountProvider } from "@/components/account-provider";
 
 export const metadata: Metadata = {

@@ -251,7 +251,7 @@ test("daily subject and global limits survive changing books and modes", () => {
     1,
   );
 });
-test("progression follows selected unit order after required new attempts", () => {
+test("a raw attempt count cannot complete a unit without a learning map and mastery evidence", () => {
   const book = {
     ...CATALOG[0],
     id: "b1",
@@ -276,7 +276,7 @@ test("progression follows selected unit order after required new attempts", () =
   p.newCount = 3;
   assert.equal(
     learningUnit(book, { ...DEFAULT_STATE, concepts: { [p.key]: p } })?.id,
-    "u2",
+    "u1",
   );
 });
 test("publisher catalog has verified metadata and never reuses starter questions", () => {

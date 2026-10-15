@@ -1,4 +1,5 @@
 import type { Book, BankQuestion } from "./learning";
+import { questionContent } from "./adaptive-learning";
 import type { SubjectId } from "@nohakwon/core";
 import { schoolLevelOf, type Grade, type SchoolLevel } from "./education";
 import { canonicalPublisher, publisherInText } from "./publishers";
@@ -209,6 +210,9 @@ export function duplicateQuestion(
   a: Pick<BankQuestion, "prompt" | "choices">,
   b: Pick<BankQuestion, "prompt" | "choices">,
 ) {
+  if (questionContent(a) === questionContent(b)) return true;
+  const mathematicalContent = (q: typeof a) => (q.prompt + q.choices.slice().sort().join("|")).normalize("NFKC").match(/\d+(?:\.\d+)?|[+−\-×÷=<>≤≥]/g)?.join("|") ?? "";
+  if (mathematicalContent(a) !== mathematicalContent(b)) return false;
   const x = normalized(a.prompt + a.choices.join("|")),
     y = normalized(b.prompt + b.choices.join("|"));
   if (x === y) return true;

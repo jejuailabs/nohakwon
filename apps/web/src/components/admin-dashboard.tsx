@@ -660,7 +660,7 @@ export function AdminDashboard() {
                     </p>
                     <div className="form-grid">
                       {Object.entries(data.config)
-                        .filter(([k]) => k !== "version")
+                        .filter(([k]) => !["version", "minimumNewPerConcept"].includes(k))
                         .map(([key, value]) => (
                           <label key={key}>
                             {(

@@ -6,6 +6,12 @@ import {
 } from "@nohakwon/core";
 import { AccountError, parseSchoolGrade } from "./account";
 import type { Grade, SchoolLevel } from "./education";
+import {
+  nextLearningUnit,
+  type AdaptiveSnapshot,
+  type SelectionReason,
+  type ReviewChange,
+} from "./adaptive-learning";
 
 export const SUBJECT_NAMES: Record<SubjectId, string> = {
   korean: "국어",
@@ -20,6 +26,7 @@ export type Unit = {
   concepts: string[];
   source: string;
   standardCodes?: string[];
+  revision?: number;
 };
 export type Book = {
   id: string;
@@ -64,6 +71,8 @@ export type BankQuestion = {
   difficulty: number;
   variant: string;
   expectedSeconds: number;
+  skillType?: string;
+  revision?: number;
   status: "approved" | "pending" | "disabled";
   origin: "original" | "ai" | "editor";
 };
@@ -78,8 +87,16 @@ export type ServedQuestion = Pick<
   | "choices"
   | "difficulty"
   | "kind"
->;
-export type LearnMode = "daily" | "review" | "assessment" | "practice" | "exam";
+  | "skillType"
+> & { selectionReason?: SelectionReason };
+export type LearnMode =
+  | "daily"
+  | "extra"
+  | "review"
+  | "reinforce"
+  | "assessment"
+  | "practice"
+  | "exam";
 export type Result = {
   id: string;
   questionId: string;
@@ -103,12 +120,27 @@ export type Result = {
   explanation: string;
   reason: string;
   bookmarked: boolean;
+  assignmentId?: string;
+  skillType?: string;
+  fingerprint?: string;
+  selectionReason?: SelectionReason;
+  reviewChange?: ReviewChange;
+  bookTitle?: string;
+  unitTitle?: string;
+  bookRevision?: number;
 };
 // Stored when the answer is revealed; understanding and rewards are saved later.
 export type AnswerFeedback = Pick<
   Result,
   "answer" | "correctAnswer" | "correct" | "seconds" | "explanation" | "at"
 >;
+export type HistoryEntry = Omit<
+  Result,
+  "confidence" | "interval" | "dueDate" | "points"
+> &
+  Partial<Pick<Result, "confidence" | "interval" | "dueDate" | "points">> & {
+    phase: "awaiting-understanding" | "complete";
+  };
 export type ConceptProgress = {
   key: string;
   bookId: string;
@@ -125,6 +157,7 @@ export type ConceptProgress = {
   difficultyChanged: string;
   lastRewardDate: string;
   weakness: number;
+  lastAttemptId?: string;
 };
 export type LearningState = {
   points: number;
@@ -216,6 +249,7 @@ export type Workspace = {
   admin: boolean;
   report: Report;
   config: LearningConfig;
+  adaptive: AdaptiveSnapshot;
 };
 export const COSMETICS = [
   { id: "starlight", name: "별빛 배지", price: 30 },
@@ -354,21 +388,13 @@ export function parseBook(
     active: b.active !== false,
   };
 }
-export function learningUnit(book: Book, state: LearningState, minimum = 3) {
-  const units = book.units.slice(
-    book.units.findIndex((u) => u.id === book.currentUnit),
-    book.units.findIndex((u) => u.id === book.endUnit) + 1,
-  );
-  return (
-    units.find((u) =>
-      u.concepts.some(
-        (concept) =>
-          (state.concepts[
-            conceptKey({ bookId: book.id, unitId: u.id, concept })
-          ]?.newCount ?? 0) < minimum,
-      ),
-    ) ?? units.at(-1)
-  );
+export function learningUnit(
+  book: Book,
+  _state: LearningState,
+  _minimum = 3,
+  adaptive: AdaptiveSnapshot = { plans: [], skills: [] },
+) {
+  return nextLearningUnit(book, adaptive);
 }
 export function reserveQuestions(
   candidates: BankQuestion[],
@@ -421,6 +447,10 @@ export function parseQuestion(value: unknown): BankQuestion {
     bookId: id(q.bookId),
     unitId: id(q.unitId),
     concept: text(q.concept, 80, "개념"),
+    skillType: text(q.skillType ?? "기본 확인", 80, "문제 유형"),
+    ...(q.revision === undefined
+      ? {}
+      : { revision: integer(q.revision, 1, 100000, "문항 버전") }),
     subject: subject(q.subject),
     ...parseSchoolGrade(q),
     prompt: text(q.prompt, 5000, "문제"),
@@ -459,6 +489,7 @@ export function publicQuestion(q: BankQuestion): ServedQuestion {
     choices: q.choices,
     difficulty: q.difficulty,
     kind: q.kind ?? "mcq",
+    skillType: q.skillType ?? "기본 확인",
   };
 }
 export function normalizeShortAnswer(value: string) {

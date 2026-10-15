@@ -29,16 +29,42 @@ import {
   type Job,
   type LearnMode,
   type LearningConfig,
+  type HistoryEntry,
+  type Unit,
 } from "@/lib/learning";
 import { starterQuestions } from "@/lib/catalog";
 import { catalogTextbook } from "./textbook-catalog";
 import { catalogSelection } from "@/lib/textbook-catalog";
-import { aiConfigured, generateQuestions } from "./ai";
+import { aiConfigured, generateQuestions, generateUnitPlan } from "./ai";
 import { adminRole } from "./admin-service";
 import { duplicateQuestion } from "@/lib/matching";
 import { schoolLevelOf } from "@/lib/education";
 import { parseCatalogAdditions } from "@/lib/textbook-recognition";
 import type { DocumentReference } from "firebase-admin/firestore";
+import {
+  loadAdaptive,
+  loadBank,
+  ensureExposureIndex,
+  exposureSet,
+  fingerprint,
+  identityHash,
+  assignmentIdentity,
+  answerIdentity,
+} from "./adaptive";
+import {
+  ADAPTIVE_POLICY,
+  advanceSkill,
+  skillIdentity,
+  generationTargets,
+  planFor,
+  unitCoverage,
+  unitRevision,
+  unitContent,
+  type SelectionReason,
+  type SkillProgress,
+  type UnitPlan,
+} from "@/lib/adaptive-learning";
+import { selectAdaptiveQuestions } from "@/lib/assignment-selection";
 
 export function isAdmin(user: DecodedIdToken) {
   return ["owner", "admin", "editor", "reviewer"].includes(user.nohakwonRole);
@@ -98,13 +124,14 @@ export function entitlement(
 }
 export async function getWorkspace(user: DecodedIdToken) {
   const { ref, data } = await studentFor(user.uid);
-  const [booksSnap, stateSnap, resultsSnap, jobsSnap, config] =
+  const [booksSnap, stateSnap, resultsSnap, jobsSnap, config, adaptive] =
     await Promise.all([
       ref.collection("books").get(),
       ref.collection("state").doc("learning").get(),
       ref.collection("attempts").orderBy("at", "desc").limit(1500).get(),
       ref.collection("jobs").orderBy("createdAt", "desc").limit(30).get(),
       learningConfig(),
+      loadAdaptive(ref),
     ]);
   const books = booksSnap.docs.map((d) => d.data() as Book),
     state = loadLearningState(stateSnap.data()),
@@ -125,6 +152,7 @@ export async function getWorkspace(user: DecodedIdToken) {
     ),
     report: makeReport(results, state.concepts),
     config,
+    adaptive,
   };
 }
 export async function saveBook(
@@ -153,14 +181,35 @@ export async function saveBook(
       throw new AccountError(409, "교재는 최대 20개까지 등록할 수 있어요.");
     const prior = old.data();
     if (catalogId && prior) return prior as Book;
+    const identityChanged =
+      prior &&
+      (prior.subject !== parsed.subject ||
+        schoolLevelOf(prior) !== schoolLevelOf(parsed) ||
+        prior.grade !== parsed.grade);
+    const shape = (units: Unit[]) =>
+      JSON.stringify(units.map((u) => [u.id, u.title, unitContent(u)]));
     const changed =
       !prior ||
-      JSON.stringify(prior.units) !== JSON.stringify(parsed.units) ||
+      shape(prior.units) !== shape(parsed.units) ||
       prior.subject !== parsed.subject ||
       schoolLevelOf(prior) !== schoolLevelOf(parsed) ||
       prior.grade !== parsed.grade;
     const b: Book = {
       ...parsed,
+      units: parsed.units.map((unit) => {
+        const previous = prior?.units.find((u: Unit) => u.id === unit.id) as
+          Unit | undefined;
+        const oldRevision = previous?.revision ?? prior?.revision ?? 0;
+        return {
+          ...unit,
+          revision: previous
+            ? oldRevision +
+              (identityChanged || unitContent(previous) !== unitContent(unit)
+                ? 1
+                : 0)
+            : 1,
+        };
+      }),
       id: bid,
       createdAt: prior?.createdAt ?? new Date().toISOString(),
       revision: (prior?.revision ?? 0) + (changed ? 1 : 0),
@@ -190,8 +239,32 @@ async function seedCatalogQuestions(ref: DocumentReference, book: Book) {
   if (questions.length) {
     const batch = adminDb().batch();
     questions.forEach((q) =>
-      batch.set(ref.collection("questions").doc(q.id), q),
+      batch.set(ref.collection("questions").doc(q.id), {
+        ...q,
+        revision:
+          q.revision ??
+          unitRevision(
+            book,
+            book.units.find((u) => u.id === q.unitId),
+          ),
+      }),
     );
+    if (book.id.startsWith("foundation-"))
+      for (const unit of book.units) {
+        const plan: UnitPlan = {
+          id: identityHash(`${book.id}:${unit.id}:${unitRevision(book, unit)}`),
+          bookId: book.id,
+          unitId: unit.id,
+          revision: unitRevision(book, unit),
+          skills: unit.concepts.map((concept) => ({
+            concept,
+            type: "기본 확인",
+          })),
+          origin: "editor",
+          createdAt: new Date().toISOString(),
+        };
+        batch.set(ref.collection("unitPlans").doc(plan.id), plan);
+      }
     await batch.commit();
   }
 }
@@ -251,7 +324,12 @@ export async function addCatalogBooks(uid: string, value: unknown) {
       : "",
   };
 }
-export async function queueJob(uid: string, bookId: string, unitId: string) {
+export async function queueJob(
+  uid: string,
+  bookId: string,
+  unitId: string,
+  options: { mode?: LearnMode; concept?: string; skillType?: string } = {},
+) {
   if (!aiConfigured())
     throw new AccountError(503, "AI 연결 설정이 필요합니다.");
   const { ref, data } = await studentFor(uid);
@@ -268,7 +346,7 @@ export async function queueJob(uid: string, bookId: string, unitId: string) {
   if (!unit.source)
     throw new AccountError(422, "이 단원의 학습 본문을 먼저 등록해 주세요.");
   const lockId = createHash("sha256")
-      .update(`${bookId}:${unitId}:${book.revision}`)
+      .update(`${bookId}:${unitId}:${unitRevision(book, unit)}`)
       .digest("hex")
       .slice(0, 32),
     lockRef = ref.collection("generationLocks").doc(lockId);
@@ -292,8 +370,11 @@ export async function queueJob(uid: string, bookId: string, unitId: string) {
       inputTokens: 0,
       outputTokens: 0,
       estimatedUsd: 0,
-      revision: book.revision,
+      revision: unitRevision(book, unit),
       attempts: 0,
+      purpose: options.mode ?? "extra",
+      targetConcept: options.concept ?? "",
+      targetType: options.skillType ?? "",
     });
     tx.set(lockRef, { jobId });
     return jobId;
@@ -334,19 +415,95 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
         await ref.collection("books").doc(job.bookId).get()
       ).data() as Book | undefined,
       unit = book?.units.find((u) => u.id === job.unitId);
-    if (!book || !unit || book.revision !== job.revision)
+    if (!book || !unit || unitRevision(book, unit) !== job.revision)
       throw new AccountError(
         409,
         "교재가 수정됐어요. 새 내용으로 다시 출제해 주세요.",
       );
-    const output = await generateQuestions(uid, book, unit);
-    const oldQuestions = (
-      await ref
-        .collection("questions")
-        .where("bookId", "==", book.id)
-        .limit(1000)
-        .get()
-    ).docs.map((d) => d.data() as BankQuestion);
+    await ensureExposureIndex(ref);
+    const [allBank, adaptive, learningSnapshot] = await Promise.all([
+      loadBank(ref),
+      loadAdaptive(ref),
+      ref.collection("state").doc("learning").get(),
+    ]);
+    const oldQuestions = allBank.filter(
+      (q) =>
+        q.bookId === book.id &&
+        q.unitId === unit.id &&
+        (q.revision ?? 1) === unitRevision(book, unit),
+    );
+    let plan = planFor(book, unit, adaptive);
+    if (!plan) {
+      plan = await generateUnitPlan(uid, book, unit, oldQuestions.length > 0);
+      plan.id = identityHash(
+        `${book.id}:${unit.id}:${unitRevision(book, unit)}`,
+      );
+      await db.runTransaction(async (tx) => {
+        const current = await tx.get(ref.collection("books").doc(book.id));
+        const currentBook = current.data() as Book | undefined;
+        if (
+          !currentBook ||
+          unitRevision(
+            currentBook,
+            currentBook.units.find((u) => u.id === unit.id),
+          ) !== unitRevision(book, unit)
+        )
+          throw new AccountError(
+            409,
+            "교재가 수정됐어요. 새 본문으로 학습지도를 다시 준비해 주세요.",
+          );
+        tx.set(ref.collection("unitPlans").doc(plan!.id), plan!);
+      });
+    }
+    const exposed = await exposureSet(ref, oldQuestions);
+    const scopedPlan = {
+      ...plan,
+      skills: plan.skills.filter(
+        (s) =>
+          (!job.targetConcept || s.concept === job.targetConcept) &&
+          (!job.targetType || s.type === job.targetType),
+      ),
+    };
+    const progress =
+      job.purpose === "extra"
+        ? []
+        : adaptive.skills.filter(
+            (s) =>
+              s.bookId === book.id &&
+              s.unitId === unit.id &&
+              s.revision === unitRevision(book, unit),
+          );
+    const targets = generationTargets(
+      scopedPlan,
+      oldQuestions,
+      exposed,
+      fingerprint,
+      progress,
+      job.purpose === "reinforce" ? "reinforce" : "daily",
+      new Set(
+        Object.values(loadLearningState(learningSnapshot.data()).concepts)
+          .filter(
+            (c) =>
+              c.bookId === book.id &&
+              c.unitId === unit.id &&
+              (!c.history.at(-1)?.correct ||
+                c.history.at(-1)?.confidence !== "known"),
+          )
+          .map((c) => c.concept),
+      ),
+    );
+    if (!targets.length) {
+      await jobRef.update({
+        status: "completed",
+        completedAt: new Date().toISOString(),
+        note: "현재 유형에 필요한 새 문제가 준비되어 있어 추가 생성하지 않았어요.",
+      });
+      return;
+    }
+    const output = await generateQuestions(uid, book, unit, {
+      targets,
+      exclude: oldQuestions.map((q) => q.prompt),
+    });
     const accepted: BankQuestion[] = [];
     for (const q of output.questions) {
       if (
@@ -372,7 +529,14 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
         currentStudent.data()?.linkedUid !== uid
       )
         throw new AccountError(403, "작업 접근 권한이 변경됐어요.");
-      if (currentBook.data()?.revision !== book.revision)
+      const currentData = currentBook.data() as Book | undefined;
+      if (
+        !currentData ||
+        unitRevision(
+          currentData,
+          currentData.units.find((u) => u.id === unit.id),
+        ) !== unitRevision(book, unit)
+      )
         throw new AccountError(
           409,
           "출제 중 교재가 수정됐어요. 새 내용으로 다시 출제해 주세요.",
@@ -380,7 +544,7 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
       output.questions.forEach((q) =>
         batch.set(ref.collection("questions").doc(q.id), {
           ...q,
-          revision: book.revision,
+          revision: unitRevision(book, unit),
         }),
       );
       batch.update(jobRef, {
@@ -404,43 +568,141 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
   }
 }
 
-export async function replenishQuestions(uid: string, bookId?: string) {
+export async function replenishQuestions(
+  uid: string,
+  bookId?: string,
+  options: {
+    mode?: LearnMode;
+    unitId?: string;
+    concept?: string;
+    skillType?: string;
+    requestId?: string;
+  } = {},
+) {
   if (!aiConfigured()) return [];
   const { ref, data } = await studentFor(uid);
   if (entitlement(data).status === "expired") return [];
-  const [b, s, q, j, config] = await Promise.all([
+  await ensureExposureIndex(ref);
+  const [b, s, bank, j, config, adaptive] = await Promise.all([
     ref.collection("books").get(),
     ref.collection("state").doc("learning").get(),
-    ref.collection("questions").limit(2500).get(),
+    loadBank(ref),
     ref.collection("jobs").orderBy("createdAt", "desc").limit(100).get(),
     learningConfig(),
+    loadAdaptive(ref),
   ]);
   const state = loadLearningState(s.data()),
-    jobs = [];
+    jobs: { id: string; studentId: string }[] = [];
+  if (!options.mode || options.mode === "daily" || options.requestId) {
+    const candidates = b.docs
+      .map((d) => d.data() as Book)
+      .filter((book) => book.active && (!bookId || book.id === bookId));
+    const resume = await currentAssignment(
+      ref,
+      assignmentIdentity(
+        seoulDate(),
+        options.mode ?? "daily",
+        bookId ?? "",
+        options.requestId ?? "",
+      ),
+      candidates,
+    );
+    if (resume.old) return [];
+  }
+  const exposed = await exposureSet(ref, bank);
   for (const book of b.docs
     .map((d) => d.data() as Book)
     .filter((b) => b.active && (!bookId || b.id === bookId))
     .slice(0, 5)) {
-    const unit = learningUnit(book, state, config.minimumNewPerConcept);
-    if (!unit?.source) continue;
-    const last = j.docs
-      .map((d) => d.data())
-      .find((j) => j.bookId === book.id && j.unitId === unit.id);
-    if (last && Date.now() - Date.parse(last.createdAt) < 30 * 60000) continue;
-    const available = q.docs.filter((d) => {
-      const v = d.data();
-      return (
-        v.bookId === book.id &&
-        v.unitId === unit.id &&
-        v.status === "approved" &&
-        (!v.revision || v.revision === book.revision)
+    const units = options.unitId
+      ? book.units.filter((u) => u.id === options.unitId)
+      : options.mode === "reinforce"
+        ? book.units.filter((u) =>
+            Object.values(state.concepts).some(
+              (c) =>
+                c.bookId === book.id &&
+                c.unitId === u.id &&
+                (!options.concept || options.concept === c.concept) &&
+                (adaptive.skills.some(
+                  (s) =>
+                    s.bookId === book.id &&
+                    s.unitId === u.id &&
+                    s.revision === unitRevision(book, u) &&
+                    s.concept === c.concept &&
+                    s.status === "needs-work" &&
+                    (!options.skillType || s.type === options.skillType),
+                ) ||
+                  !c.history.at(-1)?.correct ||
+                  c.history.at(-1)?.confidence !== "known"),
+            ),
+          )
+        : [
+            learningUnit(book, state, config.minimumNewPerConcept, adaptive),
+          ].filter((u): u is NonNullable<typeof u> => !!u);
+    for (const unit of units.slice(0, 3)) {
+      if (!unit.source) continue;
+      const last = j.docs
+        .map((d) => d.data())
+        .find(
+          (j) =>
+            j.bookId === book.id &&
+            j.unitId === unit.id &&
+            j.revision === unitRevision(book, unit),
+        );
+      if (
+        last &&
+        (last.status === "failed" || last.accepted === 0) &&
+        Date.now() - Date.parse(last.createdAt) < 30 * 60000
+      )
+        continue;
+      const plan = planFor(book, unit, adaptive);
+      const eligible = bank.filter(
+        (q) =>
+          q.bookId === book.id &&
+          q.unitId === unit.id &&
+          (q.revision ?? 1) === unitRevision(book, unit),
       );
-    }).length;
-    const consumed = Object.values(state.concepts)
-      .filter((c) => c.bookId === book.id && c.unitId === unit.id)
-      .reduce((n, c) => n + c.newCount, 0);
-    if (available - consumed < state.dailyTarget)
-      jobs.push(await queueJob(uid, book.id, unit.id));
+      const progress =
+        options.mode === "extra"
+          ? []
+          : adaptive.skills.filter(
+              (p) =>
+                p.bookId === book.id &&
+                p.unitId === unit.id &&
+                p.revision === unitRevision(book, unit),
+            );
+      const scopedPlan = plan && {
+        ...plan,
+        skills: plan.skills.filter(
+          (p) =>
+            (!options.concept || p.concept === options.concept) &&
+            (!options.skillType || p.type === options.skillType),
+        ),
+      };
+      if (
+        !scopedPlan ||
+        generationTargets(
+          scopedPlan,
+          eligible,
+          exposed,
+          fingerprint,
+          progress,
+          options.mode === "reinforce" ? "reinforce" : "daily",
+          new Set(
+            Object.values(state.concepts)
+              .filter(
+                (c) =>
+                  c.bookId === book.id &&
+                  c.unitId === unit.id &&
+                  (!c.history.at(-1)?.correct ||
+                    c.history.at(-1)?.confidence !== "known"),
+              )
+              .map((c) => c.concept),
+          ),
+        ).length
+      )
+        jobs.push(await queueJob(uid, book.id, unit.id, options));
+    }
   }
   return jobs;
 }
@@ -453,6 +715,11 @@ type Assignment = {
   results: Record<string, Result>;
   answers?: Record<string, AnswerFeedback>;
   opened: Record<string, string>;
+  reasons?: Record<string, SelectionReason>;
+  context?: Record<
+    string,
+    { bookTitle: string; unitTitle: string; bookRevision: number }
+  >;
   createdAt: string;
 };
 function assignmentView(a: Assignment) {
@@ -460,53 +727,184 @@ function assignmentView(a: Assignment) {
     id: a.id,
     date: a.date,
     mode: a.mode,
-    questions: a.questions.map(publicQuestion),
+    questions: a.questions.map((q) => ({
+      ...publicQuestion(q),
+      ...(a.reasons?.[q.id] ? { selectionReason: a.reasons[q.id] } : {}),
+    })),
     results: a.results,
     answers: a.answers ?? {},
+  };
+}
+async function currentAssignment(
+  ref: DocumentReference,
+  baseId: string,
+  books: Book[],
+) {
+  let target = ref.collection("assignments").doc(baseId);
+  let old = (await target.get()).data() as Assignment | undefined;
+  const valid = (a: Assignment) =>
+    a.questions.every((q) => {
+      const book = books.find((b) => b.id === q.bookId);
+      if (
+        !book ||
+        (q.revision ?? 1) !==
+          unitRevision(
+            book,
+            book.units.find((u) => u.id === q.unitId),
+          )
+      )
+        return false;
+      if (a.mode !== "daily" && a.mode !== "exam") return true;
+      return book.units
+        .slice(
+          book.units.findIndex((u) => u.id === book.currentUnit),
+          book.units.findIndex((u) => u.id === book.endUnit) + 1,
+        )
+        .some((u) => u.id === q.unitId);
+    });
+  if (old && !valid(old)) {
+    const scope = books.map((b) => [
+      b.id,
+      b.revision,
+      b.currentUnit,
+      b.endUnit,
+    ]);
+    target = ref
+      .collection("assignments")
+      .doc(`${baseId}-r${identityHash(JSON.stringify(scope)).slice(0, 16)}`);
+    old = (await target.get()).data() as Assignment | undefined;
+    if (old && !valid(old)) old = undefined;
+  }
+  return { ref: target, old };
+}
+function pendingHistory(
+  a: Assignment,
+  q: BankQuestion,
+  feedback: AnswerFeedback,
+): HistoryEntry {
+  return {
+    id: answerIdentity(a.id, q.id),
+    assignmentId: a.id,
+    questionId: q.id,
+    bookId: q.bookId,
+    unitId: q.unitId,
+    concept: q.concept,
+    subject: q.subject,
+    date: a.date,
+    at: feedback.at,
+    answer: feedback.answer,
+    correctAnswer: feedback.correctAnswer,
+    correct: feedback.correct,
+    seconds: feedback.seconds,
+    mode: a.mode,
+    prompt: q.prompt,
+    choices: q.choices,
+    explanation: feedback.explanation,
+    reason: "",
+    bookmarked: false,
+    fingerprint: fingerprint(q),
+    skillType: q.skillType ?? "기본 확인",
+    phase: "awaiting-understanding",
+    ...(a.context?.[q.id] ?? {}),
+    ...(a.reasons?.[q.id] ? { selectionReason: a.reasons[q.id] } : {}),
   };
 }
 export async function createAssignment(uid: string, raw: unknown) {
   const input = object(raw),
     mode = (input.mode ?? "daily") as LearnMode;
-  if (!["daily", "review", "assessment", "practice", "exam"].includes(mode))
+  if (
+    ![
+      "daily",
+      "extra",
+      "review",
+      "reinforce",
+      "assessment",
+      "practice",
+      "exam",
+    ].includes(mode)
+  )
     throw new AccountError(400, "학습 유형을 확인해 주세요.");
   const selectedBook = input.bookId ? id(input.bookId) : "",
     selectedQuestion = input.questionId ? id(input.questionId) : "";
+  const targetConcept = input.concept ? text(input.concept, 80, "개념") : "",
+    targetType = input.skillType ? text(input.skillType, 80, "문제 유형") : "",
+    selectedUnit = input.unitId ? id(input.unitId) : "";
+  if (mode === "extra" && (!selectedBook || !selectedUnit))
+    throw new AccountError(400, "추가로 풀 단원을 선택해 주세요.");
   const { ref, data } = await studentFor(uid),
-    access = entitlement(data),
     config = await learningConfig(),
     db = adminDb(),
     date = seoulDate();
-  if (access.status === "expired" && mode !== "practice")
+  if (entitlement(data).status === "expired" && mode !== "practice")
     throw new AccountError(
       402,
       "무료 체험이 끝났어요. 기존 오답은 계속 열어볼 수 있으며, 새 학습은 구독 후 시작할 수 있어요.",
     );
-  const aid = `${date}-${mode}-${selectedBook || "all"}${mode === "practice" ? `-${randomUUID()}` : ""}`;
-  const aRef = ref.collection("assignments").doc(aid);
-  const old = (await aRef.get()).data() as Assignment | undefined;
-  if (old) return assignmentView(old);
-  const [booksSnap, bankSnap, stateSnap, recentSnap] = await Promise.all([
-    ref.collection("books").get(),
-    ref.collection("questions").limit(2500).get(),
-    ref.collection("state").doc("learning").get(),
-    ref.collection("attempts").orderBy("at", "desc").limit(4000).get(),
-  ]);
+  const requestId = input.requestId ? id(input.requestId) : randomUUID();
+  const booksSnap = await ref.collection("books").get();
   const books = booksSnap.docs
-      .map((d) => d.data() as Book)
-      .filter((b) => b.active && (!selectedBook || b.id === selectedBook)),
-    state = loadLearningState(stateSnap.data()),
-    recent = recentSnap.docs.map((d) => d.data() as Result);
+    .map((d) => d.data() as Book)
+    .filter((b) => b.active && (!selectedBook || b.id === selectedBook));
+  const { ref: aRef, old } = await currentAssignment(
+    ref,
+    assignmentIdentity(date, mode, selectedBook, requestId),
+    books,
+  );
+  const aid = aRef.id;
+  if (old) return assignmentView(old);
+  await ensureExposureIndex(ref);
+  const [allBank, stateSnap, adaptive] = await Promise.all([
+    loadBank(ref),
+    ref.collection("state").doc("learning").get(),
+    loadAdaptive(ref),
+  ]);
+  const state = loadLearningState(stateSnap.data());
   if (!books.length)
     throw new AccountError(409, "교재를 등록하고 학습 범위를 선택해 주세요.");
-  const seen = new Set(
-      recent
-        .filter((r) => r.date >= addDays(date, -30))
-        .map((r) => r.questionId),
-    ),
-    allBank = bankSnap.docs.map(
-      (d) => d.data() as BankQuestion & { revision?: number },
-    );
+  if (
+    selectedUnit &&
+    !books.some((b) => b.units.some((u) => u.id === selectedUnit))
+  )
+    throw new AccountError(400, "등록한 교재의 단원을 선택해 주세요.");
+  // Upgrade the authored starter curriculum without deriving coverage from whichever
+  // questions happened to be served. Uploaded materials require a source-based plan.
+  for (const book of books.filter((b) => b.id.startsWith("foundation-")))
+    for (const unit of book.units) {
+      if (!planFor(book, unit, adaptive)) {
+        const plan: UnitPlan = {
+          id: identityHash(`${book.id}:${unit.id}:${unitRevision(book, unit)}`),
+          bookId: book.id,
+          unitId: unit.id,
+          revision: unitRevision(book, unit),
+          skills: unit.concepts.map((concept) => ({
+            concept,
+            type: "기본 확인",
+          })),
+          origin: "editor",
+          createdAt: new Date().toISOString(),
+        };
+        await ref.collection("unitPlans").doc(plan.id).set(plan);
+        adaptive.plans.push(plan);
+      }
+    }
+  if (mode === "practice") {
+    const previous = await ref
+      .collection("attempts")
+      .where("questionId", "==", selectedQuestion)
+      .limit(1)
+      .get();
+    if (
+      previous.empty &&
+      (
+        await ref
+          .collection("answerEvents")
+          .where("questionId", "==", selectedQuestion)
+          .limit(1)
+          .get()
+      ).empty
+    )
+      throw new AccountError(403, "풀었던 문제만 다시 풀 수 있어요.");
+  }
   const inRange = (q: { bookId: string; unitId: string }) =>
     books.some(
       (b) =>
@@ -518,142 +916,85 @@ export async function createAssignment(uid: string, raw: unknown) {
           )
           .some((u) => u.id === q.unitId),
     );
-  const bank = allBank.filter(
-    (q) =>
-      q.status === "approved" &&
-      (mode !== "exam" || inRange(q)) &&
-      books.some(
-        (b) => b.id === q.bookId && (!q.revision || q.revision === b.revision),
-      ),
-  );
-  let candidates: BankQuestion[] = [];
-  if (mode === "practice") {
-    const previous = recent.find((r) => r.questionId === selectedQuestion);
-    if (!previous)
-      throw new AccountError(403, "풀었던 문제만 다시 풀 수 있어요.");
-    candidates = bank.filter((q) => q.id === selectedQuestion);
-  } else if (mode === "review" || mode === "assessment" || mode === "exam") {
-    const concepts = Object.values(state.concepts)
-      .filter(
-        (c) =>
-          books.some((b) => b.id === c.bookId) &&
-          (mode !== "review" || c.dueDate <= date),
-      )
-      .sort((a, b) => {
-        const score = (c: typeof a) => {
-          const overdue = Math.min(
-              1,
-              Math.max(
-                0,
-                (Date.parse(date) - Date.parse(c.dueDate)) / 86400000 / 7,
+  const bank = allBank
+    .filter(
+      (q) =>
+        q.status === "approved" &&
+        (mode !== "exam" || inRange(q)) &&
+        books.some(
+          (b) =>
+            b.id === q.bookId &&
+            (q.revision ?? 1) ===
+              unitRevision(
+                b,
+                b.units.find((u) => u.id === q.unitId),
               ),
-            ),
-            daysUntil =
-              (Date.parse(state.examDate) - Date.parse(date)) / 86400000,
-            exam =
-              inRange(c) && daysUntil >= 0 && daysUntil <= 14
-                ? 1 - daysUntil / 14
-                : 0;
-          return 0.5 * c.weakness + 0.3 * overdue + 0.2 * exam;
-        };
-        return score(b) - score(a) || a.dueDate.localeCompare(b.dueDate);
-      });
-    for (const c of concepts) {
-      const options = bank
-        .filter((q) => conceptKey(q) === c.key)
-        .sort(
-          (a, b) =>
-            Number(a.id === c.questionId) - Number(b.id === c.questionId),
-        );
-      const q =
-        options.find((q) => !seen.has(q.id)) ??
-        options.find((q) => q.id === c.questionId);
-      if (q) candidates.push(q);
-    }
-    if (mode !== "review")
-      for (const s of Object.keys(SUBJECT_NAMES_LOCAL)) {
-        const extras = bank.filter(
-          (q) =>
-            q.subject === s &&
-            state.concepts[conceptKey(q)] &&
-            !candidates.some((c) => c.id === q.id),
-        );
-        candidates.push(
-          ...extras.slice(
-            0,
-            Math.max(0, 5 - candidates.filter((c) => c.subject === s).length),
-          ),
-        );
-      }
-  } else {
-    for (const book of books) {
-      const unit = learningUnit(book, state, config.minimumNewPerConcept);
-      if (!unit) continue;
-      const options = bank.filter(
-        (q) => q.bookId === book.id && q.unitId === unit.id && !seen.has(q.id),
-      );
-      options.sort((a, b) => {
-        const pa = state.concepts[conceptKey(a)],
-          pb = state.concepts[conceptKey(b)];
-        return (
-          Math.abs(
-            a.difficulty -
-              (state.autoDifficulty
-                ? (pa?.difficulty ?? state.baseDifficulty)
-                : state.baseDifficulty),
-          ) -
-            Math.abs(
-              b.difficulty -
-                (state.autoDifficulty
-                  ? (pb?.difficulty ?? state.baseDifficulty)
-                  : state.baseDifficulty),
-            ) ||
-          (pa?.newCount ?? 0) - (pb?.newCount ?? 0) ||
-          a.id.localeCompare(b.id)
-        );
-      });
-      candidates.push(
-        ...options.slice(
-          0,
-          Math.min(state.dailyTarget, config.dailyPerSubject),
         ),
-      );
-    }
-  }
-  const used = new Set<string>(),
-    subjects = new Map<string, number>();
-  candidates = candidates
-    .filter((q) => {
-      if (
-        used.has(q.variant) ||
-        ((subjects.get(q.subject) ?? 0) >=
-          (mode === "assessment" || mode === "exam"
-            ? 5
-            : config.dailyPerSubject) &&
-          mode !== "review")
-      )
-        return false;
-      used.add(q.variant);
-      subjects.set(q.subject, (subjects.get(q.subject) ?? 0) + 1);
-      return true;
-    })
-    .slice(0, mode === "practice" ? 1 : config.maxDaily);
-  if (!candidates.length)
+    )
+    .map((q) => ({
+      ...q,
+      revision: q.revision ?? 1,
+    }));
+  const exposed = await exposureSet(ref, bank);
+  const selections = selectAdaptiveQuestions({
+    mode,
+    books,
+    bank,
+    state,
+    adaptive,
+    exposed,
+    date,
+    fingerprint,
+    limit: Math.min(state.dailyTarget, config.dailyPerSubject),
+    selectedQuestion,
+    targetConcept,
+    targetType,
+    unitId: selectedUnit,
+  }).slice(0, mode === "practice" ? 1 : config.maxDaily);
+  if (!selections.length) {
+    const awaiting = adaptive.skills.some(
+      (s) =>
+        books.some(
+          (b) =>
+            b.id === s.bookId &&
+            unitRevision(
+              b,
+              b.units.find((u) => u.id === s.unitId),
+            ) === s.revision,
+        ) && s.status === "awaiting-check",
+    );
     throw new AccountError(
       409,
       mode === "review"
-        ? "오늘 예정된 복습이 없어요."
-        : mode === "assessment" || mode === "exam"
-          ? "먼저 학습 기록을 쌓아 주세요."
-          : "현재 단원에 새 문제가 부족해요. 교재 관리에서 본문을 등록하고 AI 출제를 실행해 주세요.",
+        ? "오늘 예정된 복습에 사용할 문항이 없어요. 새 변형 문제를 준비한 뒤 다시 시작해 주세요."
+        : mode === "reinforce"
+          ? "현재 보강할 취약 유형이 없거나 아직 보지 않은 변형 문제가 부족해요. 나의 교재에서 출제 상태를 확인해 주세요."
+          : awaiting && mode === "daily"
+            ? "오늘 확인한 유형은 다른 날의 새 문제로 다시 확인해요. 더 풀고 싶으면 나의 교재에서 단원별 새 문제를 선택해 주세요."
+            : "아직 보지 않은 문제가 부족하거나 선택 범위의 확인을 마쳤어요. 나의 교재에서 학습지도·출제 상태와 범위를 확인해 주세요.",
     );
-  // Reservation is transactional across tabs and all daily session modes.
+  }
   const assignment = await db.runTransaction(async (tx) => {
-    const [existing, daySnap] = await Promise.all([
+    const keys = [
+      ...new Set(selections.map(({ question }) => fingerprint(question))),
+    ];
+    const eRefs = keys.map((key) =>
+      ref.collection("questionExposures").doc(key),
+    );
+    const [existing, daySnap, exposureDocs] = await Promise.all([
       tx.get(aRef),
       tx.get(ref.collection("days").doc(date)),
+      tx.getAll(...eRefs),
     ]);
     if (existing.exists) return existing.data() as Assignment;
+    const currentExposures = new Map(exposureDocs.map((d) => [d.id, d]));
+    const available = selections.filter(({ question: q, reason }) => {
+      if (mode === "practice") return true;
+      const exposure = currentExposures.get(fingerprint(q));
+      return reason.repeated
+        ? exposure?.data()?.lastAssignedDate !== date
+        : !exposure?.exists;
+    });
     const day = daySnap.data() ?? {
       reserved: 0,
       count: 0,
@@ -661,7 +1002,7 @@ export async function createAssignment(uid: string, raw: unknown) {
       questionIds: [],
     };
     const { selected: unique, dailySubjects } = reserveQuestions(
-      candidates,
+      available.map((s) => s.question),
       mode,
       {
         reserved: day.reserved ?? 0,
@@ -674,18 +1015,58 @@ export async function createAssignment(uid: string, raw: unknown) {
     if (!unique.length)
       throw new AccountError(
         409,
-        "오늘의 학습 한도에 도달했거나 이미 다른 학습에 배정된 문제예요. 진행 중인 학습을 이어가 주세요.",
+        "오늘의 학습 한도에 도달했거나 다른 학습에 배정된 문제예요. 진행 중인 학습을 이어가 주세요.",
       );
+    const reasons = Object.fromEntries(
+      unique.map((q) => [
+        q.id,
+        available.find((s) => s.question.id === q.id)!.reason,
+      ]),
+    );
+    const context = Object.fromEntries(
+      unique.map((q) => {
+        const book = books.find((b) => b.id === q.bookId)!;
+        return [
+          q.id,
+          {
+            bookTitle: book.title,
+            unitTitle: book.units.find((u) => u.id === q.unitId)!.title,
+            bookRevision: book.revision,
+          },
+        ];
+      }),
+    );
     const a: Assignment = {
       id: aid,
       date,
       mode,
       questions: unique,
+      reasons,
+      context,
       results: {},
       opened: {},
       createdAt: new Date().toISOString(),
     };
     tx.set(aRef, a);
+    for (const q of unique) {
+      const key = fingerprint(q),
+        eRef = ref.collection("questionExposures").doc(key),
+        prior = currentExposures.get(key)?.data();
+      tx.set(
+        eRef,
+        {
+          fingerprint: key,
+          firstAssignedAt: prior?.firstAssignedAt ?? a.createdAt,
+          firstAssignmentId: prior?.firstAssignmentId ?? aid,
+          lastAssignedAt: a.createdAt,
+          lastAssignedDate: date,
+          lastAssignmentId: aid,
+          questionId: q.id,
+          assignments: (prior?.assignments ?? 0) + 1,
+        },
+        { merge: true },
+      );
+    }
     if (mode !== "practice")
       tx.set(ref.collection("days").doc(date), {
         ...day,
@@ -697,6 +1078,7 @@ export async function createAssignment(uid: string, raw: unknown) {
   });
   return assignmentView(assignment);
 }
+
 const SUBJECT_NAMES_LOCAL = {
   korean: 1,
   english: 1,
@@ -713,8 +1095,8 @@ export async function openQuestion(
     aRef = ref.collection("assignments").doc(id(assignmentId));
   return adminDb().runTransaction(async (tx) => {
     const a = (await tx.get(aRef)).data() as Assignment | undefined;
-    if (!a || !a.questions.some((q) => q.id === questionId))
-      throw new AccountError(404, "문제가 없어요.");
+    const question = a?.questions.find((q) => q.id === questionId);
+    if (!a || !question) throw new AccountError(404, "문제가 없어요.");
     if (a.date !== seoulDate())
       throw new AccountError(
         409,
@@ -724,7 +1106,18 @@ export async function openQuestion(
       ...a.opened,
       [questionId]: a.opened[questionId] ?? new Date().toISOString(),
     };
+    const eRef = ref.collection("questionExposures").doc(fingerprint(question)),
+      oldExposure = (await tx.get(eRef)).data();
     tx.update(aRef, { opened });
+    tx.set(
+      eRef,
+      {
+        fingerprint: fingerprint(question),
+        firstOpenedAt: oldExposure?.firstOpenedAt ?? opened[questionId],
+        lastOpenedAt: new Date().toISOString(),
+      },
+      { merge: true },
+    );
     return {
       openedAt: opened[questionId],
       result: a.results[questionId] ?? null,
@@ -780,6 +1173,15 @@ export async function answerQuestion(uid: string, raw: unknown) {
       at: now.toISOString(),
     };
     tx.update(aRef, { answers: { ...a.answers, [qid]: feedback } });
+    tx.set(
+      ref.collection("answerEvents").doc(answerIdentity(aid, qid)),
+      pendingHistory(a, q, feedback),
+    );
+    tx.set(
+      ref.collection("questionExposures").doc(fingerprint(q)),
+      { fingerprint: fingerprint(q), lastAnsweredAt: feedback.at },
+      { merge: true },
+    );
     return feedback;
   });
 }
@@ -824,12 +1226,51 @@ export async function assessQuestion(uid: string, raw: unknown) {
     const feedback = a.answers?.[qid];
     if (!feedback)
       throw new AccountError(409, "정답과 해설을 먼저 확인해 주세요.");
+    const book = (
+      await tx.get(ref.collection("books").doc(q.bookId))
+    ).data() as Book | undefined;
+    if (
+      !book ||
+      (q.revision ?? 1) !==
+        unitRevision(
+          book,
+          book.units.find((u) => u.id === q.unitId),
+        )
+    )
+      throw new AccountError(
+        409,
+        "교재가 수정됐어요. 새 본문으로 준비된 학습을 시작해 주세요.",
+      );
+    const revision = q.revision ?? 1;
+    const skillId = identityHash(
+      skillIdentity(q.bookId, q.unitId, revision, {
+        concept: q.concept,
+        type: q.skillType ?? "기본 확인",
+      }),
+    );
+    const skillRef = ref.collection("skillProgress").doc(skillId);
+    const groupKey = identityHash(
+      JSON.stringify([q.bookId, q.unitId, revision, q.concept]),
+    );
+    const [skillSnap, groupSnap] = await Promise.all([
+      tx.get(skillRef),
+      tx.get(ref.collection("skillProgress").where("groupKey", "==", groupKey)),
+    ]);
+    const previousSkill = skillSnap.data() as SkillProgress | undefined;
     const { answer, seconds } = feedback,
       state = loadLearningState(sSnap.data()),
       previous = state.concepts[conceptKey(q)],
+      previousSchedule = previousSkill?.dueDate ? previousSkill : previous,
       out = gradeAnswer(
         q,
-        previous,
+        previous && previousSchedule
+          ? {
+              ...previous,
+              interval: previousSchedule.interval ?? 1,
+              dueDate: previousSchedule.dueDate ?? "",
+              reviewStreak: previousSchedule.reviewStreak ?? 0,
+            }
+          : previous,
         answer,
         confidence,
         seconds,
@@ -849,7 +1290,59 @@ export async function assessQuestion(uid: string, raw: unknown) {
         questionIds: [],
       };
     const points = Math.min(out.points, Math.max(0, 100 - (day.points ?? 0)));
-    const rid = `${aid}_${qid}`;
+    const rid = answerIdentity(aid, qid);
+    const nextSkill = advanceSkill(
+      previousSkill,
+      {
+        id: skillId,
+        bookId: q.bookId,
+        unitId: q.unitId,
+        revision,
+        groupKey,
+        concept: q.concept,
+        type: q.skillType ?? "기본 확인",
+      },
+      {
+        questionId: qid,
+        fingerprint: fingerprint(q),
+        date,
+        at: feedback.at,
+        correct: out.correct,
+        confidence,
+        seconds,
+        mode: a.mode,
+      },
+      rid,
+    );
+    if (a.mode !== "practice" && nextSkill.status !== "secure") {
+      out.interval = Math.min(
+        out.interval,
+        nextSkill.status === "learning" ? 3 : 1,
+      );
+      out.progress.interval = out.interval;
+      out.progress.dueDate = addDays(date, out.interval);
+    }
+    const nextDue =
+      a.mode === "practice"
+        ? (previousSchedule?.dueDate ?? "")
+        : out.progress.dueDate;
+    const nextInterval =
+      a.mode === "practice" ? (previousSchedule?.interval ?? 0) : out.interval;
+    if (a.mode !== "practice") {
+      nextSkill.dueDate = nextDue;
+      nextSkill.interval = nextInterval;
+      nextSkill.reviewStreak = out.progress.reviewStreak;
+      const earliest = [
+        ...groupSnap.docs
+          .filter((d) => d.id !== skillId)
+          .map((d) => d.data() as SkillProgress),
+        nextSkill,
+      ]
+        .filter((s) => !!s.dueDate)
+        .sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))[0];
+      out.progress.dueDate = earliest.dueDate!;
+      out.progress.interval = earliest.interval ?? nextInterval;
+    }
     const result: Result = {
       id: rid,
       questionId: qid,
@@ -865,21 +1358,51 @@ export async function assessQuestion(uid: string, raw: unknown) {
       confidence,
       seconds,
       points,
-      interval: out.interval,
-      dueDate: out.progress.dueDate,
+      interval: nextInterval,
+      dueDate: nextDue,
       mode: a.mode,
       prompt: q.prompt,
       choices: q.choices,
       explanation: q.explanation,
       reason: "",
       bookmarked: false,
+      assignmentId: aid,
+      skillType: q.skillType ?? "기본 확인",
+      fingerprint: fingerprint(q),
+      ...(a.context?.[q.id] ?? {
+        bookTitle: book.title,
+        unitTitle: book.units.find((u) => u.id === q.unitId)?.title ?? "",
+        bookRevision: revision,
+      }),
+      ...(a.reasons?.[qid] ? { selectionReason: a.reasons[qid] } : {}),
+      reviewChange: {
+        previousDue: previousSchedule?.dueDate ?? "",
+        nextDue,
+        previousInterval: previousSchedule?.interval ?? 0,
+        nextInterval,
+        previousWeakness: previous?.weakness ?? 0,
+        nextWeakness:
+          a.mode === "practice"
+            ? (previous?.weakness ?? 0)
+            : out.progress.weakness,
+        previousMastery: previousSkill?.status ?? "learning",
+        nextMastery: nextSkill.status,
+        policyVersion: ADAPTIVE_POLICY.version,
+      },
     };
-    if (a.mode !== "practice") state.concepts[conceptKey(q)] = out.progress;
+    if (a.mode !== "practice") {
+      state.concepts[conceptKey(q)] = { ...out.progress, lastAttemptId: rid };
+      tx.set(skillRef, nextSkill);
+    }
     state.points += points;
     state.updatedAt = now.toISOString();
     tx.set(sRef, state);
     tx.update(aRef, { results: { ...a.results, [qid]: result } });
     tx.set(ref.collection("attempts").doc(rid), result);
+    tx.set(ref.collection("answerEvents").doc(rid), {
+      ...result,
+      phase: "complete",
+    });
     if (a.mode !== "practice")
       tx.set(ref.collection("days").doc(date), {
         ...day,
@@ -906,7 +1429,15 @@ export async function updateNote(uid: string, raw: unknown) {
     reason: text(v.reason ?? "", 500, "오답 메모", true),
     bookmarked: v.bookmarked === true,
   };
-  await rRef.update(patch);
+  const batch = adminDb().batch();
+  batch.update(rRef, patch);
+  const event = ref.collection("answerEvents").doc(rRef.id);
+  batch.set(
+    event,
+    { ...r.data(), ...patch, phase: "complete" },
+    { merge: true },
+  );
+  await batch.commit();
   return patch;
 }
 export async function updateSettings(uid: string, raw: unknown) {

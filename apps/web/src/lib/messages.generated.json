@@ -1,4 +1,9 @@
 {
+  "이 유형의 정기 복습일": {
+    "en": "Scheduled review for this skill",
+    "ja": "このタイプの復習予定日",
+    "zh": "此题型的计划复习日期"
+  },
   "교과서 목차를 불러오고 있어요.": {
     "en": "Loading textbook contents.",
     "ja": "教科書の目次を読み込んでいます。",
@@ -2463,5 +2468,430 @@
     "en": "and start learning with its table of contents.",
     "ja": "目次を読み込んで学習できます。",
     "zh": "即可载入目录开始学习。"
+  },
+  "풀이 기록": {
+    "en": "History",
+    "ja": "学習履歴",
+    "zh": "答题记录"
+  },
+  "문제 풀이 기록": {
+    "en": "Question history",
+    "ja": "問題の学習履歴",
+    "zh": "题目作答记录"
+  },
+  "모험의 발자국": {
+    "en": "Footsteps of the Adventure",
+    "ja": "冒険の足跡",
+    "zh": "冒险的足迹"
+  },
+  "어떤 문제를 풀었고, 다음 배움으로 어떻게 이어졌는지.": {
+    "en": "See what you answered and how it led to your next step.",
+    "ja": "解いた問題と、次の学びへのつながりを確認しよう。",
+    "zh": "看看做过哪些题，又如何走向下一步学习。"
+  },
+  "지나온 발자국에는, 다음 길의 힌트가 있어.": {
+    "en": "Past footsteps hold clues for the path ahead.",
+    "ja": "これまでの足跡に、次の道のヒントがあるよ。",
+    "zh": "走过的足迹中，藏着下一段路的线索。"
+  },
+  "개인별 풀이와 출제 경로": {
+    "en": "Your answers and learning paths",
+    "ja": "自分の解答と出題の経路",
+    "zh": "个人作答与出题路径"
+  },
+  "풀이 날짜 · 한국 시간": {
+    "en": "Answer date · Korea time",
+    "ja": "解答日 · 韓国時間",
+    "zh": "作答日期 · 韩国时间"
+  },
+  "학습 종류": {
+    "en": "Learning activity",
+    "ja": "学習の種類",
+    "zh": "学习类型"
+  },
+  "모든 학습": {
+    "en": "All activities",
+    "ja": "すべての学習",
+    "zh": "全部学习"
+  },
+  "진도 학습": {
+    "en": "Curriculum learning",
+    "ja": "進度学習",
+    "zh": "进度学习"
+  },
+  "단원 추가 문제": {
+    "en": "Extra unit questions",
+    "ja": "単元の追加問題",
+    "zh": "单元加练题"
+  },
+  "정기 복습": {
+    "en": "Scheduled review",
+    "ja": "定期復習",
+    "zh": "定期复习"
+  },
+  "취약 유형 보강": {
+    "en": "Targeted practice",
+    "ja": "苦手なタイプの補強",
+    "zh": "薄弱题型强化"
+  },
+  "같은 문제 다시 풀기": {
+    "en": "Retry the same question",
+    "ja": "同じ問題を解き直す",
+    "zh": "重做同一道题"
+  },
+  "풀이 교재": {
+    "en": "Textbook",
+    "ja": "解いた教材",
+    "zh": "作答教材"
+  },
+  "모든 교재": {
+    "en": "All books",
+    "ja": "すべての教材",
+    "zh": "全部教材"
+  },
+  "조회 조건 초기화": {
+    "en": "Reset filters",
+    "ja": "検索条件をリセット",
+    "zh": "重置筛选条件"
+  },
+  "풀이 기록을 불러오고 있어요.": {
+    "en": "Loading your question history.",
+    "ja": "学習履歴を読み込んでいます。",
+    "zh": "正在加载作答记录。"
+  },
+  "이 조건의 풀이 기록이 없어요": {
+    "en": "No answers match these filters",
+    "ja": "この条件の学習履歴はありません",
+    "zh": "没有符合条件的作答记录"
+  },
+  "답안을 제출하면 날짜와 학습 종류별로 기록이 남아요. 이해도를 선택하지 않은 답안도 확인할 수 있어요.": {
+    "en": "Submitted answers are saved by date and activity, even before you select your understanding.",
+    "ja": "提出した解答は日付と学習の種類ごとに保存されます。理解度を選ぶ前の解答も確認できます。",
+    "zh": "提交的答案会按日期和学习类型保存，尚未选择理解度的答案也可以查看。"
+  },
+  "이전 풀이 기록 더 보기": {
+    "en": "Load earlier answers",
+    "ja": "以前の学習履歴を表示",
+    "zh": "加载更早的作答记录"
+  },
+  "문제를 배정한 이유는 새 버전부터 기록합니다. 이전 버전의 정오답·이해도·풀이 날짜는 그대로 보존하며, 당시 남기지 않은 분기 이유는 추정하지 않습니다.": {
+    "en": "Assignment reasons are recorded from this version onward. Earlier answers, understanding and dates are preserved; missing historical reasons are not inferred.",
+    "ja": "出題理由はこのバージョンから記録します。以前の正誤・理解度・解答日は保存し、記録されていない分岐理由は推測しません。",
+    "zh": "出题原因从此版本开始记录。旧版本的正误、理解度和日期会保留，不推测当时未记录的分支原因。"
+  },
+  "이해도 미선택": {
+    "en": "Understanding not selected",
+    "ja": "理解度未選択",
+    "zh": "尚未选择理解度"
+  },
+  "{0}초": {
+    "en": "{0} sec",
+    "ja": "{0}秒",
+    "zh": "{0}秒"
+  },
+  "이전 교재": {
+    "en": "Previous textbook",
+    "ja": "以前の教材",
+    "zh": "以前的教材"
+  },
+  "이전 버전 기록 · 출제 이유는 별도로 남기지 않았어요.": {
+    "en": "Earlier record · assignment reason was not recorded.",
+    "ja": "以前の記録 · 出題理由は記録されていません。",
+    "zh": "旧版本记录 · 未单独记录出题原因。"
+  },
+  "해설과 복습 분기 보기": {
+    "en": "Explanation and review path",
+    "ja": "解説と復習の分岐を見る",
+    "zh": "查看解析与复习分支"
+  },
+  "답안은 저장됐어요. 당시 이해도를 선택하지 않아 복습 일정과 숙련도에는 아직 반영하지 않았어요.": {
+    "en": "Your answer is saved. Without an understanding choice, it has not updated review scheduling or skill status.",
+    "ja": "解答は保存されています。理解度が未選択のため、復習予定と習熟状態には反映していません。",
+    "zh": "答案已保存。当时尚未选择理解度，因此还未更新复习计划和掌握状态。"
+  },
+  "정기 복습일": {
+    "en": "Scheduled review date",
+    "ja": "定期復習日",
+    "zh": "定期复习日期"
+  },
+  "첫 기록": {
+    "en": "First record",
+    "ja": "最初の記録",
+    "zh": "首次记录"
+  },
+  "변경 없음": {
+    "en": "Unchanged",
+    "ja": "変更なし",
+    "zh": "没有变更"
+  },
+  "유형 확인 상태": {
+    "en": "Skill check status",
+    "ja": "タイプの確認状態",
+    "zh": "题型确认状态"
+  },
+  "같은 문제 다시 풀기는 복습 일정과 숙련도를 바꾸지 않아요.": {
+    "en": "Retrying the same question does not change review scheduling or mastery.",
+    "ja": "同じ問題の解き直しでは復習予定と習熟状態は変わりません。",
+    "zh": "重做同一道题不会改变复习计划或掌握状态。"
+  },
+  "정오답·해설 후 이해도·서로 다른 문항과 날짜의 기록을 반영했어요.": {
+    "en": "Updated using correctness, understanding after explanation, and distinct questions and dates.",
+    "ja": "正誤・解説後の理解度・異なる問題と日付の記録を反映しました。",
+    "zh": "已结合正误、阅读解析后的理解度，以及不同题目和日期的记录更新。"
+  },
+  "당시 기록한 다음 복습일: {0}": {
+    "en": "Next review date recorded then: {0}",
+    "ja": "当時記録した次回復習日: {0}",
+    "zh": "当时记录的下次复习日期：{0}"
+  },
+  "이 문제로 이어진 이전 풀이": {
+    "en": "The earlier answer that led here",
+    "ja": "この問題につながった前の解答",
+    "zh": "引出本题的上一次作答"
+  },
+  "이전 풀이를 찾고 있어요.": {
+    "en": "Loading the earlier answer.",
+    "ja": "前の解答を読み込んでいます。",
+    "zh": "正在查找上一次作答。"
+  },
+  "개념·유형 학습지도": {
+    "en": "Concept and skill map",
+    "ja": "概念・タイプの学習マップ",
+    "zh": "概念与题型学习图"
+  },
+  "10문제는 한 회차의 상한이에요.": {
+    "en": "Ten questions is the maximum for one session.",
+    "ja": "10問は一回の学習の上限です。",
+    "zh": "10道题是一轮学习的上限。"
+  },
+  "등록한 본문을 개념·유형으로 나누고, 서로 다른 새 문제와 다른 날짜의 풀이로 확인해요. 단원마다 필요한 문제 수는 달라집니다. 확인을 마친 단원에서 나중에 어려움이 생기면 보강으로 따로 다뤄요.": {
+    "en": "We map the supplied material into concepts and skills, then check them with different questions on different dates. Each unit needs a different amount of practice. Later difficulties in a completed unit are handled through targeted practice.",
+    "ja": "登録本文を概念とタイプに分け、異なる新しい問題と別の日の解答で確認します。必要な問題数は単元ごとに異なります。確認済み単元で後から難しさが生じた場合は、補強として別に扱います。",
+    "zh": "我们把已登记正文分成概念和题型，通过不同的新题及不同日期的作答确认。各单元需要的题量不同。已确认单元后来出现的困难，会单独作为强化练习处理。"
+  },
+  "현재 운영 기준: 서로 다른 문항 {0}개 이상 · 최근 {1}개 정답과 ‘알겠어요’ · 서로 다른 {2}일. 학습 효과를 보장하는 고정 기준이 아니며 운영 중 조정할 수 있어요.": {
+    "en": "Current operating rule: at least {0} distinct questions, the latest {1} correct with ‘I understand’, across {2} dates. This is an adjustable operating rule, not a guarantee of learning outcomes.",
+    "ja": "現在の運用基準: 異なる問題{0}問以上、直近{1}問で正解かつ「分かった」、異なる{2}日。学習効果を保証する固定基準ではなく、運用中に調整できます。",
+    "zh": "当前运行标准：至少{0}道不同题目，最近{1}题答对且选择“明白了”，覆盖{2}个不同日期。这是可调整的运行规则，并不保证学习效果。"
+  },
+  "교재를 등록하면 단원별 학습지도를 볼 수 있어요.": {
+    "en": "Add a textbook to view its unit learning maps.",
+    "ja": "教材を登録すると単元別の学習マップを確認できます。",
+    "zh": "添加教材后即可查看单元学习图。"
+  },
+  "등록한 본문 범위 기준": {
+    "en": "Based on supplied material",
+    "ja": "登録した本文の範囲が基準",
+    "zh": "以已登记的正文范围为准"
+  },
+  "진도 확인 {0} / {1}유형": {
+    "en": "Progress checked: {0} / {1} skills",
+    "ja": "進度確認 {0} / {1}タイプ",
+    "zh": "进度已确认 {0} / {1}种题型"
+  },
+  "학습지도 준비 필요": {
+    "en": "Learning map needed",
+    "ja": "学習マップの準備が必要",
+    "zh": "需要准备学习图"
+  },
+  "등록 본문에서 AI가 분석한 학습지도": {
+    "en": "AI map from the supplied material",
+    "ja": "登録本文をAIが分析した学習マップ",
+    "zh": "AI根据已登记正文分析的学习图"
+  },
+  "직접 정한 개념·유형 학습지도": {
+    "en": "Manually defined concept and skill map",
+    "ja": "自分で設定した概念・タイプのマップ",
+    "zh": "手动设定的概念与题型学习图"
+  },
+  "초기 문제은행 준비 목표 {0}문항": {
+    "en": "Initial question pool target: {0}",
+    "ja": "初期問題バンクの準備目標 {0}問",
+    "zh": "初始题库准备目标：{0}题"
+  },
+  "필요한 유형만 나누어 생성합니다. 전부 풀어야 하는 의무량이 아닙니다.": {
+    "en": "Questions are generated in batches for needed skills. You are not required to answer them all.",
+    "ja": "必要なタイプだけ分けて生成します。すべてを解く必要はありません。",
+    "zh": "只分批生成需要的题型，并不要求全部作答。"
+  },
+  "다른 문항 {0}개 · 풀이 {1}회": {
+    "en": "{0} distinct questions · {1} attempts",
+    "ja": "異なる問題{0}問 · 解答{1}回",
+    "zh": "{0}道不同题目 · 作答{1}次"
+  },
+  "다른 날 확인": {
+    "en": "Check on another day",
+    "ja": "別の日に確認",
+    "zh": "改日确认"
+  },
+  "확인 완료": {
+    "en": "Checked",
+    "ja": "確認済み",
+    "zh": "已确认"
+  },
+  "보강 필요": {
+    "en": "Targeted practice needed",
+    "ja": "補強が必要",
+    "zh": "需要强化"
+  },
+  "새 문제로 보강": {
+    "en": "Practice with new questions",
+    "ja": "新しい問題で補強",
+    "zh": "用新题强化"
+  },
+  "한 줄에 개념 | 유형": {
+    "en": "One concept | skill per line",
+    "ja": "一行に概念 | タイプ",
+    "zh": "每行填写概念 | 题型"
+  },
+  "기존 풀이 이력은 보존됩니다. 이름을 바꾼 유형은 새로운 확인 대상으로 취급해요.": {
+    "en": "Existing answers are preserved. A renamed skill becomes a new check target.",
+    "ja": "過去の解答は保存されます。名前を変えたタイプは新しい確認対象として扱います。",
+    "zh": "已有作答记录会保留。更名的题型将作为新的确认对象。"
+  },
+  "학습지도 저장": {
+    "en": "Save learning map",
+    "ja": "学習マップを保存",
+    "zh": "保存学习图"
+  },
+  "본문을 분석해 필요한 개념과 유형을 정한 뒤, 부족한 유형부터 문제를 준비해요.": {
+    "en": "We analyze the material into concepts and skills, then prepare questions where coverage is missing.",
+    "ja": "本文を分析して概念とタイプを決め、不足するタイプから問題を準備します。",
+    "zh": "先分析正文并确定概念与题型，再从缺少的题型开始准备题目。"
+  },
+  "목차만으로 세부 내용을 추측하지 않아요. 목차·본문·범위 편집에서 이 단원의 본문이나 학습 노트를 등록해 주세요.": {
+    "en": "We do not infer content from a table of contents alone. Add this unit’s text or notes in the book editor.",
+    "ja": "目次だけで内容を推測しません。教材編集でこの単元の本文や学習ノートを登録してください。",
+    "zh": "我们不会仅凭目录推测内容。请在教材编辑中登记本单元正文或学习笔记。"
+  },
+  "이 단원 새 문제 풀기": {
+    "en": "New questions for this unit",
+    "ja": "この単元の新しい問題",
+    "zh": "练习本单元新题"
+  },
+  "부족한 문제 준비": {
+    "en": "Prepare missing questions",
+    "ja": "不足する問題を準備",
+    "zh": "准备不足的题目"
+  },
+  "학습지도 분석·출제": {
+    "en": "Analyze map and prepare questions",
+    "ja": "学習マップ分析・出題",
+    "zh": "分析学习图并出题"
+  },
+  "수정 닫기": {
+    "en": "Close editing",
+    "ja": "編集を閉じる",
+    "zh": "关闭编辑"
+  },
+  "개념·유형 수정": {
+    "en": "Edit concepts and skills",
+    "ja": "概念・タイプを編集",
+    "zh": "编辑概念与题型"
+  },
+  "취약 유형은 지금, 새 문제로": {
+    "en": "Practice weak skills with new questions now",
+    "ja": "苦手なタイプは今、新しい問題で",
+    "zh": "薄弱题型现在就用新题练习"
+  },
+  "{0}개 개념에서 보강이 필요해요. 정기 복습일을 기다리지 않고 아직 보지 않은 문제로 연습할 수 있어요.": {
+    "en": "{0} concepts need targeted practice. Use unseen questions without waiting for the scheduled review date.",
+    "ja": "{0}個の概念で補強が必要です。定期復習日を待たず、新しい問題で練習できます。",
+    "zh": "有{0}个概念需要强化。无需等待定期复习日期，即可用未见过的新题练习。"
+  },
+  "취약 유형 보강 시작": {
+    "en": "Start targeted practice",
+    "ja": "苦手タイプの補強を開始",
+    "zh": "开始薄弱题型强化"
+  },
+  "이 유형 새 문제로 보강": {
+    "en": "Practice this skill with new questions",
+    "ja": "このタイプを新しい問題で補強",
+    "zh": "用新题强化此题型"
+  },
+  "날짜별 문제와 복습 분기 기록 보기": {
+    "en": "View dated answers and review paths",
+    "ja": "日付別の解答と復習の分岐を見る",
+    "zh": "查看按日期记录的题目和复习分支"
+  },
+  "선택한 범위의 확인을 마쳤어요": {
+    "en": "The selected range has been checked",
+    "ja": "選択範囲の確認が終わりました",
+    "zh": "已完成所选范围的确认"
+  },
+  "학습지도에서 단원별 새 문제를 더 풀거나 학습 범위를 바꿀 수 있어요.": {
+    "en": "Use the learning map for more new questions or change your study range.",
+    "ja": "学習マップで単元の新しい問題を解くか、学習範囲を変更できます。",
+    "zh": "可以在学习图中继续练习单元新题，或调整学习范围。"
+  },
+  "단원별 새 문제 보기": {
+    "en": "View new questions by unit",
+    "ja": "単元別の新しい問題を見る",
+    "zh": "查看各单元新题"
+  },
+  "내가 선택한 문제 다시 풀기": {
+    "en": "Retry the question I selected",
+    "ja": "自分で選んだ問題の解き直し",
+    "zh": "重做自己选择的题目"
+  },
+  "선택한 단원의 아직 보지 않은 추가 문제": {
+    "en": "An unseen extra question from your chosen unit",
+    "ja": "選んだ単元の未見の追加問題",
+    "zh": "所选单元中尚未见过的加练题"
+  },
+  "헷갈리거나 어려웠던 유형의 새 문제": {
+    "en": "A new question for a confusing or difficult skill",
+    "ja": "迷ったり難しかったタイプの新しい問題",
+    "zh": "针对困惑或困难题型的新题"
+  },
+  "복습 시점이 된 개념을 새 문제로 확인": {
+    "en": "Check a concept due for review with a new question",
+    "ja": "復習時期の概念を新しい問題で確認",
+    "zh": "用新题确认已到复习时间的概念"
+  },
+  "새 변형 문제가 없어 이전 문제로 기억 확인": {
+    "en": "No fresh variant available; check recall with an earlier question",
+    "ja": "新しい変形問題がないため、以前の問題で記憶を確認",
+    "zh": "暂无新变式题，用以前的题目确认记忆"
+  },
+  "배운 개념을 다른 문제로 점검": {
+    "en": "Check a learned concept with a different question",
+    "ja": "学んだ概念を別の問題で確認",
+    "zh": "用不同题目检查学过的概念"
+  },
+  "아직 확인하지 않은 개념·유형 학습": {
+    "en": "Learn a concept or skill not yet checked",
+    "ja": "未確認の概念・タイプを学習",
+    "zh": "学习尚未确认的概念与题型"
+  },
+  "이 유형은 정기 복습 전에도 새 문제로 보강할 수 있어요.": {
+    "en": "You can practice this skill with new questions before its scheduled review.",
+    "ja": "このタイプは定期復習の前にも新しい問題で補強できます。",
+    "zh": "定期复习之前，也可以用新题强化此题型。"
+  },
+  "오늘의 확인을 마쳤어요. 다른 날의 새 문제로 기억을 확인해요.": {
+    "en": "Today’s check is complete. Try a new question on another day to check retention.",
+    "ja": "今日の確認は完了です。別の日に新しい問題で記憶を確認します。",
+    "zh": "今天的确认已完成，请改日用新题确认记忆。"
+  },
+  "서로 다른 문항과 날짜에서 이 유형을 확인했어요.": {
+    "en": "This skill was checked across different questions and dates.",
+    "ja": "異なる問題と日付でこのタイプを確認しました。",
+    "zh": "已通过不同题目和日期确认此题型。"
+  },
+  "새 문항의 기록을 쌓으며 유형별 이해를 확인하고 있어요.": {
+    "en": "We are checking each skill as new-question evidence accumulates.",
+    "ja": "新しい問題の記録を積み重ねて、タイプ別の理解を確認しています。",
+    "zh": "正在积累新题记录，确认各题型的理解情况。"
+  },
+  "직접 개념·유형 정하기": {
+    "en": "Define concepts and skills",
+    "ja": "概念・タイプを自分で設定",
+    "zh": "手动设定概念与题型"
+  },
+  "다시 불러오기": {
+    "en": "Reload",
+    "ja": "再読み込み",
+    "zh": "重新加载"
   }
 }
