@@ -2,14 +2,22 @@ import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
 import { CATALOG } from "@/lib/catalog";
 import { mergeTextbookCatalog } from "@/lib/textbook-catalog";
+import { FieldPath } from "firebase-admin/firestore";
 
 export async function textbookCatalog(includeUnpublished = false) {
-  const snapshot = await adminDb().collection("textbooks").limit(1000).get();
-  return mergeTextbookCatalog(
-    CATALOG,
-    snapshot.docs.map((d) => ({ ...d.data(), id: d.id })),
-    includeUnpublished,
-  );
+  const collection = adminDb().collection("textbooks");
+  const saved: Record<string, unknown>[] = [];
+  let query = collection.orderBy(FieldPath.documentId()).limit(500);
+  while (true) {
+    const snapshot = await query.get();
+    saved.push(...snapshot.docs.map((d) => ({ ...d.data(), id: d.id })));
+    if (snapshot.size < 500) break;
+    query = collection
+      .orderBy(FieldPath.documentId())
+      .startAfter(snapshot.docs.at(-1)!)
+      .limit(500);
+  }
+  return mergeTextbookCatalog(CATALOG, saved, includeUnpublished);
 }
 
 export async function catalogTextbook(id: string) {

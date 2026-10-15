@@ -16,7 +16,7 @@ test("catalog contains source-backed books in all five subjects and keeps identi
     const parsed = parseBook(b);
     assert.ok(parsed.units.length > 0);
     assert.ok(parsed.author || parsed.publisher === "교육부");
-    assert.equal(parsed.curriculum, "2022");
+    assert.ok(["2015", "2022"].includes(parsed.curriculum!));
     assert.ok(parsed.sourceUrl?.startsWith("https://"));
     assert.ok(parsed.units.every((u) => !u.source));
   }
@@ -73,7 +73,13 @@ test("social volume is independent of learner grade, with distinct official TOCs
   );
   assert.equal(second.units[0].title, "헌법과 국가 기관");
   const matches = matchTextbooks(
-    { title: "사회 ②", publisher: "미래엔", subject: "social", grade: 3 },
+    {
+      title: "사회 ②",
+      publisher: "미래엔",
+      subject: "social",
+      grade: 3,
+      curriculum: "2022",
+    },
     CATALOG,
   );
   assert.deepEqual(

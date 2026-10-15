@@ -1,6 +1,7 @@
 import type { Book, BankQuestion } from "./learning";
 import type { SubjectId } from "@nohakwon/core";
 import { schoolLevelOf, type Grade, type SchoolLevel } from "./education";
+import { canonicalPublisher, publisherInText } from "./publishers";
 function normalized(value: string) {
   return value
     .normalize("NFKC")
@@ -23,15 +24,7 @@ export type TextbookMatch = { book: Book; score: number; reasons: string[] };
 const known = (value?: string) =>
   value && !/확인 필요|불명|모름|unknown/i.test(value) ? value : "";
 function publisherKey(value?: string) {
-  return normalized(known(value) || "")
-    .split(/·|ㆍ/)[0]
-    .replace(/비상교육.*/, "비상")
-    .replace(/미래엔.*/, "미래엔")
-    .replace(/동아출판.*/, "동아")
-    .replace(/천재교과서.*/, "천재교과서")
-    .replace(/천재교육.*/, "천재교육")
-    .replace(/교육부.*/, "교육부")
-    .replace(/주식회사|주$/, "");
+  return canonicalPublisher(known(value) || "");
 }
 function volumeKey(value?: string) {
   return (value || "")
@@ -72,20 +65,7 @@ export function identityFromText(query: string): TextbookIdentity {
   const schoolLevel =
     explicitLevel ||
     (grade ? (Number(grade) >= 4 ? "elementary" : "middle") : undefined);
-  const publisher = [
-    "천재교과서",
-    "천재교육",
-    "비상교육",
-    "미래엔",
-    "동아출판",
-    "지학사",
-    "금성출판사",
-    "능률",
-    "YBM",
-    "비상",
-    "동아",
-    "교육부",
-  ].find((p) => query.toLowerCase().includes(p.toLowerCase()));
+  const publisher = publisherInText(query);
   const author = query.match(/[（(]([가-힣]{2,5})[）)]/)?.[1];
   const curriculum = query.match(
     /2015|2022/,

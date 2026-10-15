@@ -3,6 +3,7 @@ import { SUBJECT_NAMES, type Book, type BankQuestion } from "./learning";
 import { QUESTIONS } from "./questions";
 import textbookData from "../data/textbooks.json";
 import elementaryData from "../data/elementary-textbooks.json";
+import publisherData from "../data/publisher-textbooks.json";
 import { schoolLevelOf, type SchoolLevel } from "./education";
 import { ELEMENTARY_FOUNDATION } from "./elementary-foundation";
 
@@ -159,6 +160,7 @@ export const PUBLISHER_CATALOG: Book[] = [
   ...[
     ...textbookData.map((b) => ({ ...b, schoolLevel: "middle" })),
     ...elementaryData,
+    ...publisherData,
   ].map((b): Book => ({
     id: b.id,
     title: b.title,
@@ -168,7 +170,7 @@ export const PUBLISHER_CATALOG: Book[] = [
         ? (b.publisherAliases as string[])
         : [],
     author: b.author,
-    curriculum: b.curriculum as "2022",
+    curriculum: b.curriculum as "2015" | "2022",
     volume: b.volume,
     flexibleGrade: b.flexibleGrade,
     edition: `${b.curriculum} 개정 · 대단원 목차`,

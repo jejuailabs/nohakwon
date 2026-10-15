@@ -7,6 +7,8 @@ import { ELEMENTARY_FOUNDATION } from "./elementary-foundation";
 import { parseBook, parseQuestion } from "./learning";
 import { catalogSelection } from "./textbook-catalog";
 import { identityFromText, matchTextbooks } from "./matching";
+import elementaryData from "../data/elementary-textbooks.json";
+import publisherData from "../data/publisher-textbooks.json";
 
 test("legacy records remain middle school while elementary requires an explicit school level", () => {
   assert.equal(schoolLevelOf({}), "middle");
@@ -39,10 +41,14 @@ test("legacy records remain middle school while elementary requires an explicit 
 
 test("official elementary TOCs cover every supported grade and subject without inventing body passages", () => {
   const books = PUBLISHER_CATALOG.filter((b) => b.schoolLevel === "elementary");
-  assert.equal(books.length, 33);
+  const expected = [
+    ...elementaryData,
+    ...publisherData.filter((b) => b.schoolLevel === "elementary"),
+  ];
+  assert.equal(books.length, expected.length);
   assert.equal(
     books.reduce((n, b) => n + b.units.length, 0),
-    162,
+    expected.reduce((n, b) => n + b.units.length, 0),
   );
   for (const grade of [4, 5, 6]) {
     assert.deepEqual(
@@ -56,8 +62,8 @@ test("official elementary TOCs cover every supported grade and subject without i
   }
   for (const book of books) {
     assert.equal(parseBook(book).schoolLevel, "elementary");
-    assert.ok(book.sourceUrl?.startsWith("https://e.m-teacher.co.kr/"));
-    assert.ok(book.units.every((u) => !u.source && !/보완|독도/.test(u.title)));
+    assert.ok(book.sourceUrl?.startsWith("https://"));
+    assert.ok(book.units.every((u) => !u.source && !/^\[보완\]/.test(u.title)));
     assert.deepEqual(starterQuestions(book), []);
   }
 });

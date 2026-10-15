@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import type { DecodedIdToken } from "firebase-admin/auth";
 import { parseProfileInput } from "../apps/web/src/lib/account";
 import type { BankQuestion } from "../apps/web/src/lib/learning";
+import { PUBLISHER_CATALOG } from "../apps/web/src/lib/catalog";
 loadEnvConfig(path.resolve("apps/web"));
 
 async function main() {
@@ -43,7 +44,7 @@ async function main() {
         (b) =>
           b.schoolLevel === "elementary" && !b.id.startsWith("foundation-"),
       ).length,
-      33,
+      PUBLISHER_CATALOG.filter((b) => b.schoolLevel === "elementary").length,
     );
     const legacy = db
       .collection("students")

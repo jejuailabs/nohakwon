@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { PUBLISHER_CATALOG } from "../apps/web/src/lib/catalog";
 import sourceData from "../apps/web/src/data/textbooks.json";
 import elementaryData from "../apps/web/src/data/elementary-textbooks.json";
+import publisherData from "../apps/web/src/data/publisher-textbooks.json";
 import { parseBook } from "../apps/web/src/lib/learning";
 
 loadEnvConfig(path.resolve("apps/web"));
@@ -25,7 +26,7 @@ async function main() {
     const book = PUBLISHER_CATALOG[i],
       parsed = parseBook(book),
       old = existing[i].data();
-    const source = [...sourceData, ...elementaryData].find(
+    const source = [...sourceData, ...elementaryData, ...publisherData].find(
       (b) => b.id === book.id,
     );
     const managedBy = "publisher-catalog-v1";
@@ -54,6 +55,9 @@ async function main() {
         tocLevel: "major",
         tocSourceUrls: source?.tocSourceUrls ?? [book.sourceUrl],
         checkedAt: source?.checkedAt ?? "2026-10-14",
+        ...(source && "verificationNote" in source && source.verificationNote
+          ? { verificationNote: source.verificationNote }
+          : {}),
         updatedAt: new Date().toISOString(),
       },
     });
@@ -70,9 +74,14 @@ async function main() {
     }),
   );
   if (apply && pending.length) {
-    const batch = db.batch();
-    pending.forEach((p) => batch.set(refs[p.index], p.data));
-    await batch.commit();
+    // Keep catalog growth below Firestore's 500-write batch limit.
+    for (let offset = 0; offset < pending.length; offset += 450) {
+      const batch = db.batch();
+      pending
+        .slice(offset, offset + 450)
+        .forEach((p) => batch.set(refs[p.index], p.data));
+      await batch.commit();
+    }
     await db.collection("auditLogs").add({
       action: "sync-publisher-catalog",
       target: expected,
