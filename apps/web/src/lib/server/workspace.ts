@@ -30,7 +30,9 @@ import {
   type LearnMode,
   type LearningConfig,
 } from "@/lib/learning";
-import { CATALOG, starterQuestions } from "@/lib/catalog";
+import { starterQuestions } from "@/lib/catalog";
+import { catalogTextbook } from "./textbook-catalog";
+import { catalogSelection } from "@/lib/textbook-catalog";
 import { aiConfigured, generateQuestions } from "./ai";
 import { adminRole } from "./admin-service";
 import { duplicateQuestion } from "@/lib/matching";
@@ -127,20 +129,16 @@ export async function saveBook(
   value: unknown,
   bookId?: string,
   catalogId?: string,
+  selection?: unknown,
 ) {
   const { ref } = await studentFor(uid);
   const input = catalogId
-    ? (CATALOG.find((b) => b.id === catalogId) ??
-      (await adminDb().collection("textbooks").doc(id(catalogId)).get()).data())
+    ? await catalogTextbook(id(catalogId))
     : parseBook(value);
-  if (
-    !input ||
-    (catalogId &&
-      !CATALOG.some((b) => b.id === catalogId) &&
-      !(input as Record<string, unknown>).published)
-  )
-    throw new AccountError(404, "선택한 교재가 없어요.");
-  const parsed = parseBook(input),
+  if (!input) throw new AccountError(404, "선택한 교재가 없어요.");
+  const parsed = catalogId
+      ? catalogSelection(input as Book, selection)
+      : parseBook(input),
     bid = bookId ? id(bookId) : catalogId ? id(catalogId) : randomUUID(),
     bookRef = ref.collection("books").doc(bid);
   const book = await adminDb().runTransaction(async (tx) => {
@@ -151,6 +149,7 @@ export async function saveBook(
     if (!old.exists && list.size >= 20)
       throw new AccountError(409, "교재는 최대 20개까지 등록할 수 있어요.");
     const prior = old.data();
+    if (catalogId && prior) return prior as Book;
     const changed =
       !prior ||
       JSON.stringify(prior.units) !== JSON.stringify(parsed.units) ||
@@ -162,6 +161,9 @@ export async function saveBook(
       createdAt: prior?.createdAt ?? new Date().toISOString(),
       revision: (prior?.revision ?? 0) + (changed ? 1 : 0),
       origin: prior?.origin ?? (catalogId ? "catalog" : "upload"),
+      ...(catalogId || prior?.catalogId
+        ? { catalogId: catalogId || prior!.catalogId }
+        : {}),
     };
     tx.set(bookRef, b);
     return b;
@@ -197,8 +199,7 @@ export async function queueJob(uid: string, bookId: string, unitId: string) {
       "체험 기간이 끝났어요. 구독 후 새 문제를 만들 수 있어요.",
     );
   const book = (await ref.collection("books").doc(id(bookId)).get()).data() as
-      | Book
-      | undefined,
+      Book | undefined,
     unit = book?.units.find((u) => u.id === unitId);
   if (!book || !unit)
     throw new AccountError(404, "교재와 단원을 확인해 주세요.");

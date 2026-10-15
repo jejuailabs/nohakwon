@@ -1,7 +1,9 @@
 import { apiError, bodyJson, json, mutationGuard } from "@/lib/server/http";
 import { requireUser } from "@/lib/server/session";
 import { studentFor, entitlement } from "@/lib/server/workspace";
-import { extractMaterial } from "@/lib/server/ai";
+import { extractMaterial, identifyTextbook } from "@/lib/server/ai";
+import { textbookCatalog } from "@/lib/server/textbook-catalog";
+import { matchTextbooks } from "@/lib/matching";
 import { object, text } from "@/lib/learning";
 import { AccountError } from "@/lib/account";
 export const runtime = "nodejs";
@@ -17,12 +19,13 @@ export async function POST(request: Request) {
         "체험 기간이 끝났어요. 구독 후 AI 인식을 사용할 수 있어요.",
       );
     let input = "",
-      kind: "toc" | "content" = "toc",
+      kind: "cover" | "toc" | "content" = "toc",
       media: { mime: string; data: Buffer } | undefined;
     if (request.headers.get("content-type")?.startsWith("application/json")) {
       const v = object(await bodyJson(request, 150000));
       input = text(v.text, 30000, "학습 자료");
-      kind = v.kind === "content" ? "content" : "toc";
+      kind =
+        v.kind === "cover" ? "cover" : v.kind === "content" ? "content" : "toc";
     } else {
       const reader = request.body?.getReader();
       if (!reader) throw new AccountError(400, "파일이 없어요.");
@@ -47,7 +50,12 @@ export async function POST(request: Request) {
         body: Buffer.concat(chunks),
       }).formData();
       const file = form.get("file");
-      kind = form.get("kind") === "content" ? "content" : "toc";
+      kind =
+        form.get("kind") === "cover"
+          ? "cover"
+          : form.get("kind") === "content"
+            ? "content"
+            : "toc";
       if (!(file instanceof File) || file.size > 5 * 1024 * 1024 || !file.size)
         throw new AccountError(400, "5MB 이하의 파일을 선택해 주세요.");
       const bytes = Buffer.from(await file.arrayBuffer());
@@ -77,6 +85,13 @@ export async function POST(request: Request) {
           );
         media = { mime, data: bytes };
       }
+    }
+    if (kind === "cover") {
+      const identity = await identifyTextbook(user.uid, input, media);
+      return json({
+        identity,
+        matches: matchTextbooks(identity, await textbookCatalog()),
+      });
     }
     return json(await extractMaterial(user.uid, input, kind, media));
   } catch (error) {

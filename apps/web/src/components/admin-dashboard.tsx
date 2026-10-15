@@ -15,6 +15,7 @@ import {
 type Snapshot = {
   role: string;
   textbooks: Book[];
+  textbookRequests: { id: string; title: string; createdAt: string }[];
   students: {
     id: string;
     nickname: string;
@@ -361,6 +362,35 @@ export function AdminDashboard() {
                 {tab === "textbooks" && (
                   <section className="panel workspace-stack">
                     <h2>등록 교재</h2>
+                    {data.textbookRequests.length > 0 && (
+                      <div className="workspace-notice">
+                        <h3>교재 추가 요청 {data.textbookRequests.length}건</h3>
+                        {data.textbookRequests.map((request) => (
+                          <div className="row-between" key={request.id}>
+                            <span>
+                              {request.title} · {request.createdAt.slice(0, 10)}
+                            </span>
+                            <button
+                              className="secondary-button"
+                              disabled={
+                                busy ||
+                                !["owner", "admin", "editor"].includes(
+                                  data.role,
+                                )
+                              }
+                              onClick={() =>
+                                void save({
+                                  action: "resolve-textbook-request",
+                                  id: request.id,
+                                })
+                              }
+                            >
+                              등록 확인·처리 완료
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                     <p className="muted">
                       실제 출판사 자료는 확인된 목차만 등록하세요. 공개 목록에는
                       교재 정보만 노출됩니다.

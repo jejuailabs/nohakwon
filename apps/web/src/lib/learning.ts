@@ -25,6 +25,12 @@ export type Book = {
   title: string;
   publisher: string;
   edition?: string;
+  author?: string;
+  curriculum?: "2015" | "2022";
+  volume?: string;
+  isbn?: string;
+  flexibleGrade?: boolean;
+  catalogId?: string;
   sourceUrl?: string;
   grade: 1 | 2 | 3;
   subject: SubjectId;
@@ -325,6 +331,13 @@ export function parseBook(
     title: text(b.title, 120, "교재명"),
     publisher: text(b.publisher ?? "직접 등록", 80, "출판사"),
     edition: text(b.edition ?? "", 100, "판본", true),
+    author: text(b.author ?? "", 80, "대표 저자", true),
+    ...(b.curriculum === "2015" || b.curriculum === "2022"
+      ? { curriculum: b.curriculum }
+      : {}),
+    volume: text(b.volume ?? "", 20, "권·학기", true),
+    isbn: text(b.isbn ?? "", 20, "ISBN", true),
+    flexibleGrade: b.flexibleGrade === true,
     sourceUrl,
     grade: integer(b.grade, 1, 3, "학년") as 1 | 2 | 3,
     subject: subject(b.subject),

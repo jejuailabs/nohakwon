@@ -1,6 +1,7 @@
 import type { SubjectId } from "@nohakwon/core";
 import { SUBJECT_NAMES, type Book, type BankQuestion } from "./learning";
 import { QUESTIONS } from "./questions";
+import textbookData from "../data/textbooks.json";
 
 // Original starter material, not a publisher's textbook or official curriculum match.
 const FOUNDATION: Book[] = (Object.keys(SUBJECT_NAMES) as SubjectId[]).map(
@@ -127,7 +128,11 @@ const verified: {
 export const OFFICIAL_CATALOG: Book[] = verified.map((b) => ({
   id: `visang-2022-${b.code}`,
   title: b.title,
-  publisher: `비상교육 · ${b.author}`,
+  publisher: "비상교육",
+  author: b.author,
+  curriculum: "2022",
+  volume: b.subject === "korean" ? "1-1" : b.subject === "social" ? "1" : "",
+  flexibleGrade: b.subject === "social",
   edition: "2022 개정 · 대단원 목차",
   sourceUrl: `https://textbook.visang.com/textbook/bookdetail?gtt=M&ac=${b.code}`,
   grade: 1,
@@ -145,7 +150,35 @@ export const OFFICIAL_CATALOG: Book[] = verified.map((b) => ({
   revision: 1,
   origin: "catalog",
 }));
-export const CATALOG = [...FOUNDATION, ...OFFICIAL_CATALOG];
+export const PUBLISHER_CATALOG: Book[] = [
+  ...OFFICIAL_CATALOG,
+  ...textbookData.map((b): Book => ({
+    id: b.id,
+    title: b.title,
+    publisher: b.publisher,
+    author: b.author,
+    curriculum: b.curriculum as "2022",
+    volume: b.volume,
+    flexibleGrade: b.flexibleGrade,
+    edition: `${b.curriculum} 개정 · 대단원 목차`,
+    sourceUrl: b.sourceUrl,
+    subject: b.subject as SubjectId,
+    grade: b.grade as Book["grade"],
+    units: b.units.map((title, i) => ({
+      id: `unit-${i + 1}`,
+      title,
+      concepts: [title],
+      source: "",
+    })),
+    currentUnit: "unit-1",
+    endUnit: "unit-1",
+    active: true,
+    createdAt: b.checkedAt,
+    revision: 1,
+    origin: "catalog",
+  })),
+];
+export const CATALOG = [...FOUNDATION, ...PUBLISHER_CATALOG];
 export function starterQuestions(book: Book): BankQuestion[] {
   const catalog = CATALOG.find((c) => c.id === book.id);
   if (!catalog || !book.id.startsWith("foundation-")) return [];

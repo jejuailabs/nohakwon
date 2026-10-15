@@ -15,6 +15,7 @@ import {
   type Unit,
 } from "@/lib/learning";
 import { seoulDate } from "@nohakwon/core";
+import { type TextbookIdentity } from "@/lib/matching";
 
 const string = { type: "string" },
   number = { type: "integer" },
@@ -255,6 +256,48 @@ export async function extractMaterial(
       };
     }),
     warning: text(v.warning, 2000, "인식 안내", true),
+  };
+}
+
+export async function identifyTextbook(
+  uid: string,
+  input: string,
+  media?: { mime: string; data: Buffer },
+): Promise<TextbookIdentity> {
+  const { value } = await aiJson(
+    uid,
+    "identify-textbook",
+    `교과서 표지·판권 또는 교재명에서 보이는 식별 정보만 읽어라. 목차나 본문은 필요하지 않다. 교재명 title, 출판사 publisher, 대표저자 author, 과목 subject(korean/english/math/social/science), 학년 grade(1~3), 개정 교육과정 curriculum(2015/2022), 권·학기 volume(국어는 1-1/1-2/2-1 등, 사회는 1/2), ISBN isbn. 표지에 보이지 않는 정보는 추측하지 말고 문자열은 빈 값, grade는 0으로 반환하라. 과목을 확인할 수 없으면 subject는 빈 문자열. 사회①의 ①은 학년이 아니라 권 번호다. 2025년 발행이라는 이유로 2022 개정이라고 추측하지 말라. 서로 다른 교과서가 여러 권 보이거나 불명확한 정보는 warning에 설명하라. 개인정보는 제외하라.\n<material>${input}</material>`,
+    schema({
+      title: string,
+      publisher: string,
+      author: string,
+      subject: { type: "string", enum: [...Object.keys(SUBJECT_NAMES), ""] },
+      grade: number,
+      curriculum: { type: "string", enum: ["2015", "2022", ""] },
+      volume: string,
+      isbn: string,
+      warning: string,
+    }),
+    media,
+  );
+  const v = object(value);
+  return {
+    title: text(v.title, 120, "교재명", true),
+    publisher: text(v.publisher, 80, "출판사", true),
+    author: text(v.author, 80, "대표 저자", true),
+    ...(typeof v.subject === "string" && v.subject in SUBJECT_NAMES
+      ? { subject: v.subject as Book["subject"] }
+      : {}),
+    ...([1, 2, 3].includes(v.grade as number)
+      ? { grade: v.grade as Book["grade"] }
+      : {}),
+    ...(v.curriculum === "2015" || v.curriculum === "2022"
+      ? { curriculum: v.curriculum }
+      : {}),
+    volume: text(v.volume, 20, "권·학기", true),
+    isbn: text(v.isbn, 20, "ISBN", true),
+    warning: text(v.warning, 1000, "인식 안내", true),
   };
 }
 

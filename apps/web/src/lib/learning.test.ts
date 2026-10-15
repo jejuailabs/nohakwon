@@ -281,7 +281,7 @@ test("progression follows selected unit order after required new attempts", () =
 });
 test("publisher catalog has verified metadata and never reuses starter questions", () => {
   for (const b of CATALOG.filter((b) => !b.id.startsWith("foundation-"))) {
-    assert.ok(b.sourceUrl?.startsWith("https://textbook.visang.com/"));
+    assert.ok(["textbook.visang.com", "22txbook.m-teacher.co.kr"].includes(new URL(b.sourceUrl!).hostname));
     assert.equal(starterQuestions(b).length, 0);
     assert.ok(b.units.every((u) => u.source === ""));
   }

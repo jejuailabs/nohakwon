@@ -1,0 +1,593 @@
+[
+  {
+    "id": "miraen-2022-10046",
+    "title": "중학교 국어3-1",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "3-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10046",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_kor09_round0101_img01.jpg?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "더불어 사는 우리",
+      "생각을 담은 말과 글",
+      "세상을 바꾸는 힘",
+      "다양한 해석, 올바른 평가"
+    ]
+  },
+  {
+    "id": "miraen-2022-10047",
+    "title": "중학교 국어3-2",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "3-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10047",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_kor10_round0201_img01.jpg?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "꿈을 찾아가는 시간",
+      "올바르게, 균형 있게",
+      "엮어 읽고 표현하고",
+      "삶을 비추는 언어"
+    ]
+  },
+  {
+    "id": "miraen-2022-10048",
+    "title": "중학교 국어3-1",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "3-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10048",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_kor11_round0101_img01.jpg?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "더불어 사는 세상",
+      "함께 읽고 판단하기",
+      "생각을 엮어 표현하기",
+      "근거를 발판 삼아"
+    ]
+  },
+  {
+    "id": "miraen-2022-10049",
+    "title": "중학교 국어3-2",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "3-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10049",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_kor11_round0201_img01.jpg?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "우리가 만드는 연결 고리",
+      "세상을 보는 관점",
+      "분석하고 성찰하기",
+      "길을 여는 독서와 면담"
+    ]
+  },
+  {
+    "id": "miraen-2022-10050",
+    "title": "중학교 영어 3",
+    "publisher": "미래엔",
+    "author": "문영인",
+    "subject": "english",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10050",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_eng03_round0101_img01.png?v=260819140100",
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_eng03_round0101_img02.png?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "A Better World for All",
+      "Outside the Box",
+      "How Our Bodies Work",
+      "Mountains to Oceans",
+      "More Than Just a Story",
+      "Technology in Our Lives",
+      "One World, Many Cultures",
+      "A Greener Tomorrow",
+      "Our Classroom Memories",
+      "In 20 Years"
+    ]
+  },
+  {
+    "id": "miraen-2022-10051",
+    "title": "중학교 수학 3",
+    "publisher": "미래엔",
+    "author": "황선욱",
+    "subject": "math",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10051",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_mat03_round0101_img01.jpg?v=260820150100",
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_mat03_round0101_img02.jpg?v=260820150100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "실수와 그 계산",
+      "다항식의 곱셈과 인수분해",
+      "이차방정식",
+      "이차함수",
+      "삼각비",
+      "원의 성질",
+      "통계"
+    ]
+  },
+  {
+    "id": "miraen-2022-10052",
+    "title": "중학교 과학 3",
+    "publisher": "미래엔",
+    "author": "김태일",
+    "subject": "science",
+    "grade": 3,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10052",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_sci03_round0101_img01.jpg?v=260819140100",
+      "https://cdn-event.m-teacher.co.kr/22txbook-v2/mid_sci03_round0101_img02.jpg?v=260819140100"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "화학 반응의 규칙성",
+      "날씨와 기후 변화",
+      "수권과 해수의 순환",
+      "운동과 에너지",
+      "자극과 반응",
+      "생식과 유전",
+      "재해·재난과 안전",
+      "과학과 나의 미래"
+    ]
+  },
+  {
+    "id": "miraen-2022-19",
+    "title": "중학교 국어1-1",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "1-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=19",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor01_round0101_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "표현과 소통의 즐거움",
+      "간추리고 쓰고",
+      "능동적인 언어생활",
+      "성장의 시간"
+    ]
+  },
+  {
+    "id": "miraen-2022-20",
+    "title": "중학교 국어1-2",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "1-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=20",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor01_round0201_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "갈등을 넘어서",
+      "우리가 만드는 세상",
+      "우리말의 오모조모",
+      "너의 생각, 나의 의견"
+    ]
+  },
+  {
+    "id": "miraen-2022-21",
+    "title": "중학교 국어1-1",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "1-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=21",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor03_round0101_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "마음을 표현하는 법",
+      "숨은 의미 찾기",
+      "분류하고 활용하기",
+      "성장하고 변화하고"
+    ]
+  },
+  {
+    "id": "miraen-2022-22",
+    "title": "중학교 국어1-2",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "1-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=22",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor03_round0201_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "갈등과 문제 해결",
+      "핵심을 찾고 주장하기",
+      "단어의 세계",
+      "올바르게 소통하기"
+    ]
+  },
+  {
+    "id": "miraen-2022-10036",
+    "title": "중학교 국어2-1",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "2-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10036",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor05_round0101_img01.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "목소리와 시선을 따라서",
+      "설명과 논증의 세계",
+      "정확하게, 자신감 있게",
+      "생각이 자라는 시간"
+    ]
+  },
+  {
+    "id": "miraen-2022-10037",
+    "title": "중학교 국어2-2",
+    "publisher": "미래엔",
+    "author": "신유식",
+    "subject": "korean",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "2-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10037",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor06_round0101_img01.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "삶을 읽고 마음을 나누며",
+      "스스로 읽고 쓰는 힘",
+      "우리말, 우리글",
+      "소중한 경험, 빛나는 표현"
+    ]
+  },
+  {
+    "id": "miraen-2022-10038",
+    "title": "중학교 국어2-1",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "2-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10038",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor07_round0101_img01.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "문학 속 목소리",
+      "적절하고 타당하게",
+      "국어의 체계와 소통",
+      "개성적으로, 빛나게"
+    ]
+  },
+  {
+    "id": "miraen-2022-10039",
+    "title": "중학교 국어2-2",
+    "publisher": "미래엔",
+    "author": "민병곤",
+    "subject": "korean",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "2-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10039",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_kor08_round0101_img01.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "공감과 이해",
+      "복합양식으로 소통하기",
+      "상황에 맞는 표현",
+      "읽고 분석하고"
+    ]
+  },
+  {
+    "id": "miraen-2022-23",
+    "title": "중학교 영어 1",
+    "publisher": "미래엔",
+    "author": "문영인",
+    "subject": "english",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=23",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_eng01_round0101_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "Are You Ready?",
+      "My Happy Life",
+      "Be Open to Differences",
+      "Let’s Travel Together!",
+      "Think Green, Live Green",
+      "Dear Future Me",
+      "You Know What?",
+      "Special Reading 1 · The World of Picasso",
+      "Special Reading 2 · The King with Donkey Ears"
+    ]
+  },
+  {
+    "id": "miraen-2022-10040",
+    "title": "중학교 영어 2",
+    "publisher": "미래엔",
+    "author": "문영인",
+    "subject": "english",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10040",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_eng02_round0101_img01.jpg?v=250829081843",
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_eng02_round0101_img02.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "Your Answers Here",
+      "Let’s Taste the World",
+      "An Eye for Art",
+      "Healthy, Smart Life",
+      "Discover Korea",
+      "Ready, Set, Go!",
+      "Amazing Animals",
+      "Clever Spending",
+      "Where Is My Home?"
+    ]
+  },
+  {
+    "id": "miraen-2022-24",
+    "title": "중학교 수학 1",
+    "publisher": "미래엔",
+    "author": "황선욱",
+    "subject": "math",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=24",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_mat01_round0101_img02.png?v=250829081843",
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_mat01_round0101_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "소인수분해",
+      "정수와 유리수",
+      "문자와 식",
+      "좌표평면과 그래프",
+      "기본 도형과 작도",
+      "평면도형의 성질",
+      "입체도형의 성질",
+      "자료의 정리와 해석"
+    ]
+  },
+  {
+    "id": "miraen-2022-10041",
+    "title": "중학교 수학 2",
+    "publisher": "미래엔",
+    "author": "황선욱",
+    "subject": "math",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10041",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_mat02_round0101_img01.jpg?v=250829081843",
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_mat02_round0101_img02.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "유리수와 순환소수",
+      "식의 계산",
+      "일차부등식",
+      "연립일차방정식",
+      "일차함수",
+      "삼각형과 사각형의 성질",
+      "도형의 닮음과 피타고라스 정리",
+      "경우의 수와 확률"
+    ]
+  },
+  {
+    "id": "miraen-2022-25",
+    "title": "중학교 사회①",
+    "publisher": "미래엔",
+    "author": "손영찬",
+    "subject": "social",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "1",
+    "flexibleGrade": true,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=25",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_soc01_round0101_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "세계화 시대, 지리의 힘",
+      "아시아",
+      "유럽",
+      "아프리카",
+      "아메리카",
+      "오세아니아와 극지방",
+      "인간과 사회생활",
+      "다양한 문화의 이해",
+      "민주주의와 시민",
+      "정치과정과 시민 참여",
+      "일상생활과 법",
+      "인권과 기본권"
+    ]
+  },
+  {
+    "id": "miraen-2022-26",
+    "title": "중학교 사회②",
+    "publisher": "미래엔",
+    "author": "손영찬",
+    "subject": "social",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "2",
+    "flexibleGrade": true,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=26",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_soc01_round0201_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "헌법과 국가 기관",
+      "경제생활과 선택",
+      "시장과 가격",
+      "우리나라 경제와 세계화",
+      "국제 사회와 한반도",
+      "사회 변동과 사회문제",
+      "대한민국, 우리가 살아가는 곳",
+      "우리나라의 자연환경과 인간 생활",
+      "중부 지역",
+      "남부 지역",
+      "북부 지역",
+      "지속가능한 세계와 글로벌 시민"
+    ]
+  },
+  {
+    "id": "miraen-2022-33",
+    "title": "중학교 과학 1",
+    "publisher": "미래엔",
+    "author": "김태일",
+    "subject": "science",
+    "grade": 1,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=33",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_sci01_round0101_img01.png?v=250829081843",
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_sci01_round0101_img02.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "과학과 인류의 지속가능한 삶",
+      "생물의 구성과 다양성",
+      "열",
+      "물질의 상태 변화",
+      "힘의 작용",
+      "기체의 성질",
+      "태양계"
+    ]
+  },
+  {
+    "id": "miraen-2022-10042",
+    "title": "중학교 과학 2",
+    "publisher": "미래엔",
+    "author": "김태일",
+    "subject": "science",
+    "grade": 2,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://22txbook.m-teacher.co.kr/book/view?id=10042",
+    "tocSourceUrls": [
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_sci02_round0101_img01.jpg?v=250829081843",
+      "https://cdn-event.m-teacher.co.kr/22txbook/mid_sci02_round0101_img02.jpg?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "물질의 특성",
+      "지권의 변화",
+      "빛과 파동",
+      "물질의 구성",
+      "식물과 에너지",
+      "동물과 에너지",
+      "전기와 자기",
+      "별과 우주"
+    ]
+  }
+]

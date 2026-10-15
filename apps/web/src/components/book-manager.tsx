@@ -13,6 +13,7 @@ import {
 import { SUBJECT_NAMES, type Book, type Unit, type Job } from "@/lib/learning";
 import { suggestedBooks } from "@/lib/matching";
 import { accountRequest } from "./account-provider";
+import { TextbookFinder } from "./textbook-finder";
 
 type Props = {
   books: Book[];
@@ -42,9 +43,12 @@ export function BookManager({
   const [catalog, setCatalog] = useState<Book[]>([]),
     [draft, setDraft] = useState<Draft | null>(null),
     [editing, setEditing] = useState(""),
-    [tab, setTab] = useState<"mine" | "catalog" | "upload">("mine"),
+    [catalogId, setCatalogId] = useState(""),
+    [tab, setTab] = useState<"mine" | "catalog" | "upload">(
+      books.length ? "mine" : "catalog",
+    ),
     [input, setInput] = useState(""),
-    [kind, setKind] = useState("toc"),
+    [kind, setKind] = useState("content"),
     [busy, setBusy] = useState(""),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
@@ -78,6 +82,7 @@ export function BookManager({
           "본문을 인식했어요. 내용과 수식을 확인한 뒤 저장해 주세요.",
       );
     } else {
+      setCatalogId("");
       setEditing("");
       setDraft({
         ...result,
@@ -127,14 +132,31 @@ export function BookManager({
       await accountRequest("/api/books", "POST", {
         book: draft,
         ...(editing ? { id: editing } : {}),
+        ...(catalogId
+          ? {
+              catalogId,
+              selection: {
+                grade: draft.grade,
+                currentUnit: draft.currentUnit,
+                endUnit: draft.endUnit,
+              },
+            }
+          : {}),
       });
       await onChange();
       setDraft(null);
+      setCatalogId("");
       setTab("mine");
-      setNotice(
-        "교재와 학습 범위를 저장했어요. 본문을 넣은 단원은 AI 출제를 시작할 수 있어요.",
-      );
+      setNotice("교재와 단원·학습 범위를 저장했어요.");
     });
+  }
+  function selectCatalog(book: Book) {
+    setDraft(structuredClone(book));
+    setCatalogId(book.id);
+    setEditing("");
+    setNotice(
+      "교과서 목차를 불러왔어요. 현재 배우는 시작 단원과 학습 종료 단원을 선택해 등록하세요.",
+    );
   }
   return (
     <Localize>
@@ -149,6 +171,7 @@ export function BookManager({
             className="primary-button"
             onClick={() => {
               setEditing("");
+              setCatalogId("");
               setDraft(structuredClone(blank));
               setNotice("");
             }}
@@ -162,7 +185,7 @@ export function BookManager({
             [
               ["mine", "등록한 교재"],
               ["catalog", "교재 찾기"],
-              ["upload", "사진·PDF·텍스트"],
+              ["upload", "학습 자료 올리기"],
             ] as const
           ).map(([key, label]) => (
             <button
@@ -196,20 +219,19 @@ export function BookManager({
                 <BookOpen size={36} />
                 <h2>첫 교재를 등록해 볼까요?</h2>
                 <p>
-                  목차 사진이나 PDF를 올리거나, 기초 점검 교재로 바로 테스트해
-                  보세요.
+                  표지 사진이나 교재명으로 찾으면 단원 목록을 불러올 수 있어요.
                 </p>
                 <button
                   className="primary-button"
-                  onClick={() => setTab("upload")}
+                  onClick={() => setTab("catalog")}
                 >
-                  내 교재 올리기
+                  내 교과서 찾기
                 </button>
                 <button
                   className="secondary-button"
                   onClick={() => setTab("catalog")}
                 >
-                  기초 교재 선택
+                  교과서·기초 교재 보기
                 </button>
               </div>
             )}
@@ -268,6 +290,7 @@ export function BookManager({
                     onClick={() => {
                       setDraft(structuredClone(book));
                       setEditing(book.id);
+                      setCatalogId("");
                       setNotice("");
                     }}
                   >
@@ -286,50 +309,12 @@ export function BookManager({
           </div>
         )}
         {!draft && tab === "catalog" && (
-          <>
-            <p className="workspace-notice">
-              기초 점검 자료와 출판사 공식 목차를 구분해 제공해요. 공식 목차는
-              대단원만 포함합니다. 국어는 1-1, 사회 ①은 학교 편성에 따라 학년을
-              수정해 주세요. 맞춤 출제에는 해당 단원의 본문이 필요합니다.
-            </p>
-            <div className="book-grid">
-              {catalog.map((book) => (
-                <article className="panel book-card" key={book.id}>
-                  <span className="tag">{SUBJECT_NAMES[book.subject]}</span>
-                  <h2>{book.title}</h2>
-                  <p className="muted">{book.publisher}</p>
-                  <p>{book.units.map((u) => u.title).join(" · ")}</p>
-                  {book.sourceUrl && (
-                    <a
-                      className="tag"
-                      href={book.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      공식 목차 출처 ↗
-                    </a>
-                  )}
-                  <button
-                    className="primary-button"
-                    disabled={!!busy || books.some((b) => b.id === book.id)}
-                    onClick={() =>
-                      void action("교재를 등록하고 있어요", async () => {
-                        await accountRequest("/api/books", "POST", {
-                          catalogId: book.id,
-                        });
-                        await onChange();
-                        setTab("mine");
-                      })
-                    }
-                  >
-                    {books.some((b) => b.id === book.id)
-                      ? "등록됨"
-                      : "이 교재 선택"}
-                  </button>
-                </article>
-              ))}
-            </div>
-          </>
+          <TextbookFinder
+            catalog={catalog}
+            registered={books.map((b) => b.id)}
+            aiConfigured={aiConfigured}
+            onSelect={selectCatalog}
+          />
         )}
         {!draft && tab === "upload" && (
           <div className="panel material-panel">
@@ -337,14 +322,14 @@ export function BookManager({
               <Upload size={21} /> 내 교재 가져오기
             </h2>
             <p className="muted">
-              목차는 단원 순서를 정하고, 본문은 맞춤 문제의 근거가 됩니다. 인식
-              결과를 확인한 후 저장해 주세요.
+              교과서는 ‘교재 찾기’에서 표지나 이름으로 등록하세요. 이곳에서는
+              수업 필기·본문·직접 만든 학습 자료를 추가할 수 있어요.
             </p>
             <label>
-              자료 종류
+              올릴 학습 자료
               <select value={kind} onChange={(e) => setKind(e.target.value)}>
-                <option value="toc">목차</option>
                 <option value="content">단원 본문·학습 노트</option>
+                <option value="toc">직접 만든 자료의 목차</option>
               </select>
             </label>
             <label className="upload-area">
@@ -391,7 +376,7 @@ export function BookManager({
                 }
               >
                 <Sparkles size={17} />
-                AI로 목차 인식
+                AI로 자료 인식
               </button>
               <button
                 className="secondary-button"
@@ -415,6 +400,7 @@ export function BookManager({
                     endUnit: units[0].id,
                   });
                   setEditing("");
+                  setCatalogId("");
                 }}
               >
                 줄마다 단원으로 직접 입력
@@ -427,25 +413,38 @@ export function BookManager({
             </small>
           </div>
         )}
-        {draft && suggestedBooks(draft, catalog).length > 0 && (
-          <section className="panel">
-            <h2>비슷한 등록 교재가 있어요</h2>
-            <p className="muted small">
-              목차·제목 기준 추천입니다. 출판사와 판본을 직접 확인해 주세요.
-            </p>
-            {suggestedBooks(draft, catalog).map((m) => (
-              <p key={m.book.id}>
-                {m.book.title} · {m.book.publisher} · {m.score}% 일치
+        {draft &&
+          !catalogId &&
+          !editing &&
+          suggestedBooks(draft, catalog).length > 0 && (
+            <section className="panel">
+              <h2>비슷한 등록 교재가 있어요</h2>
+              <p className="muted small">
+                목차·제목 기준 추천입니다. 출판사와 판본을 직접 확인해 주세요.
               </p>
-            ))}
-          </section>
-        )}
+              {suggestedBooks(draft, catalog).map((m) => (
+                <p key={m.book.id}>
+                  {m.book.title} · {m.book.publisher} · {m.score}% 일치
+                  <button
+                    className="secondary-button"
+                    onClick={() => selectCatalog(m.book)}
+                  >
+                    이 교과서 목차 불러오기
+                  </button>
+                </p>
+              ))}
+            </section>
+          )}
         {draft && (
           <section className="panel book-editor">
             <div className="section-heading">
               <h2>
                 <FileText size={20} />{" "}
-                {editing ? "교재 편집" : "인식 결과 확인·교재 등록"}
+                {catalogId
+                  ? "교과서·학습 범위 확인"
+                  : editing
+                    ? "교재 편집"
+                    : "인식 결과 확인·교재 등록"}
               </h2>
               <button
                 className="secondary-button"
@@ -459,6 +458,7 @@ export function BookManager({
                 교재명
                 <input
                   value={draft.title}
+                  readOnly={!!catalogId}
                   maxLength={120}
                   onChange={(e) =>
                     setDraft({ ...draft, title: e.target.value })
@@ -469,6 +469,7 @@ export function BookManager({
                 출판사·자료 출처
                 <input
                   value={draft.publisher}
+                  readOnly={!!catalogId}
                   maxLength={80}
                   onChange={(e) =>
                     setDraft({ ...draft, publisher: e.target.value })
@@ -479,6 +480,7 @@ export function BookManager({
                 판본·교육과정
                 <input
                   value={draft.edition ?? ""}
+                  readOnly={!!catalogId}
                   maxLength={100}
                   onChange={(e) =>
                     setDraft({ ...draft, edition: e.target.value })
@@ -490,6 +492,7 @@ export function BookManager({
                 과목
                 <select
                   value={draft.subject}
+                  disabled={!!catalogId}
                   onChange={(e) =>
                     setDraft({
                       ...draft,
@@ -508,6 +511,7 @@ export function BookManager({
                 학년
                 <select
                   value={draft.grade}
+                  disabled={!!catalogId && !draft.flexibleGrade}
                   onChange={(e) =>
                     setDraft({
                       ...draft,
@@ -576,127 +580,153 @@ export function BookManager({
               />
               이 교재로 학습하기
             </label>
-            <div className="unit-editors">
-              {draft.units.map((unit, i) => (
-                <details
-                  key={unit.id}
-                  open={draft.units.length === 1 || undefined}
-                >
-                  <summary>
-                    {i + 1}. {unit.title || "새 단원"}
-                    <span>
-                      {unit.source
-                        ? `${unit.source.length.toLocaleString()}자 본문`
-                        : "본문 없음"}
-                    </span>
-                  </summary>
-                  <label>
-                    단원 이름
-                    <input
-                      value={unit.title}
-                      maxLength={120}
-                      onChange={(e) => editUnit(i, { title: e.target.value })}
-                    />
-                  </label>
-                  <label>
-                    핵심 개념 (쉼표로 구분)
-                    <input
-                      value={unit.concepts.join(", ")}
-                      onChange={(e) =>
-                        editUnit(i, {
-                          concepts: e.target.value
-                            .split(",")
-                            .map((s) => s.trim()),
-                        })
-                      }
-                    />
-                  </label>
-                  <label>
-                    단원 본문·학습 노트
-                    <textarea
-                      rows={8}
-                      value={unit.source}
-                      maxLength={24000}
-                      onChange={(e) => editUnit(i, { source: e.target.value })}
-                      placeholder="이 단원의 정의, 설명, 예제, 지문을 넣어 주세요. 이 내용에 근거해 문제를 만듭니다."
-                    />
-                  </label>
-                  <div className="workspace-actions">
-                    <label className="secondary-button file-button">
-                      <Upload size={15} />
-                      본문 사진·PDF 인식
+            {catalogId && (
+              <div className="workspace-notice">
+                <strong>
+                  {draft.publisher}
+                  {draft.author ? ` · ${draft.author}` : ""} · {draft.edition}
+                </strong>
+                <p>
+                  아래 {draft.units.length}개 단원을 연결합니다. 학교에서 배우는
+                  범위만 선택하세요.
+                </p>
+                <ol>
+                  {draft.units.map((u) => (
+                    <li key={u.id}>{u.title}</li>
+                  ))}
+                </ol>
+                {draft.flexibleGrade && (
+                  <p>사회 교과서는 학교에서 배우는 학년으로 선택해 주세요.</p>
+                )}
+              </div>
+            )}
+            {!catalogId && (
+              <div className="unit-editors">
+                {draft.units.map((unit, i) => (
+                  <details
+                    key={unit.id}
+                    open={draft.units.length === 1 || undefined}
+                  >
+                    <summary>
+                      {i + 1}. {unit.title || "새 단원"}
+                      <span>
+                        {unit.source
+                          ? `${unit.source.length.toLocaleString()}자 본문`
+                          : "본문 없음"}
+                      </span>
+                    </summary>
+                    <label>
+                      단원 이름
                       <input
-                        aria-label={`${unit.title} 본문 파일`}
-                        type="file"
-                        accept=".pdf,.txt,image/png,image/jpeg,image/webp"
-                        disabled={!!busy || !aiConfigured}
-                        onChange={(e) => {
-                          const f = e.target.files?.[0];
-                          if (f) void upload(f, i);
-                          e.target.value = "";
-                        }}
+                        value={unit.title}
+                        maxLength={120}
+                        onChange={(e) => editUnit(i, { title: e.target.value })}
                       />
                     </label>
-                    <button
-                      className="secondary-button"
-                      disabled={i === 0}
-                      onClick={() => {
-                        const units = [...draft.units];
-                        [units[i - 1], units[i]] = [units[i], units[i - 1]];
-                        setDraft({ ...draft, units });
-                      }}
-                    >
-                      위로
-                    </button>
-                    <button
-                      className="text-danger"
-                      disabled={draft.units.length === 1}
-                      onClick={() => {
-                        const units = draft.units.filter(
-                          (u) => u.id !== unit.id,
-                        );
-                        setDraft({
-                          ...draft,
-                          units,
-                          currentUnit: units.some(
-                            (u) => u.id === draft.currentUnit,
-                          )
-                            ? draft.currentUnit
-                            : units[0].id,
-                          endUnit: units.some((u) => u.id === draft.endUnit)
-                            ? draft.endUnit
-                            : units.at(-1)!.id,
-                        });
-                      }}
-                    >
-                      단원 삭제
-                    </button>
-                  </div>
-                </details>
-              ))}
-            </div>
+                    <label>
+                      핵심 개념 (쉼표로 구분)
+                      <input
+                        value={unit.concepts.join(", ")}
+                        onChange={(e) =>
+                          editUnit(i, {
+                            concepts: e.target.value
+                              .split(",")
+                              .map((s) => s.trim()),
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      단원 본문·학습 노트
+                      <textarea
+                        rows={8}
+                        value={unit.source}
+                        maxLength={24000}
+                        onChange={(e) =>
+                          editUnit(i, { source: e.target.value })
+                        }
+                        placeholder="이 단원의 정의, 설명, 예제, 지문을 넣어 주세요. 이 내용에 근거해 문제를 만듭니다."
+                      />
+                    </label>
+                    <div className="workspace-actions">
+                      <label className="secondary-button file-button">
+                        <Upload size={15} />
+                        본문 사진·PDF 인식
+                        <input
+                          aria-label={`${unit.title} 본문 파일`}
+                          type="file"
+                          accept=".pdf,.txt,image/png,image/jpeg,image/webp"
+                          disabled={!!busy || !aiConfigured}
+                          onChange={(e) => {
+                            const f = e.target.files?.[0];
+                            if (f) void upload(f, i);
+                            e.target.value = "";
+                          }}
+                        />
+                      </label>
+                      <button
+                        className="secondary-button"
+                        disabled={i === 0}
+                        onClick={() => {
+                          const units = [...draft.units];
+                          [units[i - 1], units[i]] = [units[i], units[i - 1]];
+                          setDraft({ ...draft, units });
+                        }}
+                      >
+                        위로
+                      </button>
+                      <button
+                        className="text-danger"
+                        disabled={draft.units.length === 1}
+                        onClick={() => {
+                          const units = draft.units.filter(
+                            (u) => u.id !== unit.id,
+                          );
+                          setDraft({
+                            ...draft,
+                            units,
+                            currentUnit: units.some(
+                              (u) => u.id === draft.currentUnit,
+                            )
+                              ? draft.currentUnit
+                              : units[0].id,
+                            endUnit: units.some((u) => u.id === draft.endUnit)
+                              ? draft.endUnit
+                              : units.at(-1)!.id,
+                          });
+                        }}
+                      >
+                        단원 삭제
+                      </button>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            )}
             <div className="workspace-actions">
-              <button
-                className="secondary-button"
-                disabled={draft.units.length >= 60}
-                onClick={() =>
-                  setDraft({
-                    ...draft,
-                    units: [
-                      ...draft.units,
-                      {
-                        id: `unit-${crypto.randomUUID()}`,
-                        title: "",
-                        concepts: [],
-                        source: "",
-                      },
-                    ],
-                  })
-                }
-              >
-                <Plus size={16} />
-                단원 추가
-              </button>
+              {!catalogId && (
+                <button
+                  className="secondary-button"
+                  disabled={draft.units.length >= 60}
+                  onClick={() =>
+                    setDraft({
+                      ...draft,
+                      units: [
+                        ...draft.units,
+                        {
+                          id: `unit-${crypto.randomUUID()}`,
+                          title: "",
+                          concepts: [],
+                          source: "",
+                        },
+                      ],
+                    })
+                  }
+                >
+                  <Plus size={16} />
+                  단원 추가
+                </button>
+              )}
               <button
                 className="primary-button"
                 disabled={!!busy}

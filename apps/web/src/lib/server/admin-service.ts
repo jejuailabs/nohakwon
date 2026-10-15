@@ -11,12 +11,11 @@ import {
   text,
 } from "@/lib/learning";
 import { requireUser } from "./session";
-import { CATALOG } from "@/lib/catalog";
+import { textbookCatalog, catalogTextbook } from "./textbook-catalog";
 export const ADMIN_ROLES = ["owner", "admin", "editor", "reviewer"];
 export async function adminRole(uid: string) {
   return (await adminAuth().getUser(uid)).customClaims?.nohakwonRole as
-    | string
-    | undefined;
+    string | undefined;
 }
 export async function requireAdmin(roles = ADMIN_ROLES) {
   const user = await requireUser(),
@@ -41,13 +40,19 @@ export async function adminSnapshot(
   studentId?: string,
 ) {
   const db = adminDb(),
-    [textbooks, disputes, usage, config, audits] = await Promise.all([
-      db.collection("textbooks").limit(100).get(),
-      db.collection("disputes").orderBy("createdAt", "desc").limit(100).get(),
-      db.collection("aiUsage").orderBy("at", "desc").limit(100).get(),
-      db.doc("settings/learning").get(),
-      db.collection("auditLogs").orderBy("at", "desc").limit(50).get(),
-    ]);
+    [textbooks, disputes, usage, config, audits, textbookRequests] =
+      await Promise.all([
+        textbookCatalog(true),
+        db.collection("disputes").orderBy("createdAt", "desc").limit(100).get(),
+        db.collection("aiUsage").orderBy("at", "desc").limit(100).get(),
+        db.doc("settings/learning").get(),
+        db.collection("auditLogs").orderBy("at", "desc").limit(50).get(),
+        db
+          .collection("textbookRequests")
+          .where("status", "==", "pending")
+          .limit(100)
+          .get(),
+      ]);
   let students: unknown[] = [],
     questions: unknown[] = [],
     jobs: unknown[] = [];
@@ -83,7 +88,12 @@ export async function adminSnapshot(
   const rows = usage.docs.map((d) => ({ id: d.id, ...d.data() }));
   return {
     role,
-    textbooks: [...CATALOG, ...textbooks.docs.map((d) => d.data())],
+    textbooks,
+    textbookRequests: textbookRequests.docs.map((d) => ({
+      id: d.id,
+      title: d.data().title,
+      createdAt: d.data().createdAt,
+    })),
     students,
     questions,
     jobs,
@@ -102,6 +112,21 @@ export async function adminSnapshot(
 export async function adminMutation(uid: string, role: string, value: unknown) {
   const v = object(value),
     db = adminDb();
+  if (v.action === "resolve-textbook-request") {
+    if (!["owner", "admin", "editor"].includes(role))
+      throw new AccountError(403, "교재 편집 권한이 없습니다.");
+    const requestId = id(v.id);
+    await db
+      .collection("textbookRequests")
+      .doc(requestId)
+      .update({
+        status: "resolved",
+        resolvedBy: uid,
+        resolvedAt: new Date().toISOString(),
+      });
+    await audit(uid, "resolve-textbook-request", requestId);
+    return;
+  }
   if (v.action === "textbook") {
     if (!["owner", "admin", "editor"].includes(role))
       throw new AccountError(403, "교재 편집 권한이 없습니다.");
@@ -144,8 +169,7 @@ export async function adminMutation(uid: string, role: string, value: unknown) {
             .doc(q.bookId)
             .get()
         ).data()
-      : (CATALOG.find((b) => b.id === q.bookId) ??
-        (await db.collection("textbooks").doc(q.bookId).get()).data());
+      : await catalogTextbook(q.bookId);
     if (
       !book ||
       !book.units.some(

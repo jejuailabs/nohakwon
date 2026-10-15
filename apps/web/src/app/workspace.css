@@ -6,6 +6,57 @@
   max-width: 1600px;
   padding: 30px;
 }
+.textbook-search {
+  display: grid;
+  gap: 20px;
+}
+.textbook-search h2 {
+  margin-top: 8px;
+}
+.textbook-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+.textbook-query {
+  display: flex !important;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--panel-2, #1e2440);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.textbook-query input {
+  border: 0 !important;
+  background: transparent !important;
+  min-width: 0;
+  width: 100%;
+}
+.textbook-query:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.textbook-filters {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+.textbook-reasons {
+  color: var(--accent);
+}
+.textbook-finder details summary {
+  cursor: pointer;
+  padding: 10px 0;
+  color: var(--muted);
+}
+@media (max-width: 700px) {
+  .textbook-search-row {
+    flex-direction: column;
+  }
+  .textbook-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
 .workspace-nav {
   display: flex;
   gap: 6px;
