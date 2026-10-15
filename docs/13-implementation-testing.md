@@ -28,7 +28,8 @@
 - 이해도 순서 변경 후 Firestore 학습 통합 10개 재검증: 답안 공개 전 이해도 저장 차단, 제출 답안·시간 고정, 정답 공개 후 재개, 이해도 저장 시 단일 보상, 다른 계정 접근 차단. `node scripts/verify-integrations.cjs --live --learning-only`로 AI 호출 없이 실행합니다.
 - TypeScript 검사와 Next.js production build 통과.
 - 교재 매칭 통합 4개: 실제 Firebase 목록 조회·중복 제거, 단원 범위 등록, 재등록 시 본문·범위 보존, 실제 AI 식별→카탈로그 매칭. `node scripts/verify-textbook-matching.cjs --live --with-ai`로 임시 자료만 사용해 재검증합니다.
-- 실제 카드 등록/PG 승인, 공개 배포는 미검증입니다.
+- 공개 배포의 실제 Chrome에서 공식 미래엔 수학1 표지 이미지 → 미래엔/황선욱/중1 후보 1종 → 등록된 8개 단원 불러오기를 확인했습니다. 표지에 없는 교육과정은 추정하지 않고 판본 확인 안내를 표시했습니다.
+- 실제 카드 등록/PG 승인은 미검증입니다.
 
 ## 관리자와 운영 범위
 
