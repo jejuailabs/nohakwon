@@ -4,7 +4,8 @@ import {
   type Confidence,
   type SubjectId,
 } from "@nohakwon/core";
-import { AccountError } from "./account";
+import { AccountError, parseSchoolGrade } from "./account";
+import type { Grade, SchoolLevel } from "./education";
 
 export const SUBJECT_NAMES: Record<SubjectId, string> = {
   korean: "국어",
@@ -24,6 +25,7 @@ export type Book = {
   id: string;
   title: string;
   publisher: string;
+  publisherAliases?: string[];
   edition?: string;
   author?: string;
   curriculum?: "2015" | "2022";
@@ -32,7 +34,8 @@ export type Book = {
   flexibleGrade?: boolean;
   catalogId?: string;
   sourceUrl?: string;
-  grade: 1 | 2 | 3;
+  schoolLevel?: SchoolLevel;
+  grade: Grade;
   subject: SubjectId;
   units: Unit[];
   currentUnit: string;
@@ -49,6 +52,7 @@ export type BankQuestion = {
   concept: string;
   subject: SubjectId;
   grade: number;
+  schoolLevel?: SchoolLevel;
   prompt: string;
   choices: string[];
   answer: number | string;
@@ -330,6 +334,9 @@ export function parseBook(
   return {
     title: text(b.title, 120, "교재명"),
     publisher: text(b.publisher ?? "직접 등록", 80, "출판사"),
+    publisherAliases: Array.isArray(b.publisherAliases)
+      ? b.publisherAliases.slice(0, 6).map((p) => text(p, 80, "출판사 별칭"))
+      : [],
     edition: text(b.edition ?? "", 100, "판본", true),
     author: text(b.author ?? "", 80, "대표 저자", true),
     ...(b.curriculum === "2015" || b.curriculum === "2022"
@@ -339,7 +346,7 @@ export function parseBook(
     isbn: text(b.isbn ?? "", 20, "ISBN", true),
     flexibleGrade: b.flexibleGrade === true,
     sourceUrl,
-    grade: integer(b.grade, 1, 3, "학년") as 1 | 2 | 3,
+    ...parseSchoolGrade(b),
     subject: subject(b.subject),
     units,
     currentUnit,
@@ -415,7 +422,7 @@ export function parseQuestion(value: unknown): BankQuestion {
     unitId: id(q.unitId),
     concept: text(q.concept, 80, "개념"),
     subject: subject(q.subject),
-    grade: integer(q.grade, 1, 3, "학년"),
+    ...parseSchoolGrade(q),
     prompt: text(q.prompt, 5000, "문제"),
     choices,
     kind,

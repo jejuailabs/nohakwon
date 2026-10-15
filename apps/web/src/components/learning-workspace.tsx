@@ -43,6 +43,13 @@ import { FamilyLinks } from "./family-links";
 import { DeleteAccount } from "./delete-account";
 import { SavedReports } from "./saved-reports";
 import { ServerStudy, type StudyAssignment } from "./server-study";
+import {
+  gradeLabel,
+  schoolLevelOf,
+  type Grade,
+  type SchoolLevel,
+} from "@/lib/education";
+import { SchoolGradeFields } from "./school-grade-fields";
 
 const NAV = [
   { id: "today", label: "오늘의 학습", Icon: Home },
@@ -197,8 +204,12 @@ export function LearningWorkspace() {
                 <span>
                   <strong>{account.profile?.nickname}</strong>
                   <small>
-                    <span>{`중학교 ${account.profile?.grade}학년`}</span> · Lv.{" "}
-                    {1 + Math.floor(data.results.length / 10)}
+                    <span>
+                      {account.profile
+                        ? gradeLabel(account.profile)
+                        : "학습 프로필"}
+                    </span>{" "}
+                    · Lv. {1 + Math.floor(data.results.length / 10)}
                   </small>
                 </span>
               </button>
@@ -756,6 +767,7 @@ export function LearningWorkspace() {
                             await account.saveProfile({
                               nickname: account.profile.nickname,
                               grade: account.profile.grade,
+                              schoolLevel: schoolLevelOf(account.profile),
                               calm: e.target.checked,
                             });
                         })
@@ -1057,10 +1069,18 @@ function FamilyView({
 }) {
   const account = useAccount(),
     [profiles, setProfiles] = useState<
-      { id: string; nickname: string; grade: number }[]
+      {
+        id: string;
+        nickname: string;
+        grade: number;
+        schoolLevel?: SchoolLevel;
+      }[]
     >([]),
     [nickname, setNickname] = useState(""),
-    [grade, setGrade] = useState(1),
+    [schoolLevel, setSchoolLevel] = useState<SchoolLevel>(
+      schoolLevelOf(account.profile),
+    ),
+    [grade, setGrade] = useState<Grade>(account.profile?.grade ?? 1),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   useEffect(() => {
@@ -1105,7 +1125,7 @@ function FamilyView({
                 <Star />
               </span>
               <h2>{p.nickname}</h2>
-              <p className="muted">중학교 {p.grade}학년</p>
+              <p className="muted">{gradeLabel(p)}</p>
               <button
                 className="primary-button"
                 disabled={busy || account.profile?.id === p.id}
@@ -1122,7 +1142,13 @@ function FamilyView({
           className="panel form-grid"
           onSubmit={(e) => {
             e.preventDefault();
-            void act({ action: "create", nickname, grade, calm: false });
+            void act({
+              action: "create",
+              nickname,
+              schoolLevel,
+              grade,
+              calm: false,
+            });
           }}
         >
           <label>
@@ -1134,19 +1160,14 @@ function FamilyView({
               onChange={(e) => setNickname(e.target.value)}
             />
           </label>
-          <label>
-            학년
-            <select
-              value={grade}
-              onChange={(e) => setGrade(Number(e.target.value))}
-            >
-              {[1, 2, 3].map((g) => (
-                <option key={g} value={g}>
-                  중학교 {g}학년
-                </option>
-              ))}
-            </select>
-          </label>
+          <SchoolGradeFields
+            value={{ schoolLevel, grade }}
+            onChange={(v) => {
+              setSchoolLevel(v.schoolLevel);
+              setGrade(v.grade);
+            }}
+            prefix="새 학습자 "
+          />
           <button
             className="primary-button"
             disabled={busy || !nickname.trim() || profiles.length >= 5}

@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import { SUBJECT_NAMES, type Book, type Unit, type Job } from "@/lib/learning";
 import { suggestedBooks } from "@/lib/matching";
-import { accountRequest } from "./account-provider";
+import { accountRequest, useAccount } from "./account-provider";
 import { TextbookFinder } from "./textbook-finder";
+import { gradeLabel, schoolLevelOf } from "@/lib/education";
+import { SchoolGradeFields } from "./school-grade-fields";
 
 type Props = {
   books: Book[];
@@ -40,6 +42,12 @@ export function BookManager({
   onChange,
   onStudy,
 }: Props) {
+  const { profile } = useAccount();
+  const blankForLearner = (): Draft => ({
+    ...structuredClone(blank),
+    schoolLevel: schoolLevelOf(profile),
+    grade: profile?.grade ?? 1,
+  });
   const [catalog, setCatalog] = useState<Book[]>([]),
     [draft, setDraft] = useState<Draft | null>(null),
     [editing, setEditing] = useState(""),
@@ -172,7 +180,7 @@ export function BookManager({
             onClick={() => {
               setEditing("");
               setCatalogId("");
-              setDraft(structuredClone(blank));
+              setDraft(blankForLearner());
               setNotice("");
             }}
           >
@@ -241,7 +249,7 @@ export function BookManager({
                 key={book.id}
               >
                 <span className="tag">
-                  중{book.grade} · {SUBJECT_NAMES[book.subject]} ·{" "}
+                  {gradeLabel(book, true)} · {SUBJECT_NAMES[book.subject]} ·{" "}
                   {book.active ? "학습 중" : "보관 중"}
                 </span>
                 <h2>{book.title}</h2>
@@ -314,6 +322,7 @@ export function BookManager({
             registered={books.map((b) => b.id)}
             aiConfigured={aiConfigured}
             onSelect={selectCatalog}
+            initialSchoolLevel={schoolLevelOf(profile)}
           />
         )}
         {!draft && tab === "upload" && (
@@ -394,7 +403,7 @@ export function BookManager({
                       source: "",
                     }));
                   setDraft({
-                    ...structuredClone(blank),
+                    ...blankForLearner(),
                     units,
                     currentUnit: units[0].id,
                     endUnit: units[0].id,
@@ -507,25 +516,16 @@ export function BookManager({
                   ))}
                 </select>
               </label>
-              <label>
-                학년
-                <select
-                  value={draft.grade}
-                  disabled={!!catalogId && !draft.flexibleGrade}
-                  onChange={(e) =>
-                    setDraft({
-                      ...draft,
-                      grade: Number(e.target.value) as 1 | 2 | 3,
-                    })
-                  }
-                >
-                  {[1, 2, 3].map((g) => (
-                    <option key={g} value={g}>
-                      중학교 {g}학년
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <SchoolGradeFields
+                value={{
+                  schoolLevel: schoolLevelOf(draft),
+                  grade: draft.grade,
+                }}
+                onChange={(v) => setDraft({ ...draft, ...v })}
+                levelDisabled={!!catalogId}
+                gradeDisabled={!!catalogId && !draft.flexibleGrade}
+                prefix="교재 "
+              />
               <label>
                 현재 시작 단원
                 <select

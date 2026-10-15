@@ -12,6 +12,7 @@ import {
 } from "@/lib/learning";
 import { requireUser } from "./session";
 import { textbookCatalog, catalogTextbook } from "./textbook-catalog";
+import { schoolLevelOf } from "@/lib/education";
 export const ADMIN_ROLES = ["owner", "admin", "editor", "reviewer"];
 export async function adminRole(uid: string) {
   return (await adminAuth().getUser(uid)).customClaims?.nohakwonRole as
@@ -61,6 +62,7 @@ export async function adminSnapshot(
     students = s.docs.map((d) => ({
       id: d.id,
       nickname: d.data().nickname,
+      schoolLevel: schoolLevelOf(d.data()),
       grade: d.data().grade,
       guardianUid: d.data().guardianUid,
       paidUntil: d.data().paidUntil ?? "",
@@ -116,14 +118,11 @@ export async function adminMutation(uid: string, role: string, value: unknown) {
     if (!["owner", "admin", "editor"].includes(role))
       throw new AccountError(403, "교재 편집 권한이 없습니다.");
     const requestId = id(v.id);
-    await db
-      .collection("textbookRequests")
-      .doc(requestId)
-      .update({
-        status: "resolved",
-        resolvedBy: uid,
-        resolvedAt: new Date().toISOString(),
-      });
+    await db.collection("textbookRequests").doc(requestId).update({
+      status: "resolved",
+      resolvedBy: uid,
+      resolvedAt: new Date().toISOString(),
+    });
     await audit(uid, "resolve-textbook-request", requestId);
     return;
   }
@@ -172,6 +171,9 @@ export async function adminMutation(uid: string, role: string, value: unknown) {
       : await catalogTextbook(q.bookId);
     if (
       !book ||
+      schoolLevelOf(book) !== schoolLevelOf(q) ||
+      book.grade !== q.grade ||
+      book.subject !== q.subject ||
       !book.units.some(
         (u: { id: string; concepts: string[] }) =>
           u.id === q.unitId && u.concepts.includes(q.concept),

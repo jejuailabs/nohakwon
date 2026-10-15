@@ -246,6 +246,7 @@ export function ConceptEditor() {
                   title: "",
                   subject: "math",
                   grade: 1,
+                  schoolLevel: "middle",
                   standardCodes: [],
                   prerequisites: [],
                 },

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { ShieldCheck, Download, RefreshCw } from "lucide-react";
 import { accountRequest } from "./account-provider";
+import { gradeLabel, type SchoolLevel } from "@/lib/education";
 import {
   answerLabel,
   type BankQuestion,
@@ -19,6 +20,7 @@ type Snapshot = {
   students: {
     id: string;
     nickname: string;
+    schoolLevel?: SchoolLevel;
     grade: number;
     guardianUid: string;
     paidUntil: string;
@@ -216,7 +218,7 @@ export function AdminDashboard() {
                           <option value="">공유 문제은행 (등록 교재)</option>
                           {data.students.map((s) => (
                             <option key={s.id} value={s.id}>
-                              {s.nickname} · 중{s.grade}
+                              {s.nickname} · {gradeLabel(s, true)}
                             </option>
                           ))}
                         </select>
@@ -254,6 +256,7 @@ export function AdminDashboard() {
                                 concept: b.units[0].concepts[0],
                                 subject: b.subject,
                                 grade: b.grade,
+                                schoolLevel: b.schoolLevel ?? "middle",
                                 kind: "mcq",
                                 prompt: "",
                                 choices: ["", "", "", ""],
@@ -406,6 +409,7 @@ export function AdminDashboard() {
                                 title: "",
                                 publisher: "",
                                 grade: 1,
+                                schoolLevel: "middle",
                                 subject: "math",
                                 units: [
                                   {
@@ -600,7 +604,7 @@ export function AdminDashboard() {
                           {data.students.map((s) => (
                             <tr key={s.id}>
                               <td>{s.nickname}</td>
-                              <td>{s.grade}</td>
+                              <td>{gradeLabel(s, true)}</td>
                               <td>{s.guardianUid}</td>
                               <td>
                                 {s.paidUntil || "체험"}

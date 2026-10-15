@@ -36,6 +36,7 @@ import { catalogSelection } from "@/lib/textbook-catalog";
 import { aiConfigured, generateQuestions } from "./ai";
 import { adminRole } from "./admin-service";
 import { duplicateQuestion } from "@/lib/matching";
+import { schoolLevelOf } from "@/lib/education";
 
 export function isAdmin(user: DecodedIdToken) {
   return ["owner", "admin", "editor", "reviewer"].includes(user.nohakwonRole);
@@ -154,6 +155,7 @@ export async function saveBook(
       !prior ||
       JSON.stringify(prior.units) !== JSON.stringify(parsed.units) ||
       prior.subject !== parsed.subject ||
+      schoolLevelOf(prior) !== schoolLevelOf(parsed) ||
       prior.grade !== parsed.grade;
     const b: Book = {
       ...parsed,

@@ -1,6 +1,7 @@
 import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
 import { AccountError } from "@/lib/account";
+import { parseSchoolGrade } from "@/lib/account";
 import {
   loadLearningState,
   makeReport,
@@ -159,7 +160,7 @@ export async function saveConcept(uid: string, role: string, raw: unknown) {
     id: cid,
     title: text(v.title, 80, "개념명"),
     subject: subject(v.subject),
-    grade: integer(v.grade, 1, 3, "학년"),
+    ...parseSchoolGrade(v),
     standardCodes: Array.isArray(v.standardCodes)
       ? v.standardCodes.slice(0, 20).map((c) => text(c, 40, "성취기준 코드"))
       : [],

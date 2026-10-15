@@ -1,0 +1,860 @@
+[
+  {
+    "id": "miraen-elementary-2022-1410",
+    "title": "초등학교 영어4",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "강정진",
+    "subject": "english",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1410&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1410",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_eng01_round0201_img01.png?v=250912084659"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "How Are You?",
+      "This Is My Dad",
+      "Who Is She?",
+      "Don't Run, Please",
+      "Let's Play Soccer",
+      "I'm Cooking",
+      "What Time Is It?",
+      "How Much Is It?",
+      "It's Under the Desk",
+      "Is This Your Shoe?",
+      "It's Friday",
+      "I Ride My Bike"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1540",
+    "title": "초등학교 국어 4-1(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-1가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1540&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1540"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "질문을 만들며 책을 읽어요",
+      "깊이 있게 읽어요",
+      "서로 다른 의견",
+      "자세하게 살펴요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1541",
+    "title": "초등학교 국어 4-1(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-1나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1541&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1541"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "인터넷에서 자료를 찾아요",
+      "뜻을 파악하며 읽어요",
+      "말과 글로 전하는 생각",
+      "경험을 표현해요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1578",
+    "title": "초등학교 국어 4-2(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-2가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1578&gradeCode=04&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1578"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "생각을 나누며 책을 읽어요",
+      "비교하며 읽어요",
+      "우리말 우리글",
+      "의견을 모아서"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1579",
+    "title": "초등학교 국어 4-2(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-2나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1579&gradeCode=04&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1579"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "자료를 활용하여 발표해요",
+      "책 속의 길을 따라",
+      "오가는 마음",
+      "상상의 날개"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1416",
+    "title": "초등학교 수학 4-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1416&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1416",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat01_round0301_img01.png?v=250912091519"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "큰 수",
+      "각도",
+      "곱셈과 나눗셈",
+      "평면도형의 이동",
+      "분수의 덧셈과 뺄셈",
+      "막대그래프"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1417",
+    "title": "초등학교 수학 4-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1417&gradeCode=04&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1417",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat01_round0401_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "소수의 덧셈과 뺄셈",
+      "삼각형",
+      "규칙 찾기와 식 만들기",
+      "사각형",
+      "꺾은선그래프",
+      "다각형"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1423",
+    "title": "초등학교 과학 4-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1423&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1423",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci01_round0301_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "자석의 이용",
+      "물의 상태 변화",
+      "땅의 변화",
+      "다양한 생물과 우리 생활"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1425",
+    "title": "초등학교 과학 4-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1425&gradeCode=04&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1425",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci01_round0401_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "밤하늘 관찰",
+      "생물과 환경",
+      "여러 가지 기체",
+      "기후변화와 우리 생활"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1419",
+    "title": "초등학교 사회 4-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1419&gradeCode=04&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1419",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc01_round0301_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "지도로 만나는 우리 지역",
+      "우리 지역의 국가유산",
+      "경제활동과 지역 간 교류"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1421",
+    "title": "초등학교 사회 4-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 4,
+    "curriculum": "2022",
+    "volume": "4-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1421&gradeCode=04&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1421",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc01_round0401_img01.png?v=250829081843"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "민주주의와 자치",
+      "지역문제 해결과 지역을 알리는 노력",
+      "다양한 환경과 삶의 모습"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1588",
+    "title": "초등학교 영어5",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "강정진",
+    "subject": "english",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1588&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1588",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_eng03_round0101_img01.jpg?v=250926023348"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "I'm from Korea",
+      "Can I Take a Picture?",
+      "Whose Bottle Is This?",
+      "My Favorite Subject Is P.E.",
+      "What Would You Like?",
+      "What Will You Do This Summer?",
+      "I Visited My Grandpa",
+      "He Has Short Curly Hair",
+      "There Is a Bed in the Bedroom",
+      "I Get Up at 7",
+      "Where Is the Restaurant?",
+      "What Season Do You Like?"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1644",
+    "title": "초등학교 국어 5-1(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-1가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1644&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1644"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "책을 읽고 함께 이야기해요",
+      "대화를 나누어요",
+      "체험한 일을 글로 써요",
+      "발표하고 질문해요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1645",
+    "title": "초등학교 국어 5-1(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-1나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1645&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1645"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "필요한 정보를 찾아요",
+      "대상을 설명해요",
+      "의논하며 토의해요",
+      "작품을 즐겨요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1670",
+    "title": "초등학교 국어 5-2(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-2가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1670&gradeCode=05&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1670"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "여러 가지 형태의 책을 읽어요",
+      "작품에 대한 의견을 나누어요",
+      "올바른 문장으로 글을 써요",
+      "표준어와 방언을 알아봐요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1671",
+    "title": "초등학교 국어 5-2(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-2나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1671&gradeCode=05&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1671"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "판단하며 이용해요",
+      "의견을 조정해요",
+      "추론하며 읽어요",
+      "작품을 감상해요"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1624",
+    "title": "초등학교 수학 5-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1624&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1624",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat05_round0101_img01.jpg?v=250917104103"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "자연수의 혼합 계산",
+      "약수와 배수",
+      "약분과 통분",
+      "대응 관계",
+      "분수의 덧셈과 뺄셈",
+      "다각형의 둘레와 넓이"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1626",
+    "title": "초등학교 수학 5-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1626&gradeCode=05&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1626",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat06_round0101_img01.jpg?v=250917104133"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "수의 범위와 어림하기",
+      "분수의 곱셈",
+      "합동과 대칭",
+      "소수의 곱셈",
+      "직육면체",
+      "평균과 가능성"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1611",
+    "title": "초등학교 과학 5-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1611&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1611",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci05_round0101_img01.jpg?v=251103044750"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "지층과 화석",
+      "빛의 성질",
+      "용해와 용액",
+      "우리 몸의 구조와 기능"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1612",
+    "title": "초등학교 과학 5-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1612&gradeCode=05&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1612",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci06_round0101_img01.jpg?v=251103044956"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "혼합물의 분리",
+      "열과 우리 생활",
+      "날씨와 우리 생활",
+      "자원과 에너지"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1584",
+    "title": "초등학교 사회 5-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1584&gradeCode=05&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1584",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc05_round0101_img01.jpg?v=250912090712"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": ["우리나라 국토 여행", "우리나라 지리 탐구", "법과 인권의 보장"]
+  },
+  {
+    "id": "miraen-elementary-2022-1585",
+    "title": "초등학교 사회 5-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 5,
+    "curriculum": "2022",
+    "volume": "5-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1585&gradeCode=05&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1585",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc06_round0101_img01.jpg?v=250912090732"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "유적과 유물로 살펴본 옛사람들의 생활",
+      "달라지는 시대, 변화하는 생활 모습",
+      "식민 통치와 저항, 전쟁이 바꾼 사회와 생활"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1589",
+    "title": "초등학교 영어6",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "강정진",
+    "subject": "english",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1589&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1589",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_eng04_round0101_img01.jpg?v=250926023405"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "I'm in the Sixth Grade",
+      "I Want to Be a Cook",
+      "I Have a Headache",
+      "When Is Your Birthday?",
+      "How Much Are These Shoes?",
+      "I Know About It",
+      "How Can I Get to the Museum?",
+      "I'm Stronger Than You",
+      "What Do You Think?",
+      "How Often Do You Work Out?",
+      "How About Planting Trees?",
+      "What Are You Going to Do This Afternoon?"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1646",
+    "title": "초등학교 국어 6-1(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-1가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1646&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1646"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "같은 주제에 대한 책을 읽고 생각을 나누어요",
+      "자신의 삶과 관련지어 읽어요",
+      "바르게 고쳐 써요",
+      "절차를 지키며 토론해요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1647",
+    "title": "초등학교 국어 6-1(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-1나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1647&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1647"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "매체 자료를 만들어요",
+      "상황에 맞게 표현해요",
+      "자신의 글쓰기 과정을 살펴봐요",
+      "비판적으로 읽어요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1672",
+    "title": "초등학교 국어 6-2(가)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-2가",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1672&gradeCode=06&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1672"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "다양한 책을 읽고 문제를 해결해요",
+      "깊이 있게 감상해요",
+      "궁금한 점을 해결해요",
+      "보거나 듣고 판단해요"
+    ]
+  },
+  {
+    "id": "national-elementary-2022-1673",
+    "title": "초등학교 국어 6-2(나)",
+    "publisher": "교육부",
+    "publisherAliases": ["미래엔"],
+    "author": "",
+    "subject": "korean",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-2나",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1673&gradeCode=06&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1673"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "매체 이용 습관을 돌아봐요",
+      "소중한 우리말",
+      "언어와 소통",
+      "시와 이야기로 표현해요"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1629",
+    "title": "초등학교 수학 6-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1629&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1629",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat07_round0101_img01.jpg?v=250917104201"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "분수의 나눗셈",
+      "각기둥과 각뿔",
+      "소수의 나눗셈",
+      "비와 비율",
+      "여러 가지 그래프",
+      "직육면체의 겉넓이와 부피"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1630",
+    "title": "초등학교 수학 6-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "장혜원",
+    "subject": "math",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1630&gradeCode=06&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1630",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_mat08_round0101_img01.jpg?v=250917104225"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "분수의 나눗셈",
+      "공간과 입체",
+      "소수의 나눗셈",
+      "비례식과 비례배분",
+      "원의 둘레와 넓이",
+      "원기둥, 원뿔, 구"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1613",
+    "title": "초등학교 과학 6-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1613&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1613",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci07_round0101_img01.jpg?v=251103045034"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": ["산과 염기", "물체의 운동", "식물의 구조와 기능", "지구의 운동"]
+  },
+  {
+    "id": "miraen-elementary-2022-1614",
+    "title": "초등학교 과학 6-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "양일호",
+    "subject": "science",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1614&gradeCode=06&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1614",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_sci08_round0101_img01.jpg?v=251103045114"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": ["계절의 변화", "물질의 연소", "전기의 이용", "과학과 나의 진로"]
+  },
+  {
+    "id": "miraen-elementary-2022-1586",
+    "title": "초등학교 사회 6-1",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-1",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1586&gradeCode=06&termCode=01&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1586",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc07_round0101_img01.jpg?v=250912090748"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": [
+      "평화 통일을 위한 노력, 민주화와 산업화",
+      "민주주의와 시민 참여",
+      "지구, 대륙 그리고 국가들"
+    ]
+  },
+  {
+    "id": "miraen-elementary-2022-1587",
+    "title": "초등학교 사회 6-2",
+    "publisher": "미래엔",
+    "publisherAliases": [],
+    "author": "전종한",
+    "subject": "social",
+    "schoolLevel": "elementary",
+    "grade": 6,
+    "curriculum": "2022",
+    "volume": "6-2",
+    "flexibleGrade": false,
+    "sourceUrl": "https://e.m-teacher.co.kr/pages/ele/textbook/textbookDetail.mrn?masterSeq=1587&gradeCode=06&termCode=02&revisionCode=2022&tabType=classTab",
+    "tocSourceUrls": [
+      "https://e.m-teacher.co.kr/pages/ele/textbook/class/subjectList.ax?masterSeq=1587",
+      "https://cdn-event.m-teacher.co.kr/22txbook/ele_soc08_round0101_img01.jpg?v=250912090802"
+    ],
+    "tocLevel": "major",
+    "checkedAt": "2026-10-15",
+    "units": ["세계의 자연환경", "시장경제와 국가 간 거래", "지구촌 사람들"]
+  }
+]

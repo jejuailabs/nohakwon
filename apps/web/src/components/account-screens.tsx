@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { RedeemInvite } from "./family-links";
 import type { LearnerProfile } from "@/lib/account";
+import { schoolLevelOf, type Grade } from "@/lib/education";
+import { SchoolGradeFields } from "./school-grade-fields";
 import { googleIdToken, signInError } from "@/lib/firebase/client";
 import {
   accountRequest,
@@ -228,7 +230,8 @@ export function OnboardingScreen({
 }) {
   const account = useAccount();
   const [nickname, setNickname] = useState(profile?.nickname ?? "");
-  const [grade, setGrade] = useState<1 | 2 | 3>(profile?.grade ?? 1);
+  const [schoolLevel, setSchoolLevel] = useState(schoolLevelOf(profile));
+  const [grade, setGrade] = useState<Grade>(profile?.grade ?? 1);
   const [calm, setCalm] = useState(profile?.calm ?? false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -253,7 +256,12 @@ export function OnboardingScreen({
               setBusy(true);
               setError("");
               try {
-                await account.saveProfile({ nickname, grade, calm });
+                await account.saveProfile({
+                  nickname,
+                  schoolLevel,
+                  grade,
+                  calm,
+                });
                 window.location.assign("/b");
               } catch (error) {
                 setError(
@@ -278,26 +286,13 @@ export function OnboardingScreen({
             <small className="muted">
               언제든지 설정에서 바꿀 수 있어요. (최대 20자)
             </small>
-            <fieldset className="grade-fieldset">
-              <legend>현재 학년</legend>
-              <div>
-                {([1, 2, 3] as const).map((value) => (
-                  <label
-                    key={value}
-                    className={grade === value ? "selected" : ""}
-                  >
-                    <input
-                      type="radio"
-                      name="grade"
-                      value={value}
-                      checked={grade === value}
-                      onChange={() => setGrade(value)}
-                    />
-                    중학교 {value}학년
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            <SchoolGradeFields
+              value={{ schoolLevel, grade }}
+              onChange={(v) => {
+                setSchoolLevel(v.schoolLevel);
+                setGrade(v.grade);
+              }}
+            />
             <label className="toggle-label">
               <span>
                 <strong>차분하게 학습하기</strong>

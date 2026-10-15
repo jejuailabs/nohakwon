@@ -2,6 +2,9 @@ import type { SubjectId } from "@nohakwon/core";
 import { SUBJECT_NAMES, type Book, type BankQuestion } from "./learning";
 import { QUESTIONS } from "./questions";
 import textbookData from "../data/textbooks.json";
+import elementaryData from "../data/elementary-textbooks.json";
+import { schoolLevelOf, type SchoolLevel } from "./education";
+import { ELEMENTARY_FOUNDATION } from "./elementary-foundation";
 
 // Original starter material, not a publisher's textbook or official curriculum match.
 const FOUNDATION: Book[] = (Object.keys(SUBJECT_NAMES) as SubjectId[]).map(
@@ -136,6 +139,7 @@ export const OFFICIAL_CATALOG: Book[] = verified.map((b) => ({
   edition: "2022 개정 · 대단원 목차",
   sourceUrl: `https://textbook.visang.com/textbook/bookdetail?gtt=M&ac=${b.code}`,
   grade: 1,
+  schoolLevel: "middle",
   subject: b.subject,
   units: b.units.map((title, i) => ({
     id: `unit-${i + 1}`,
@@ -152,10 +156,17 @@ export const OFFICIAL_CATALOG: Book[] = verified.map((b) => ({
 }));
 export const PUBLISHER_CATALOG: Book[] = [
   ...OFFICIAL_CATALOG,
-  ...textbookData.map((b): Book => ({
+  ...[
+    ...textbookData.map((b) => ({ ...b, schoolLevel: "middle" })),
+    ...elementaryData,
+  ].map((b): Book => ({
     id: b.id,
     title: b.title,
     publisher: b.publisher,
+    publisherAliases:
+      "publisherAliases" in b && Array.isArray(b.publisherAliases)
+        ? (b.publisherAliases as string[])
+        : [],
     author: b.author,
     curriculum: b.curriculum as "2022",
     volume: b.volume,
@@ -164,6 +175,7 @@ export const PUBLISHER_CATALOG: Book[] = [
     sourceUrl: b.sourceUrl,
     subject: b.subject as SubjectId,
     grade: b.grade as Book["grade"],
+    schoolLevel: b.schoolLevel as SchoolLevel,
     units: b.units.map((title, i) => ({
       id: `unit-${i + 1}`,
       title,
@@ -178,10 +190,19 @@ export const PUBLISHER_CATALOG: Book[] = [
     origin: "catalog",
   })),
 ];
-export const CATALOG = [...FOUNDATION, ...PUBLISHER_CATALOG];
+export const CATALOG = [
+  ...FOUNDATION,
+  ...ELEMENTARY_FOUNDATION,
+  ...PUBLISHER_CATALOG,
+];
 export function starterQuestions(book: Book): BankQuestion[] {
   const catalog = CATALOG.find((c) => c.id === book.id);
-  if (!catalog || !book.id.startsWith("foundation-")) return [];
+  if (
+    !catalog ||
+    !book.id.startsWith("foundation-") ||
+    schoolLevelOf(book) !== "middle"
+  )
+    return [];
   const qs: BankQuestion[] = QUESTIONS.filter(
     (q) => q.subject === book.subject,
   ).map((q) => ({

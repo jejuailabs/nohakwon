@@ -2,6 +2,7 @@ import { apiError, json } from "@/lib/server/http";
 import { requireUser } from "@/lib/server/session";
 import { adminDb } from "@/lib/firebase/admin";
 import { studentFor } from "@/lib/server/workspace";
+import { schoolLevelOf } from "@/lib/education";
 export async function GET() {
   try {
     const user = await requireUser(),
@@ -20,6 +21,7 @@ export async function GET() {
           id: student.id,
           profile: {
             nickname: s.nickname,
+            schoolLevel: schoolLevelOf(s),
             grade: s.grade,
             ui: s.ui,
             createdAt: s.createdAt,

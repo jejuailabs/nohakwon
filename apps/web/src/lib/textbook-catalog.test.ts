@@ -15,7 +15,7 @@ test("catalog contains source-backed books in all five subjects and keeps identi
   for (const b of PUBLISHER_CATALOG) {
     const parsed = parseBook(b);
     assert.ok(parsed.units.length > 0);
-    assert.ok(parsed.author);
+    assert.ok(parsed.author || parsed.publisher === "교육부");
     assert.equal(parsed.curriculum, "2022");
     assert.ok(parsed.sourceUrl?.startsWith("https://"));
     assert.ok(parsed.units.every((u) => !u.source));

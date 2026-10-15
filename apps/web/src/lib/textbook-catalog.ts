@@ -1,4 +1,5 @@
 import { parseBook, type Book, object, id } from "./learning";
+import { schoolLevelOf } from "./education";
 
 /** Database revisions and unpublishing take precedence over bundled seed data. */
 export function mergeTextbookCatalog(
@@ -31,6 +32,7 @@ export function catalogSelection(
   const v = selection ? object(selection) : {};
   return parseBook({
     ...book,
+    schoolLevel: schoolLevelOf(book),
     grade: book.flexibleGrade && v.grade !== undefined ? v.grade : book.grade,
     currentUnit: v.currentUnit ?? book.currentUnit,
     endUnit: v.endUnit ?? v.currentUnit ?? book.endUnit,

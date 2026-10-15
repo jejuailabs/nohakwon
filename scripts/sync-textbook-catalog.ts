@@ -3,6 +3,7 @@ import path from "node:path";
 import { createHash } from "node:crypto";
 import { PUBLISHER_CATALOG } from "../apps/web/src/lib/catalog";
 import sourceData from "../apps/web/src/data/textbooks.json";
+import elementaryData from "../apps/web/src/data/elementary-textbooks.json";
 import { parseBook } from "../apps/web/src/lib/learning";
 
 loadEnvConfig(path.resolve("apps/web"));
@@ -24,7 +25,9 @@ async function main() {
     const book = PUBLISHER_CATALOG[i],
       parsed = parseBook(book),
       old = existing[i].data();
-    const source = sourceData.find((b) => b.id === book.id);
+    const source = [...sourceData, ...elementaryData].find(
+      (b) => b.id === book.id,
+    );
     const managedBy = "publisher-catalog-v1";
     const catalogHash = createHash("sha256")
       .update(JSON.stringify(parsed))
@@ -70,14 +73,12 @@ async function main() {
     const batch = db.batch();
     pending.forEach((p) => batch.set(refs[p.index], p.data));
     await batch.commit();
-    await db
-      .collection("auditLogs")
-      .add({
-        action: "sync-publisher-catalog",
-        target: expected,
-        details: { books: pending.length, version: "publisher-catalog-v1" },
-        at: new Date().toISOString(),
-      });
+    await db.collection("auditLogs").add({
+      action: "sync-publisher-catalog",
+      target: expected,
+      details: { books: pending.length, version: "publisher-catalog-v1" },
+      at: new Date().toISOString(),
+    });
     const saved = await db.getAll(...refs);
     if (saved.some((s) => !s.exists))
       throw Error("Catalog verification failed.");

@@ -6,6 +6,7 @@ import { textbookCatalog } from "@/lib/server/textbook-catalog";
 import { matchTextbooks } from "@/lib/matching";
 import { object, text } from "@/lib/learning";
 import { AccountError } from "@/lib/account";
+import { schoolLevelOf } from "@/lib/education";
 export const runtime = "nodejs";
 export const maxDuration = 180;
 export async function POST(request: Request) {
@@ -93,7 +94,12 @@ export async function POST(request: Request) {
         matches: matchTextbooks(identity, await textbookCatalog()),
       });
     }
-    return json(await extractMaterial(user.uid, input, kind, media));
+    return json(
+      await extractMaterial(user.uid, input, kind, media, {
+        schoolLevel: schoolLevelOf(data),
+        grade: data.grade,
+      }),
+    );
   } catch (error) {
     return apiError(error);
   }

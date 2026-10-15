@@ -5,6 +5,7 @@ import { parseProfileInput, AccountError } from "@/lib/account";
 import { apiError, bodyJson, json, mutationGuard } from "@/lib/server/http";
 import { requireUser } from "@/lib/server/session";
 import { id, object } from "@/lib/learning";
+import { schoolLevelOf } from "@/lib/education";
 export const runtime = "nodejs";
 export async function GET() {
   try {
@@ -18,6 +19,7 @@ export async function GET() {
       profiles: snap.docs.map((d) => ({
         id: d.id,
         nickname: d.data().nickname,
+        schoolLevel: schoolLevelOf(d.data()),
         grade: d.data().grade,
       })),
     });
@@ -45,6 +47,7 @@ export async function POST(request: Request) {
     } else if (v.action === "create") {
       const p = parseProfileInput({
           nickname: v.nickname,
+          schoolLevel: v.schoolLevel,
           grade: v.grade,
           calm: v.calm,
         }),
@@ -61,6 +64,7 @@ export async function POST(request: Request) {
         tx.set(studentRef, {
           guardianUid: user.uid,
           nickname: p.nickname,
+          schoolLevel: schoolLevelOf(p),
           grade: p.grade,
           ui: { lowStimulus: p.calm },
           createdAt: FieldValue.serverTimestamp(),

@@ -9,19 +9,31 @@ import {
   type TextbookMatch,
 } from "@/lib/matching";
 import { accountRequest } from "./account-provider";
+import {
+  gradeLabel,
+  schoolLevelOf,
+  SCHOOL_GRADES,
+  SCHOOL_NAMES,
+  type SchoolLevel,
+} from "@/lib/education";
 
 export function TextbookFinder({
   catalog,
   registered,
   aiConfigured,
   onSelect,
+  initialSchoolLevel = "middle",
 }: {
   catalog: Book[];
   registered: string[];
   aiConfigured: boolean;
   onSelect: (book: Book) => void;
+  initialSchoolLevel?: SchoolLevel;
 }) {
   const [query, setQuery] = useState(""),
+    [schoolLevel, setSchoolLevel] = useState<SchoolLevel | "">(
+      initialSchoolLevel,
+    ),
     [subject, setSubject] = useState(""),
     [grade, setGrade] = useState(""),
     [curriculum, setCurriculum] = useState(""),
@@ -31,13 +43,18 @@ export function TextbookFinder({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
-  const official = catalog.filter((b) => !b.id.startsWith("foundation-"));
+  const official = catalog.filter(
+    (b) =>
+      !b.id.startsWith("foundation-") &&
+      (!schoolLevel || schoolLevelOf(b) === schoolLevel),
+  );
   const publishers = [
     ...new Set(official.map((b) => b.publisher.split("·")[0].trim())),
   ].sort();
   const results = useMemo(() => {
     const available = catalog.filter(
       (b) =>
+        (!schoolLevel || schoolLevelOf(b) === schoolLevel) &&
         (!subject || b.subject === subject) &&
         (!grade || b.flexibleGrade || b.grade === Number(grade)) &&
         (!curriculum ||
@@ -51,7 +68,16 @@ export function TextbookFinder({
     return available
       .filter((b) => !b.id.startsWith("foundation-"))
       .map((book) => ({ book, score: 0, reasons: [] }));
-  }, [catalog, subject, grade, curriculum, publisher, matches, query]);
+  }, [
+    catalog,
+    schoolLevel,
+    subject,
+    grade,
+    curriculum,
+    publisher,
+    matches,
+    query,
+  ]);
   async function identify(file: File) {
     setBusy(true);
     setError("");
@@ -73,6 +99,14 @@ export function TextbookFinder({
       if (!response.ok) throw Error(result.error);
       setIdentity(result.identity);
       setMatches(result.matches);
+      setSchoolLevel(
+        result.identity.schoolLevel ||
+          (result.identity.grade >= 4
+            ? "elementary"
+            : result.identity.grade
+              ? "middle"
+              : ""),
+      );
       setSubject("");
       setGrade("");
       setCurriculum("");
@@ -131,6 +165,12 @@ export function TextbookFinder({
               placeholder="예: 비상 수학 1 / 미래엔 국어 1-1 (신유식)"
               onChange={(e) => {
                 setQuery(e.target.value);
+                const level = identityFromText(e.target.value).schoolLevel;
+                if (level && level !== schoolLevel) {
+                  setSchoolLevel(level);
+                  setGrade("");
+                  setPublisher("");
+                }
                 setIdentity(null);
                 setMatches(null);
                 setNotice("");
@@ -157,6 +197,22 @@ export function TextbookFinder({
         </div>
         <div className="form-grid textbook-filters">
           <label>
+            학교급
+            <select
+              aria-label="교과서 학교급"
+              value={schoolLevel}
+              onChange={(e) => {
+                setSchoolLevel(e.target.value as SchoolLevel | "");
+                setGrade("");
+                setPublisher("");
+              }}
+            >
+              <option value="">전체 학교급</option>
+              <option value="elementary">초등학교 4~6학년</option>
+              <option value="middle">중학교 1~3학년</option>
+            </select>
+          </label>
+          <label>
             과목
             <select
               aria-label="교과서 과목"
@@ -179,11 +235,16 @@ export function TextbookFinder({
               onChange={(e) => setGrade(e.target.value)}
             >
               <option value="">전체 학년</option>
-              {[1, 2, 3].map((g) => (
-                <option key={g} value={g}>
-                  중학교 {g}학년
-                </option>
-              ))}
+              {(schoolLevel
+                ? [schoolLevel]
+                : (["elementary", "middle"] as SchoolLevel[])
+              ).flatMap((level) =>
+                SCHOOL_GRADES[level].map((g) => (
+                  <option key={`${level}-${g}`} value={g}>
+                    {SCHOOL_NAMES[level]} {g}학년
+                  </option>
+                )),
+              )}
             </select>
           </label>
           <label>
@@ -214,7 +275,10 @@ export function TextbookFinder({
         </div>
         <small className="muted">
           현재 {publishers.length}개 출판사 · {official.length}종의 공식 목차가
-          등록되어 있어요. 사회 ①·②는 학교 편성에 따라 학년을 선택합니다.
+          등록되어 있어요.{" "}
+          {schoolLevel === "elementary"
+            ? "초등 교과서는 학기와 권까지 확인해 주세요."
+            : "사회 ①·②는 학교 편성에 따라 학년을 선택합니다."}
         </small>
         {!aiConfigured && (
           <p className="muted small">
@@ -278,6 +342,7 @@ export function TextbookFinder({
               setMatches(null);
               setIdentity(null);
               setSubject("");
+              setSchoolLevel("");
               setGrade("");
               setPublisher("");
               setCurriculum("");
@@ -292,8 +357,8 @@ export function TextbookFinder({
           <article className="panel book-card" key={book.id}>
             <span className="tag">
               {SUBJECT_NAMES[book.subject]} ·{" "}
-              {book.flexibleGrade ? "학년 공통" : `중${book.grade}`} ·{" "}
-              {book.curriculum || book.edition?.match(/2015|2022/)?.[0]} 개정
+              {book.flexibleGrade ? "중학교 학년 공통" : gradeLabel(book, true)}{" "}
+              · {book.curriculum || book.edition?.match(/2015|2022/)?.[0]} 개정
             </span>
             <h2>{book.title}</h2>
             <p className="muted">
@@ -341,7 +406,11 @@ export function TextbookFinder({
           <summary>교과서 없이 기초 학습 체험하기</summary>
           <div className="workspace-actions">
             {catalog
-              .filter((b) => b.id.startsWith("foundation-"))
+              .filter(
+                (b) =>
+                  b.id.startsWith("foundation-") &&
+                  (!schoolLevel || schoolLevelOf(b) === schoolLevel),
+              )
               .map((book) => (
                 <button
                   className="secondary-button"
