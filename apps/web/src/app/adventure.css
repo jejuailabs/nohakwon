@@ -1,0 +1,568 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.workspace-light {
+  --shadow: 0 8px 30px #392c6a0c;
+}
+@media (prefers-color-scheme: light) {
+  .workspace-system {
+    --shadow: 0 8px 30px #392c6a0c;
+  }
+}
+.companion-portrait {
+  display: inline-block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--companion-color) 60%, var(--line));
+  border-radius: 50%;
+  background: var(--panel-soft) url("/images/party.png")
+    var(--companion-position) var(--companion-focus) / 500% auto no-repeat;
+}
+.subject-companion {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.subject-companion > span:last-child {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.subject-companion strong {
+  font-size: 13px;
+}
+.subject-companion small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.adventure-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  position: relative;
+  isolation: isolate;
+  min-height: 260px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(
+    110deg,
+    var(--panel) 30%,
+    color-mix(in srgb, var(--companion-color) 12%, var(--panel))
+  );
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.adventure-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at 80% 5%,
+    color-mix(in srgb, var(--companion-color) 14%, transparent),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+.adventure-copy {
+  padding: 30px 36px;
+  align-self: center;
+  min-width: 0;
+}
+.adventure-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.adventure-kicker > svg {
+  color: var(--companion-color);
+}
+.adventure-chapter {
+  margin-left: 9px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.adventure-header h1 {
+  font-size: 30px;
+  letter-spacing: -1px;
+  line-height: 1.5;
+  margin: 12px 0 9px;
+}
+.adventure-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+.adventure-facts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.adventure-facts .tag {
+  color: var(--text);
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 400;
+}
+.adventure-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.adventure-guide {
+  position: relative;
+  align-self: stretch;
+  min-height: 260px;
+}
+.adventure-orbit {
+  position: absolute;
+  height: 240px;
+  width: 240px;
+  border: 1px solid color-mix(in srgb, var(--companion-color) 35%, transparent);
+  border-radius: 50%;
+  right: 48px;
+  top: 28px;
+  transform: rotate(-18deg);
+}
+.adventure-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 15px -16px;
+  border: 1px dashed color-mix(in srgb, var(--companion-color) 25%, transparent);
+  border-radius: 50%;
+}
+.adventure-character {
+  position: absolute;
+  right: 60px;
+  top: 15px;
+  height: 270px;
+  width: 230px;
+  border-radius: 130px 130px 18px 18px;
+  border-bottom: 0;
+  box-shadow: 0 0 50px
+    color-mix(in srgb, var(--companion-color) 15%, transparent);
+  mask-image: linear-gradient(#000 65%, transparent 100%);
+}
+.adventure-dialogue {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 28px;
+  padding: 14px 18px;
+  border: 1px solid color-mix(in srgb, var(--companion-color) 30%, var(--line));
+  border-radius: 12px;
+  background: var(--panel);
+  box-shadow: 0 8px 24px #0002;
+}
+.adventure-dialogue > span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 6px;
+}
+.adventure-dialogue p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--text);
+}
+.adventure-star {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  font-size: 28px;
+  color: var(--companion-color);
+}
+.adventure-empty {
+  background: radial-gradient(
+    ellipse at 50% 0,
+    color-mix(in srgb, var(--companion-color) 9%, var(--panel)),
+    var(--panel) 70%
+  );
+}
+.adventure-empty > .companion-portrait {
+  width: 78px;
+  height: 78px;
+  box-shadow: 0 0 0 7px var(--panel-soft);
+  margin: 5px 0;
+}
+.adventure-empty .eyebrow {
+  font-size: 9px;
+}
+.adventure-empty h2 {
+  font-size: 20px;
+}
+.adventure-empty button {
+  margin-top: 4px;
+}
+.learning-workspace .book-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+.book-grid > .adventure-empty {
+  grid-column: 1 / -1;
+}
+.book-card,
+.review-concept-card,
+.note-card,
+.textbook-photo-card {
+  border-top: 2px solid
+    color-mix(in srgb, var(--companion-color, var(--accent)) 70%, var(--line));
+}
+.book-card > .subject-companion {
+  margin-bottom: 6px;
+}
+.book-card h2 {
+  line-height: 1.65;
+  font-size: 19px;
+}
+.book-card > p {
+  font-size: 13px;
+  line-height: 1.9;
+}
+.review-concept-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.review-concept-card h2 {
+  font-size: 20px;
+  line-height: 1.7;
+}
+.review-concept-card > p {
+  font-size: 13px;
+  line-height: 1.8;
+}
+.review-concept-card > .small {
+  margin-top: auto;
+}
+.notes-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+.notes-toolbar > label {
+  min-width: 160px;
+}
+.note-card {
+  border-left: 1px solid
+    color-mix(in srgb, var(--companion-color) 40%, var(--line));
+}
+.subject-report .progress-track {
+  margin-left: 55px;
+}
+.subject-report .progress-track i {
+  background: var(--companion-color);
+}
+.subject-report .companion-portrait {
+  width: 36px;
+  height: 36px;
+}
+.subject-report .subject-companion small {
+  display: none;
+}
+.report-metrics .panel {
+  position: relative;
+  overflow: hidden;
+}
+.report-metrics .panel::after {
+  content: "✦";
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 31px;
+  color: var(--accent);
+  opacity: 0.15;
+}
+.family-profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.family-profile-card.current {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent-soft), var(--panel) 65%);
+}
+.family-profile-card .avatar {
+  width: 52px;
+  height: 52px;
+}
+.family-profile-card h2 {
+  font-size: 20px;
+}
+.family-profile-card > button {
+  margin-top: auto;
+}
+.badge-collection > .eyebrow {
+  display: block;
+  margin-bottom: 10px;
+}
+.badge-collection > p {
+  font-size: 13px;
+  line-height: 1.9;
+  margin-top: 12px;
+}
+.cosmetic-grid .cosmetic-badge {
+  position: relative;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  gap: 13px;
+  padding: 24px;
+  border-radius: 14px;
+}
+.cosmetic-grid .equipped {
+  border-color: var(--companion-color);
+  opacity: 1;
+}
+.cosmetic-badge small {
+  color: var(--muted);
+}
+.badge-emblem {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 68px;
+  color: var(--companion-color);
+  border: 1px solid color-mix(in srgb, var(--companion-color) 60%, var(--line));
+  border-radius: 24px 24px 30px 30px;
+  background: radial-gradient(
+    circle at 50% 15%,
+    color-mix(in srgb, var(--companion-color) 28%, var(--panel)),
+    var(--panel)
+  );
+  box-shadow: 0 0 25px
+    color-mix(in srgb, var(--companion-color) 10%, transparent);
+}
+.study-guide {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin: 4px 0 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-soft);
+}
+.study-guide .eyebrow {
+  display: block;
+  font-size: 8px;
+  margin-bottom: 5px;
+}
+.study-guide p {
+  font-size: 12px;
+}
+.server-study > .primary-button.full-width {
+  margin-top: 18px;
+}
+.study-complete .study-companion {
+  width: 115px;
+  height: 115px;
+  box-shadow:
+    0 0 0 9px var(--panel-soft),
+    0 0 50px color-mix(in srgb, var(--companion-color) 15%, transparent);
+}
+.textbook-photo-results .book-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+  align-items: start;
+}
+.textbook-query {
+  background: var(--panel-soft);
+}
+.workspace-nav {
+  scrollbar-width: none;
+}
+.workspace-nav::-webkit-scrollbar {
+  display: none;
+}
+.textbook-photo-card > .tag {
+  justify-self: start;
+}
+.textbook-photo-confirm {
+  border-color: var(--accent);
+  background: linear-gradient(120deg, var(--accent-soft), var(--panel));
+}
+.calm-mode .adventure-guide,
+.calm-mode .adventure-header::before,
+.calm-mode .report-metrics .panel::after {
+  display: none;
+}
+.calm-mode .adventure-header {
+  display: block;
+  min-height: 0;
+  background: var(--panel);
+}
+.calm-mode .companion-portrait {
+  background-image: none;
+  box-shadow: none;
+  position: relative;
+  background-color: var(--accent-soft);
+}
+.calm-mode .companion-portrait::after {
+  content: "✦";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+@media (max-width: 1050px) {
+  .adventure-header {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+  .adventure-copy {
+    padding: 26px;
+  }
+  .adventure-character {
+    right: 30px;
+    width: 210px;
+  }
+  .adventure-orbit {
+    right: 20px;
+  }
+  .adventure-dialogue {
+    left: 0;
+    right: 16px;
+  }
+  .adventure-header h1 {
+    font-size: 27px;
+  }
+}
+@media (max-width: 700px) {
+  .adventure-header {
+    grid-template-columns: minmax(0, 1fr) 104px;
+    min-height: 0;
+    border-radius: 16px;
+  }
+  .adventure-copy {
+    padding: 23px 0 23px 20px;
+  }
+  .adventure-kicker {
+    gap: 6px;
+    font-size: 10px;
+    flex-wrap: wrap;
+  }
+  .adventure-chapter {
+    display: none;
+  }
+  .adventure-header h1 {
+    font-size: 23px;
+    margin: 10px 0;
+  }
+  .adventure-description {
+    font-size: 12px;
+  }
+  .adventure-facts {
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .adventure-facts .tag {
+    font-size: 10px;
+  }
+  .adventure-actions {
+    margin-top: 17px;
+  }
+  .adventure-actions > button {
+    font-size: 12px;
+    padding: 12px;
+  }
+  .adventure-guide {
+    min-height: 0;
+  }
+  .adventure-character {
+    top: 28px;
+    right: -18px;
+    height: 178px;
+    width: 117px;
+    border-radius: 90px 90px 0 0;
+    opacity: 0.85;
+  }
+  .adventure-dialogue,
+  .adventure-orbit,
+  .adventure-star {
+    display: none;
+  }
+  .adventure-empty h2 {
+    font-size: 18px;
+  }
+  .notes-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .notes-toolbar > label {
+    width: 100%;
+  }
+  .note-card .row-between {
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .note-card .row-between > .small {
+    white-space: nowrap;
+    font-size: 10px;
+  }
+  .textbook-photo-results .section-heading,
+  .textbook-photo-confirm {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .textbook-photo-results .section-heading h2 {
+    font-size: 18px;
+  }
+  .textbook-photo-results .section-heading > button {
+    margin-top: 10px;
+  }
+  .textbook-photo-confirm > button {
+    width: 100%;
+  }
+  .calm-mode .adventure-copy {
+    padding: 23px 20px;
+  }
+}
+@media print {
+  .adventure-header {
+    display: block;
+    background: white;
+    min-height: 0;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 16px;
+  }
+  .adventure-copy {
+    padding: 0 0 16px;
+  }
+  .adventure-guide,
+  .adventure-header::before,
+  .adventure-actions,
+  .companion-portrait,
+  .report-metrics .panel::after {
+    display: none;
+  }
+  .subject-report .progress-track {
+    margin-left: 0;
+  }
+  .adventure-facts .tag {
+    background: white;
+  }
+}

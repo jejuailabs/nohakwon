@@ -1,7 +1,13 @@
 "use client";
 import { Localize, LocaleProvider, PersistedLocale } from "./localize";
 import Link from "next/link";
-import { useCallback, useEffect, useState, type CSSProperties } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   BookOpen,
   Swords,
@@ -50,6 +56,12 @@ import {
   type SchoolLevel,
 } from "@/lib/education";
 import { SchoolGradeFields } from "./school-grade-fields";
+import {
+  AdventureHeader,
+  AdventureEmpty,
+  SubjectCompanion,
+  companionStyle,
+} from "./adventure";
 
 const NAV = [
   { id: "today", label: "오늘의 학습", Icon: Home },
@@ -67,6 +79,7 @@ const LABELS = {
   zh: ["今日学习", "我的教材", "复习", "错题本", "学习报告", "家长", "设置"],
 };
 export function LearningWorkspace() {
+  const navigation = useRef<HTMLElement>(null);
   const account = useAccount(),
     [data, setData] = useState<Workspace | null>(null),
     [error, setError] = useState(""),
@@ -85,8 +98,9 @@ export function LearningWorkspace() {
   useEffect(() => {
     void refresh();
     const sync = () => {
-      const v = new URLSearchParams(window.location.search).get("view");
-      if (v && NAV.some((n) => n.id === v)) setView(v);
+      const requested = new URLSearchParams(window.location.search).get("view");
+      const v = requested === "records" ? "reports" : requested;
+      setView(v && NAV.some((n) => n.id === v) ? v : "today");
     };
     sync();
     window.addEventListener("popstate", sync);
@@ -95,6 +109,22 @@ export function LearningWorkspace() {
   const pending = data?.jobs.some((j) =>
     ["queued", "running"].includes(j.status),
   );
+  const ready = !!data;
+  useEffect(() => {
+    const revealActive = () => {
+      const nav = navigation.current;
+      const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+      if (nav && active)
+        nav.scrollTo({
+          left:
+            active.offsetLeft - nav.clientWidth / 2 + active.offsetWidth / 2,
+          behavior: "instant",
+        });
+    };
+    revealActive();
+    window.addEventListener("resize", revealActive);
+    return () => window.removeEventListener("resize", revealActive);
+  }, [view, ready]);
   useEffect(() => {
     if (!pending) return;
     const timer = setInterval(() => void refresh(), 6000);
@@ -162,7 +192,11 @@ export function LearningWorkspace() {
     due = Object.values(data.state.concepts).filter((c) => c.dueDate <= date),
     selectedBook = data.books.find((b) => b.active && b.subject === subject),
     remaining = data.state.points - data.state.spent,
-    locale = data.state.locale;
+    locale = data.state.locale,
+    savedNotes = data.results.filter((r) => !r.correct || r.bookmarked),
+    visibleNotes = savedNotes.filter(
+      (r) => filter === "all" || r.subject === filter,
+    );
   return (
     <LocaleProvider locale={data?.state.locale ?? "ko"}>
       <Localize>
@@ -215,7 +249,7 @@ export function LearningWorkspace() {
               </button>
             </div>
           </header>
-          <nav className="workspace-nav" aria-label="주 메뉴">
+          <nav ref={navigation} className="workspace-nav" aria-label="주 메뉴">
             {NAV.map((n, i) => (
               <button
                 className={view === n.id ? "active" : ""}
@@ -442,8 +476,9 @@ export function LearningWorkspace() {
                         <BookOpen size={42} />
                         <h3>배울 교재를 선택해 주세요</h3>
                         <p>
-                          교재를 올리고 목차를 확인하면
-                          <br />그 순서대로 학습할 수 있어요.
+                          사진이나 교재명으로 내 교과서를 찾으면
+                          <br />
+                          목차를 불러와 학습할 수 있어요.
                         </p>
                         <button
                           className="primary-button"
@@ -527,27 +562,33 @@ export function LearningWorkspace() {
             )}
             {view === "reviews" && (
               <div className="workspace-stack">
-                <div className="workspace-heading">
-                  <div>
-                    <p className="eyebrow">KEEP WHAT YOU LEARNED</p>
-                    <h1>기억을 단단하게</h1>
-                    <p className="muted">
-                      모르거나 헷갈렸던 개념부터 차근차근.
-                    </p>
-                  </div>
-                  <button
-                    className="primary-button"
-                    disabled={!due.length || busy}
-                    onClick={() => void start("review")}
-                  >
-                    오늘의 복습 시작
-                  </button>
-                </div>
+                <AdventureHeader
+                  chapter="reviews"
+                  actions={
+                    <button
+                      className="primary-button"
+                      disabled={!due.length || busy}
+                      onClick={() => void start("review")}
+                    >
+                      오늘의 복습 시작
+                    </button>
+                  }
+                >
+                  <span className="tag">{`오늘 복습 ${due.length}개 개념`}</span>
+                  <span className="tag">
+                    {`전체 ${Object.keys(data.state.concepts).length}개 개념`}
+                  </span>
+                </AdventureHeader>
                 <div className="book-grid">
                   {Object.values(data.state.concepts)
                     .sort((a, b) => a.dueDate.localeCompare(b.dueDate))
                     .map((c) => (
-                      <article className="panel" key={c.key}>
+                      <article
+                        className="panel review-concept-card"
+                        key={c.key}
+                        style={companionStyle(c.subject)}
+                      >
+                        <SubjectCompanion subject={c.subject} />
                         <span className="tag">
                           {SUBJECT_NAMES[c.subject]} ·{" "}
                           {c.dueDate <= date ? "오늘 복습" : "예정"}
@@ -567,55 +608,77 @@ export function LearningWorkspace() {
                     ))}
                 </div>
                 {!Object.keys(data.state.concepts).length && (
-                  <Empty
+                  <AdventureEmpty
                     title="첫 학습을 시작해 주세요"
                     description="답안과 이해도가 쌓이면 개념별 복습 일정이 생겨요."
-                  />
+                  >
+                    <button
+                      className="primary-button"
+                      onClick={() => navigate("today")}
+                    >
+                      오늘의 학습으로
+                    </button>
+                  </AdventureEmpty>
                 )}
               </div>
             )}
             {view === "notes" && (
               <div className="workspace-stack">
-                <div className="workspace-heading">
-                  <div>
-                    <p className="eyebrow">MISTAKES BECOME DISCOVERIES</p>
-                    <h1>나의 오답노트</h1>
-                  </div>
-                  <select
-                    aria-label="오답 과목"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                  >
-                    <option value="all">모든 과목</option>
-                    {Object.entries(SUBJECT_NAMES).map(([id, n]) => (
-                      <option key={id} value={id}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
+                <AdventureHeader chapter="notes">
+                  <span className="tag">{`기록한 문제 ${savedNotes.length}개`}</span>
+                </AdventureHeader>
+                <div className="notes-toolbar">
+                  <p className="muted small">
+                    정답과 해설을 다시 읽고, 나만의 풀이 메모를 남겨요.
+                  </p>
+                  <label>
+                    <span className="sr-only">오답 과목</span>
+                    <select
+                      aria-label="오답 과목"
+                      value={filter}
+                      onChange={(e) => setFilter(e.target.value)}
+                    >
+                      <option value="all">모든 과목</option>
+                      {Object.entries(SUBJECT_NAMES).map(([id, n]) => (
+                        <option key={id} value={id}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                 </div>
-                {data.results
-                  .filter(
-                    (r) =>
-                      (!r.correct || r.bookmarked) &&
-                      (filter === "all" || r.subject === filter),
-                  )
-                  .map((r) => (
-                    <NoteCard
-                      key={r.id}
-                      result={r}
-                      book={data.books.find((b) => b.id === r.bookId)}
-                      onChange={refresh}
-                      onPractice={() =>
-                        void start("practice", r.bookId, r.questionId)
-                      }
-                    />
-                  ))}
-                {!data.results.some((r) => !r.correct || r.bookmarked) && (
-                  <Empty
-                    title="아직 오답노트가 비어 있어요"
-                    description="틀린 문제와 저장한 문제가 이곳에 모여요."
+                {visibleNotes.map((r) => (
+                  <NoteCard
+                    key={r.id}
+                    result={r}
+                    book={data.books.find((b) => b.id === r.bookId)}
+                    onChange={refresh}
+                    onPractice={() =>
+                      void start("practice", r.bookId, r.questionId)
+                    }
                   />
+                ))}
+                {!visibleNotes.length && (
+                  <AdventureEmpty
+                    subject={
+                      filter === "all" ? "english" : (filter as SubjectId)
+                    }
+                    title={
+                      savedNotes.length
+                        ? "이 과목에 저장한 문제가 없어요"
+                        : "아직 오답노트가 비어 있어요"
+                    }
+                    description="틀린 문제와 저장한 문제가 이곳에 모여요."
+                  >
+                    <button
+                      className="secondary-button"
+                      onClick={() =>
+                        savedNotes.length ? setFilter("all") : navigate("today")
+                      }
+                    >
+                      {savedNotes.length ? "모든 과목 보기" : "오늘의 학습으로"}
+                    </button>
+                  </AdventureEmpty>
                 )}
               </div>
             )}
@@ -638,14 +701,27 @@ export function LearningWorkspace() {
               />
             )}
             {view === "family" && !data.guardian && (
-              <Empty
-                title="학생 학습 계정"
-                description="결제와 프로필 연결은 보호자 계정에서 관리해 주세요."
-              />
+              <div className="workspace-stack">
+                <AdventureHeader chapter="family" />
+                <AdventureEmpty
+                  subject="science"
+                  title="학생 학습 계정"
+                  description="결제와 프로필 연결은 보호자 계정에서 관리해 주세요."
+                />
+              </div>
             )}
             {view === "settings" && (
               <div className="workspace-stack">
-                <h1>학습 설정</h1>
+                <AdventureHeader chapter="settings">
+                  <span className="tag">
+                    {`과목별 하루 ${data.state.dailyTarget}문제`}
+                  </span>
+                  <span className="tag">
+                    {account.profile?.calm
+                      ? "차분하게 학습 중"
+                      : "동료와 함께 학습 중"}
+                  </span>
+                </AdventureHeader>
                 <section className="panel form-grid">
                   <label>
                     화면 테마
@@ -780,16 +856,20 @@ export function LearningWorkspace() {
                     유지합니다.
                   </p>
                 </section>
-                <section className="panel">
+                <section className="panel badge-collection">
+                  <span className="eyebrow">ADVENTURER COLLECTION</span>
                   <h2>나만의 배지</h2>
                   <p className="muted">
                     학습 포인트로 모험가 배지를 열어요. 포인트는 현금으로
                     거래되지 않아요.
                   </p>
                   <div className="cosmetic-grid">
-                    {COSMETICS.map((c) => (
+                    {COSMETICS.map((c, i) => (
                       <button
-                        className="secondary-button"
+                        className={`secondary-button cosmetic-badge ${data.state.equipped === c.id ? "equipped" : ""}`}
+                        style={companionStyle(
+                          (["math", "science", "english"] as const)[i % 3],
+                        )}
                         key={c.id}
                         disabled={busy || data.state.equipped === c.id}
                         onClick={() =>
@@ -802,7 +882,9 @@ export function LearningWorkspace() {
                           })
                         }
                       >
-                        <Star size={25} />
+                        <span className="badge-emblem">
+                          <Star size={28} />
+                        </span>
                         {c.name}
                         <small>
                           {data.state.equipped === c.id
@@ -870,17 +952,6 @@ export function LearningWorkspace() {
     </LocaleProvider>
   );
 }
-function Empty({ title, description }: { title: string; description: string }) {
-  return (
-    <Localize>
-      <div className="panel empty-state">
-        <BookOpen size={38} />
-        <h2>{title}</h2>
-        <p>{description}</p>
-      </div>
-    </Localize>
-  );
-}
 function NoteCard({
   result: r,
   book,
@@ -896,11 +967,9 @@ function NoteCard({
     [message, setMessage] = useState("");
   return (
     <Localize>
-      <article className="panel note-card">
+      <article className="panel note-card" style={companionStyle(r.subject)}>
         <div className="row-between">
-          <span className="tag">
-            {SUBJECT_NAMES[r.subject]} · {r.concept}
-          </span>
+          <SubjectCompanion subject={r.subject} detail={r.concept} />
           <span className="muted small">{r.date}</span>
         </div>
         <p className="muted small">
@@ -966,16 +1035,16 @@ function ReportView({
   return (
     <Localize>
       <div className="workspace-stack">
-        <div className="workspace-heading">
-          <div>
-            <p className="eyebrow">EVERY STEP COUNTS</p>
-            <h1>최근 7일 학습 리포트</h1>
-            <p className="muted">실제 답안 기록으로 계산한 나의 변화</p>
-          </div>
-          <button className="secondary-button" onClick={() => window.print()}>
-            인쇄·PDF 저장
-          </button>
-        </div>
+        <AdventureHeader
+          chapter="reports"
+          actions={
+            <button className="secondary-button" onClick={() => window.print()}>
+              인쇄·PDF 저장
+            </button>
+          }
+        >
+          <span className="tag">{`최근 7일 · ${report.days}일의 발자국`}</span>
+        </AdventureHeader>
         <div className="report-metrics">
           {[
             [report.count, "학습 문항"],
@@ -1012,9 +1081,13 @@ function ReportView({
           <section className="panel">
             <h2>과목별 학습</h2>
             {report.subjects.map((s) => (
-              <div className="subject-report" key={s.subject}>
+              <div
+                className="subject-report"
+                key={s.subject}
+                style={companionStyle(s.subject)}
+              >
                 <div className="row-between">
-                  <strong>{SUBJECT_NAMES[s.subject]}</strong>
+                  <SubjectCompanion subject={s.subject} />
                   <span>
                     {s.count}문제 · {s.accuracy}%
                   </span>
@@ -1109,18 +1182,17 @@ function FamilyView({
   return (
     <Localize>
       <div className="workspace-stack">
-        <div className="workspace-heading">
-          <div>
-            <p className="eyebrow">GROW TOGETHER</p>
-            <h1>보호자 학습 관리</h1>
-            <p className="muted">
-              자녀별 교재와 학습 기록을 구분해서 관리해요.
-            </p>
-          </div>
-        </div>
+        <AdventureHeader chapter="family">
+          {profiles.length > 0 && (
+            <span className="tag">{`학습 프로필 ${profiles.length} / 5`}</span>
+          )}
+        </AdventureHeader>
         <div className="book-grid">
           {profiles.map((p) => (
-            <article className="panel" key={p.id}>
+            <article
+              className={`panel family-profile-card ${account.profile?.id === p.id ? "current" : ""}`}
+              key={p.id}
+            >
               <span className="avatar">
                 <Star />
               </span>

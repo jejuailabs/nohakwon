@@ -6,6 +6,7 @@ import { gradeLabel, type Grade } from "@/lib/education";
 import type { TextbookIdentity } from "@/lib/matching";
 import type { TextbookPhotoResult } from "@/lib/textbook-recognition";
 import { accountRequest } from "./account-provider";
+import { SubjectCompanion, companionStyle } from "./adventure";
 
 type Choice = {
   catalogId: string;
@@ -164,7 +165,18 @@ export function TextbookPhotoResults({
           )?.book;
           const label = `${index + 1}. ${group.identity.title || (group.identity.subject ? SUBJECT_NAMES[group.identity.subject] : "교과서")}`;
           return (
-            <article className="panel textbook-photo-card" key={group.id}>
+            <article
+              className="panel textbook-photo-card"
+              key={group.id}
+              style={
+                group.identity.subject
+                  ? companionStyle(group.identity.subject)
+                  : undefined
+              }
+            >
+              {group.identity.subject && (
+                <SubjectCompanion subject={group.identity.subject} />
+              )}
               <span className="tag">
                 {group.identity.subject
                   ? SUBJECT_NAMES[group.identity.subject]

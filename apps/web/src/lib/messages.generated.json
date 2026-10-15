@@ -1,4 +1,9 @@
 {
+  "교과서 목차를 불러오고 있어요.": {
+    "en": "Loading textbook contents.",
+    "ja": "教科書の目次を読み込んでいます。",
+    "zh": "正在加载教材目录。"
+  },
   "오늘의 학습": {
     "en": "Today’s Learning",
     "ja": "今日の学習",
@@ -2278,5 +2283,185 @@
     "en": "Please check the answer and explanation first.",
     "ja": "先に正解と解説を確認してください。",
     "zh": "请先查看答案和解析。"
+  },
+  "모험의 서재": {
+    "en": "The Adventure Library",
+    "ja": "冒険の書庫",
+    "zh": "冒险书房"
+  },
+  "기억의 수련장": {
+    "en": "The Memory Workshop",
+    "ja": "記憶の修練場",
+    "zh": "记忆练习场"
+  },
+  "발견의 기록실": {
+    "en": "The Discovery Journal",
+    "ja": "発見の記録室",
+    "zh": "发现记录室"
+  },
+  "성장의 별자리": {
+    "en": "A Constellation of Growth",
+    "ja": "成長の星座",
+    "zh": "成长的星座"
+  },
+  "함께하는 베이스캠프": {
+    "en": "Our Shared Base Camp",
+    "ja": "みんなのベースキャンプ",
+    "zh": "共同的大本营"
+  },
+  "모험가의 준비실": {
+    "en": "The Adventurer’s Room",
+    "ja": "冒険者の準備室",
+    "zh": "冒险家的准备室"
+  },
+  "한 권의 교재에서, 새로운 이야기가 시작돼.": {
+    "en": "A new story begins with a single book.",
+    "ja": "一冊の教材から、新しい物語が始まるよ。",
+    "zh": "一本教材，就是新故事的开始。"
+  },
+  "다시 만난 개념은, 더 오래 빛날 거야.": {
+    "en": "Revisit an idea and let it shine a little longer.",
+    "ja": "もう一度出会った概念は、もっと長く輝くよ。",
+    "zh": "再次遇见的知识，会闪耀得更久。"
+  },
+  "괜찮아. 어려웠던 곳이 다음 모험의 시작이야.": {
+    "en": "It’s okay. A tricky moment can start your next adventure.",
+    "ja": "大丈夫。難しかったところが、次の冒険の始まりだよ。",
+    "zh": "没关系，难住你的地方就是下一次冒险的起点。"
+  },
+  "작은 발자국도 모이면, 나만의 길이 되지.": {
+    "en": "Little footsteps add up to a path of your own.",
+    "ja": "小さな足跡も集まれば、自分だけの道になるよ。",
+    "zh": "小小的脚印，也能汇成属于自己的路。"
+  },
+  "각자의 속도로 자라는 배움을 함께 응원해.": {
+    "en": "Cheer on every learner as they grow at their own pace.",
+    "ja": "それぞれのペースで育つ学びを、一緒に応援しよう。",
+    "zh": "一起支持每个人按自己的节奏成长。"
+  },
+  "가장 좋은 모험의 속도는, 너에게 맞는 속도야.": {
+    "en": "The best pace for an adventure is the one that suits you.",
+    "ja": "いちばん良い冒険の速さは、自分に合った速さだよ。",
+    "zh": "最好的冒险节奏，就是适合你的节奏。"
+  },
+  "틀린 문제와 저장한 문제에서 다음 배움의 실마리를 찾아요.": {
+    "en": "Find your next learning clue in missed and saved questions.",
+    "ja": "間違えた問題や保存した問題から、次の学びのヒントを探そう。",
+    "zh": "从错题和收藏的题目中寻找下一步学习的线索。"
+  },
+  "화면부터 학습 목표까지, 나에게 편안한 모험을 준비해요.": {
+    "en": "Make your adventure comfortable, from display settings to learning goals.",
+    "ja": "画面から学習目標まで、自分に合った冒険を準備しよう。",
+    "zh": "从显示设置到学习目标，准备适合自己的冒险。"
+  },
+  "등록한 교재 {0}권": {
+    "en": "{0} books added",
+    "ja": "登録した教材 {0}冊",
+    "zh": "已添加 {0} 本教材"
+  },
+  "학습 중 {0}권": {
+    "en": "{0} active books",
+    "ja": "学習中 {0}冊",
+    "zh": "正在学习 {0} 本"
+  },
+  "오늘 복습 {0}개 개념": {
+    "en": "{0} concepts due today",
+    "ja": "今日の復習 {0}概念",
+    "zh": "今天复习 {0} 个概念"
+  },
+  "전체 {0}개 개념": {
+    "en": "{0} concepts in total",
+    "ja": "合計 {0}概念",
+    "zh": "共 {0} 个概念"
+  },
+  "기록한 문제 {0}개": {
+    "en": "{0} saved questions",
+    "ja": "記録した問題 {0}問",
+    "zh": "已记录 {0} 道题"
+  },
+  "정답과 해설을 다시 읽고, 나만의 풀이 메모를 남겨요.": {
+    "en": "Read the answer and explanation again, then leave your own notes.",
+    "ja": "正解と解説を読み直して、自分の解き方をメモしよう。",
+    "zh": "重读答案和解析，留下自己的解题笔记。"
+  },
+  "이 과목에 저장한 문제가 없어요": {
+    "en": "No saved questions for this subject yet",
+    "ja": "この教科に保存した問題はまだありません",
+    "zh": "这个科目还没有保存的题目"
+  },
+  "모든 과목 보기": {
+    "en": "Show all subjects",
+    "ja": "すべての教科を見る",
+    "zh": "查看所有科目"
+  },
+  "오늘의 학습으로": {
+    "en": "Go to today’s learning",
+    "ja": "今日の学習へ",
+    "zh": "进入今日学习"
+  },
+  "과목별 하루 {0}문제": {
+    "en": "{0} questions per subject daily",
+    "ja": "教科ごとに一日 {0}問",
+    "zh": "每科每天 {0} 道题"
+  },
+  "차분하게 학습 중": {
+    "en": "Calm learning mode",
+    "ja": "落ち着いた学習モード",
+    "zh": "安静学习模式"
+  },
+  "동료와 함께 학습 중": {
+    "en": "Learning with companions",
+    "ja": "仲間と一緒に学習中",
+    "zh": "和伙伴一起学习"
+  },
+  "최근 7일 · {0}일의 발자국": {
+    "en": "Last 7 days · {0} learning days",
+    "ja": "最近7日間 · {0}日分の足跡",
+    "zh": "最近7天 · {0}天的足迹"
+  },
+  "학습 프로필 {0} / 5": {
+    "en": "Learner profiles {0} / 5",
+    "ja": "学習プロフィール {0} / 5",
+    "zh": "学习档案 {0} / 5"
+  },
+  "이야기의 기록자": {
+    "en": "Story Keeper",
+    "ja": "物語の記録者",
+    "zh": "故事记录者"
+  },
+  "언어의 탐험가": {
+    "en": "Language Explorer",
+    "ja": "言葉の探検家",
+    "zh": "语言探险家"
+  },
+  "별빛의 연산술사": {
+    "en": "Starlight Arithmetician",
+    "ja": "星明かりの演算術師",
+    "zh": "星光运算师"
+  },
+  "시간의 여행자": {
+    "en": "Time Traveler",
+    "ja": "時の旅人",
+    "zh": "时间旅行者"
+  },
+  "자연의 연구자": {
+    "en": "Nature Researcher",
+    "ja": "自然の研究者",
+    "zh": "自然研究者"
+  },
+  "한 문제씩, 나만의 속도로.": {
+    "en": "One question at a time, at your own pace.",
+    "ja": "一問ずつ、自分のペースで。",
+    "zh": "一道一道，按自己的节奏来。"
+  },
+  "사진이나 교재명으로 내 교과서를 찾으면": {
+    "en": "Find your textbook by photo or title",
+    "ja": "写真や教材名で教科書を見つけると",
+    "zh": "通过照片或教材名称找到课本"
+  },
+  "목차를 불러와 학습할 수 있어요.": {
+    "en": "and start learning with its table of contents.",
+    "ja": "目次を読み込んで学習できます。",
+    "zh": "即可载入目录开始学习。"
   }
 }

@@ -16,6 +16,12 @@ import { accountRequest, useAccount } from "./account-provider";
 import { TextbookFinder } from "./textbook-finder";
 import { gradeLabel, schoolLevelOf } from "@/lib/education";
 import { SchoolGradeFields } from "./school-grade-fields";
+import {
+  AdventureHeader,
+  AdventureEmpty,
+  SubjectCompanion,
+  companionStyle,
+} from "./adventure";
 
 type Props = {
   books: Book[];
@@ -49,6 +55,7 @@ export function BookManager({
     grade: profile?.grade ?? 1,
   });
   const [catalog, setCatalog] = useState<Book[]>([]),
+    [catalogLoading, setCatalogLoading] = useState(true),
     [draft, setDraft] = useState<Draft | null>(null),
     [editing, setEditing] = useState(""),
     [catalogId, setCatalogId] = useState(""),
@@ -63,7 +70,8 @@ export function BookManager({
   useEffect(() => {
     accountRequest<{ catalog: Book[] }>("/api/books")
       .then((r) => setCatalog(r.catalog))
-      .catch((e) => setError(e.message));
+      .catch((e) => setError(e.message))
+      .finally(() => setCatalogLoading(false));
   }, []);
   async function action(label: string, fn: () => Promise<void>) {
     setBusy(label);
@@ -169,25 +177,28 @@ export function BookManager({
   return (
     <Localize>
       <div className="workspace-stack">
-        <div className="workspace-heading">
-          <div>
-            <p className="eyebrow">MY LEARNING LIBRARY</p>
-            <h1>나의 교재</h1>
-            <p className="muted">교과서의 순서대로, 지금 배우는 범위에 맞춰.</p>
-          </div>
-          <button
-            className="primary-button"
-            onClick={() => {
-              setEditing("");
-              setCatalogId("");
-              setDraft(blankForLearner());
-              setNotice("");
-            }}
-          >
-            <Plus size={18} />
-            직접 등록
-          </button>
-        </div>
+        <AdventureHeader
+          chapter="books"
+          actions={
+            <button
+              className="primary-button"
+              onClick={() => {
+                setEditing("");
+                setCatalogId("");
+                setDraft(blankForLearner());
+                setNotice("");
+              }}
+            >
+              <Plus size={18} />
+              직접 등록
+            </button>
+          }
+        >
+          <span className="tag">{`등록한 교재 ${books.length}권`}</span>
+          <span className="tag">
+            {`학습 중 ${books.filter((b) => b.active).length}권`}
+          </span>
+        </AdventureHeader>
         <div className="workspace-tabs">
           {(
             [
@@ -223,12 +234,11 @@ export function BookManager({
         {!draft && tab === "mine" && (
           <div className="book-grid">
             {!books.length && (
-              <div className="panel empty-state">
-                <BookOpen size={36} />
-                <h2>첫 교재를 등록해 볼까요?</h2>
-                <p>
-                  표지 사진이나 교재명으로 찾으면 단원 목록을 불러올 수 있어요.
-                </p>
+              <AdventureEmpty
+                subject="korean"
+                title="첫 교재를 등록해 볼까요?"
+                description="표지 사진이나 교재명으로 찾으면 단원 목록을 불러올 수 있어요."
+              >
                 <button
                   className="primary-button"
                   onClick={() => setTab("catalog")}
@@ -241,13 +251,15 @@ export function BookManager({
                 >
                   교과서·기초 교재 보기
                 </button>
-              </div>
+              </AdventureEmpty>
             )}
             {books.map((book) => (
               <article
                 className={`panel book-card ${!book.active ? "inactive" : ""}`}
                 key={book.id}
+                style={companionStyle(book.subject)}
               >
+                <SubjectCompanion subject={book.subject} />
                 <span className="tag">
                   {gradeLabel(book, true)} · {SUBJECT_NAMES[book.subject]} ·{" "}
                   {book.active ? "학습 중" : "보관 중"}
@@ -316,7 +328,12 @@ export function BookManager({
             ))}
           </div>
         )}
-        {!draft && tab === "catalog" && (
+        {!draft && tab === "catalog" && catalogLoading && (
+          <div className="panel workspace-notice" role="status">
+            교과서 목차를 불러오고 있어요.
+          </div>
+        )}
+        {!draft && tab === "catalog" && !catalogLoading && (
           <TextbookFinder
             catalog={catalog}
             registered={books.map((b) => b.id)}

@@ -12,6 +12,7 @@ import {
   type LearnMode,
 } from "@/lib/learning";
 import { accountRequest } from "./account-provider";
+import { CompanionPortrait, companionStyle } from "./adventure";
 export type StudyAssignment = {
   id: string;
   date: string;
@@ -159,6 +160,7 @@ export function ServerStudy({
         <section
           ref={dialog}
           className="server-study panel"
+          style={companionStyle(q.subject)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="study-heading"
@@ -187,7 +189,13 @@ export function ServerStudy({
           </div>
           {done ? (
             <div className="study-complete">
-              <CheckCircle2 size={55} />
+              <CompanionPortrait
+                subject={q.subject}
+                className="study-companion"
+              />
+              <span className="tag">
+                <CheckCircle2 size={16} /> QUEST COMPLETE
+              </span>
               <h2 id="study-heading">오늘의 한 걸음, 완료!</h2>
               <p>
                 {Object.keys(results).length}문제 중{" "}
@@ -205,6 +213,13 @@ export function ServerStudy({
             </div>
           ) : (
             <>
+              <div className="study-guide">
+                <CompanionPortrait subject={q.subject} />
+                <div>
+                  <span className="eyebrow">ONE STEP AT A TIME</span>
+                  <p>한 문제씩, 나만의 속도로.</p>
+                </div>
+              </div>
               <div className="row-between small">
                 <span>{q.concept}</span>
                 <span>
