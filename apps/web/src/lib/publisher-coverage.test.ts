@@ -46,7 +46,7 @@ test("all catalog identities are distinct and new TOCs retain public source evid
   assert.equal(PUBLISHER_CATALOG.length, 407);
   assert.equal(
     PUBLISHER_CATALOG.reduce((n, b) => n + b.units.length, 0),
-    2521,
+    2514,
   );
   const identities = PUBLISHER_CATALOG.map((b) =>
     [
@@ -67,7 +67,10 @@ test("all catalog identities are distinct and new TOCs retain public source evid
     assert.ok(book.tocSourceUrls.every((url) => url.startsWith("https://")));
     assert.ok(
       book.units.every(
-        (u) => !/^(부록|Wrap-up|Special Lesson|Review)/i.test(u),
+        (u) =>
+          !/^(부록|Wrap-up|Special Lesson|Review|프로젝트$|정답과 풀이$)/i.test(
+            u,
+          ),
       ),
     );
   }
