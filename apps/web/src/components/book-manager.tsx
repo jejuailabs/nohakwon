@@ -322,6 +322,21 @@ export function BookManager({
             registered={books.map((b) => b.id)}
             aiConfigured={aiConfigured}
             onSelect={selectCatalog}
+            learnerGrade={profile?.grade ?? 1}
+            onAdded={async (added, warning) => {
+              await onChange();
+              setTab("mine");
+              setNotice(
+                [
+                  added
+                    ? `${added}권의 교과서와 목차를 추가했어요.`
+                    : "이미 등록한 교과서를 확인했어요.",
+                  warning,
+                ]
+                  .filter(Boolean)
+                  .join(" "),
+              );
+            }}
             initialSchoolLevel={schoolLevelOf(profile)}
           />
         )}

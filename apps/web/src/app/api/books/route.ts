@@ -1,6 +1,6 @@
 import { apiError, bodyJson, json, mutationGuard } from "@/lib/server/http";
 import { requireUser } from "@/lib/server/session";
-import { saveBook, studentFor } from "@/lib/server/workspace";
+import { saveBook, addCatalogBooks, studentFor } from "@/lib/server/workspace";
 import { id, object, text } from "@/lib/learning";
 import { textbookCatalog } from "@/lib/server/textbook-catalog";
 import { adminDb } from "@/lib/firebase/admin";
@@ -39,6 +39,8 @@ export async function POST(request: Request) {
       });
       return json({ ok: true });
     }
+    if (v.action === "add-catalogs")
+      return json(await addCatalogBooks(user.uid, v.selections));
     return json({
       book: await saveBook(
         user.uid,

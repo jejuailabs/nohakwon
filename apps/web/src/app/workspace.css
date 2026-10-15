@@ -74,6 +74,91 @@
 .textbook-reasons {
   color: var(--accent);
 }
+.textbook-photo-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+}
+.textbook-photo-card h3,
+.textbook-photo-card p {
+  margin: 0;
+}
+.textbook-candidates {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 9px;
+  min-width: 0;
+}
+.textbook-candidates legend {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.textbook-candidate {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.textbook-candidate.selected {
+  border-color: var(--accent);
+  background: var(--accent-soft, var(--panel-soft));
+}
+.textbook-candidate input {
+  width: 18px !important;
+  height: 18px;
+  padding: 0 !important;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}
+.textbook-candidate span {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.textbook-candidate small,
+.textbook-skip {
+  color: var(--muted);
+}
+.textbook-photo-range {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.textbook-selected-details {
+  display: grid;
+  gap: 12px;
+}
+.textbook-photo-range select,
+.textbook-selected-details select {
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+.textbook-photo-confirm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.textbook-photo-confirm strong {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+.textbook-photo-source img {
+  display: block;
+  max-width: 100%;
+  max-height: 420px;
+  margin: 12px auto 0;
+  object-fit: contain;
+}
 .textbook-finder details summary {
   cursor: pointer;
   padding: 10px 0;

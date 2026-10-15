@@ -1,9 +1,9 @@
 import { apiError, bodyJson, json, mutationGuard } from "@/lib/server/http";
 import { requireUser } from "@/lib/server/session";
 import { studentFor, entitlement } from "@/lib/server/workspace";
-import { extractMaterial, identifyTextbook } from "@/lib/server/ai";
+import { extractMaterial, identifyTextbooks } from "@/lib/server/ai";
 import { textbookCatalog } from "@/lib/server/textbook-catalog";
-import { matchTextbooks } from "@/lib/matching";
+import { matchRecognizedTextbooks } from "@/lib/textbook-recognition";
 import { object, text } from "@/lib/learning";
 import { AccountError } from "@/lib/account";
 import { schoolLevelOf } from "@/lib/education";
@@ -88,10 +88,23 @@ export async function POST(request: Request) {
       }
     }
     if (kind === "cover") {
-      const identity = await identifyTextbook(user.uid, input, media);
+      const recognition = await identifyTextbooks(user.uid, input, media);
+      const result = matchRecognizedTextbooks(
+        recognition,
+        await textbookCatalog(),
+      );
       return json({
-        identity,
-        matches: matchTextbooks(identity, await textbookCatalog()),
+        ...result,
+        // Old browser tabs may still expect the former one-book response.
+        identity:
+          result.groups.length === 1
+            ? result.groups[0].identity
+            : {
+                title: "",
+                warning:
+                  "여러 교과서를 인식했어요. 화면을 새로고침하여 교과서별 결과를 확인해 주세요.",
+              },
+        matches: result.groups.length === 1 ? result.groups[0].matches : [],
       });
     }
     return json(

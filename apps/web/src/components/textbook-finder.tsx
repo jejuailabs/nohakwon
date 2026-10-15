@@ -1,13 +1,14 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, Camera, ArrowRight, BookOpen } from "lucide-react";
 import { SUBJECT_NAMES, type Book } from "@/lib/learning";
 import {
   identityFromText,
   matchTextbooks,
   type TextbookIdentity,
-  type TextbookMatch,
 } from "@/lib/matching";
+import type { TextbookPhotoResult } from "@/lib/textbook-recognition";
+import { TextbookPhotoResults } from "./textbook-photo-results";
 import { accountRequest } from "./account-provider";
 import {
   gradeLabel,
@@ -15,6 +16,7 @@ import {
   SCHOOL_GRADES,
   SCHOOL_NAMES,
   type SchoolLevel,
+  type Grade,
 } from "@/lib/education";
 
 export function TextbookFinder({
@@ -22,12 +24,16 @@ export function TextbookFinder({
   registered,
   aiConfigured,
   onSelect,
+  onAdded,
+  learnerGrade = 1,
   initialSchoolLevel = "middle",
 }: {
   catalog: Book[];
   registered: string[];
   aiConfigured: boolean;
   onSelect: (book: Book) => void;
+  onAdded: (added: number, warning: string) => Promise<void>;
+  learnerGrade?: Grade;
   initialSchoolLevel?: SchoolLevel;
 }) {
   const [query, setQuery] = useState(""),
@@ -38,11 +44,21 @@ export function TextbookFinder({
     [grade, setGrade] = useState(""),
     [curriculum, setCurriculum] = useState(""),
     [publisher, setPublisher] = useState("");
-  const [identity, setIdentity] = useState<TextbookIdentity | null>(null),
-    [matches, setMatches] = useState<TextbookMatch[] | null>(null),
+  const [recognition, setRecognition] = useState<TextbookPhotoResult | null>(
+      null,
+    ),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const [photo, setPhoto] = useState<{ name: string; url: string } | null>(
+    null,
+  );
+  useEffect(
+    () => () => {
+      if (photo) URL.revokeObjectURL(photo.url);
+    },
+    [photo],
+  );
   const official = catalog.filter(
     (b) =>
       !b.id.startsWith("foundation-") &&
@@ -62,31 +78,20 @@ export function TextbookFinder({
           b.edition?.includes(curriculum)) &&
         (!publisher || b.publisher.split("·")[0].trim() === publisher),
     );
-    if (matches)
-      return matches.filter((m) => available.some((b) => b.id === m.book.id));
     if (query.trim()) return matchTextbooks(identityFromText(query), available);
     return available
       .filter((b) => !b.id.startsWith("foundation-"))
       .map((book) => ({ book, score: 0, reasons: [] }));
-  }, [
-    catalog,
-    schoolLevel,
-    subject,
-    grade,
-    curriculum,
-    publisher,
-    matches,
-    query,
-  ]);
+  }, [catalog, schoolLevel, subject, grade, curriculum, publisher, query]);
   async function identify(file: File) {
     setBusy(true);
     setError("");
     setNotice("");
-    setIdentity(null);
-    setMatches(null);
+    setRecognition(null);
     try {
       if (file.size > 5 * 1024 * 1024)
-        throw Error("표지 사진은 5MB 이하로 올려 주세요.");
+        throw Error("교과서 사진은 5MB 이하로 올려 주세요.");
+      setPhoto({ name: file.name, url: URL.createObjectURL(file) });
       const body = new FormData();
       body.set("kind", "cover");
       body.set("file", file);
@@ -97,35 +102,38 @@ export function TextbookFinder({
       });
       const result = await response.json();
       if (!response.ok) throw Error(result.error);
-      setIdentity(result.identity);
-      setMatches(result.matches);
-      setSchoolLevel(
-        result.identity.schoolLevel ||
-          (result.identity.grade >= 4
-            ? "elementary"
-            : result.identity.grade
-              ? "middle"
-              : ""),
-      );
+      setRecognition(result as TextbookPhotoResult);
       setSubject("");
       setGrade("");
       setCurriculum("");
       setPublisher("");
-      setQuery(
-        [
-          result.identity.publisher,
-          result.identity.title,
-          result.identity.author && `(${result.identity.author})`,
-          result.identity.curriculum && `${result.identity.curriculum} 개정`,
-        ]
-          .filter(Boolean)
-          .join(" "),
-      );
+      setQuery("");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "표지를 읽지 못했어요.");
+      setError(e instanceof Error ? e.message : "사진을 읽지 못했어요.");
     } finally {
       setBusy(false);
     }
+  }
+  function searchAgain(identity?: TextbookIdentity) {
+    setRecognition(null);
+    setPhoto(null);
+    setQuery(
+      identity
+        ? [
+            identity.publisher,
+            identity.title,
+            identity.author && `(${identity.author})`,
+            identity.curriculum && `${identity.curriculum} 개정`,
+          ]
+            .filter(Boolean)
+            .join(" ")
+        : "",
+    );
+    setSchoolLevel(identity?.schoolLevel || "");
+    setSubject("");
+    setGrade("");
+    setCurriculum("");
+    setPublisher("");
   }
   async function requestBook() {
     setBusy(true);
@@ -149,10 +157,11 @@ export function TextbookFinder({
       <div className="panel textbook-search">
         <div>
           <p className="eyebrow">FIND YOUR TEXTBOOK</p>
-          <h2>표지 한 장이면, 목차는 여기서</h2>
+          <h2>사진 한 장으로, 내 교과서 찾기</h2>
           <p className="muted">
-            교과서 이름으로 찾거나 표지를 촬영하세요. 출판사·저자·개정판을
-            확인하면 저장된 단원을 바로 불러옵니다.
+            표지 한 권이나 여러 과목의 교과서 안내표를 올려 주세요. 과목별로
+            출판사·저자·개정판을 찾아 목차를 보여 드립니다. 확인 후 버튼으로
+            추가하세요.
           </p>
         </div>
         <div className="textbook-search-row">
@@ -171,8 +180,8 @@ export function TextbookFinder({
                   setGrade("");
                   setPublisher("");
                 }
-                setIdentity(null);
-                setMatches(null);
+                setRecognition(null);
+                setPhoto(null);
                 setNotice("");
               }}
             />
@@ -181,7 +190,7 @@ export function TextbookFinder({
             className={`secondary-button file-button ${busy ? "disabled" : ""}`}
           >
             <Camera size={18} />
-            {busy ? "표지를 읽고 있어요…" : "표지 사진으로 찾기"}
+            {busy ? "교과서를 읽고 있어요…" : "사진·안내표로 찾기"}
             <input
               type="file"
               aria-label="교과서 표지 사진"
@@ -195,115 +204,103 @@ export function TextbookFinder({
             />
           </label>
         </div>
-        <div className="form-grid textbook-filters">
-          <label>
-            학교급
-            <select
-              aria-label="교과서 학교급"
-              value={schoolLevel}
-              onChange={(e) => {
-                setSchoolLevel(e.target.value as SchoolLevel | "");
-                setGrade("");
-                setPublisher("");
-              }}
-            >
-              <option value="">전체 학교급</option>
-              <option value="elementary">초등학교 4~6학년</option>
-              <option value="middle">중학교 1~3학년</option>
-            </select>
-          </label>
-          <label>
-            과목
-            <select
-              aria-label="교과서 과목"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            >
-              <option value="">전체 과목</option>
-              {Object.entries(SUBJECT_NAMES).map(([id, label]) => (
-                <option key={id} value={id}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            학년
-            <select
-              aria-label="교과서 학년"
-              value={grade}
-              onChange={(e) => setGrade(e.target.value)}
-            >
-              <option value="">전체 학년</option>
-              {(schoolLevel
-                ? [schoolLevel]
-                : (["elementary", "middle"] as SchoolLevel[])
-              ).flatMap((level) =>
-                SCHOOL_GRADES[level].map((g) => (
-                  <option key={`${level}-${g}`} value={g}>
-                    {SCHOOL_NAMES[level]} {g}학년
-                  </option>
-                )),
-              )}
-            </select>
-          </label>
-          <label>
-            출판사
-            <select
-              aria-label="교과서 출판사"
-              value={publisher}
-              onChange={(e) => setPublisher(e.target.value)}
-            >
-              <option value="">전체 출판사</option>
-              {publishers.map((p) => (
-                <option key={p}>{p}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            교육과정
-            <select
-              aria-label="교과서 개정판"
-              value={curriculum}
-              onChange={(e) => setCurriculum(e.target.value)}
-            >
-              <option value="">전체 개정판</option>
-              <option value="2022">2022 개정</option>
-              <option value="2015">2015 개정</option>
-            </select>
-          </label>
-        </div>
         <small className="muted">
-          현재 {publishers.length}개 출판사 · {official.length}종의 공식 목차가
-          등록되어 있어요.{" "}
-          {schoolLevel === "elementary"
-            ? "초등 교과서는 학기와 권까지 확인해 주세요."
-            : "사회 ①·②는 학교 편성에 따라 학년을 선택합니다."}
+          표지·교과서 안내표 PNG/JPG/WebP · 5MB 이하 · 사진 한 장에 최대 20권
         </small>
+        {!recognition && (
+          <>
+            <div className="form-grid textbook-filters">
+              <label>
+                학교급
+                <select
+                  aria-label="교과서 학교급"
+                  value={schoolLevel}
+                  onChange={(e) => {
+                    setSchoolLevel(e.target.value as SchoolLevel | "");
+                    setGrade("");
+                    setPublisher("");
+                  }}
+                >
+                  <option value="">전체 학교급</option>
+                  <option value="elementary">초등학교 4~6학년</option>
+                  <option value="middle">중학교 1~3학년</option>
+                </select>
+              </label>
+              <label>
+                과목
+                <select
+                  aria-label="교과서 과목"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                >
+                  <option value="">전체 과목</option>
+                  {Object.entries(SUBJECT_NAMES).map(([id, label]) => (
+                    <option key={id} value={id}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                학년
+                <select
+                  aria-label="교과서 학년"
+                  value={grade}
+                  onChange={(e) => setGrade(e.target.value)}
+                >
+                  <option value="">전체 학년</option>
+                  {(schoolLevel
+                    ? [schoolLevel]
+                    : (["elementary", "middle"] as SchoolLevel[])
+                  ).flatMap((level) =>
+                    SCHOOL_GRADES[level].map((g) => (
+                      <option key={`${level}-${g}`} value={g}>
+                        {SCHOOL_NAMES[level]} {g}학년
+                      </option>
+                    )),
+                  )}
+                </select>
+              </label>
+              <label>
+                출판사
+                <select
+                  aria-label="교과서 출판사"
+                  value={publisher}
+                  onChange={(e) => setPublisher(e.target.value)}
+                >
+                  <option value="">전체 출판사</option>
+                  {publishers.map((p) => (
+                    <option key={p}>{p}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                교육과정
+                <select
+                  aria-label="교과서 개정판"
+                  value={curriculum}
+                  onChange={(e) => setCurriculum(e.target.value)}
+                >
+                  <option value="">전체 개정판</option>
+                  <option value="2022">2022 개정</option>
+                  <option value="2015">2015 개정</option>
+                </select>
+              </label>
+            </div>
+            <small className="muted">
+              현재 {publishers.length}개 출판사 · {official.length}종의 공식
+              목차가 등록되어 있어요.{" "}
+              {schoolLevel === "elementary"
+                ? "초등 교과서는 학기와 권까지 확인해 주세요."
+                : "사회 ①·②는 학교 편성에 따라 학년을 선택합니다."}
+            </small>
+          </>
+        )}
         {!aiConfigured && (
           <p className="muted small">
             표지 인식을 준비 중입니다. 교재명 검색과 목록 선택은 사용할 수
             있어요.
           </p>
-        )}
-        {identity && (
-          <div className="workspace-notice">
-            <strong>표지에서 읽은 정보</strong>
-            <p>
-              {[
-                identity.title,
-                identity.publisher,
-                identity.author,
-                identity.curriculum && `${identity.curriculum} 개정`,
-                identity.volume,
-              ]
-                .filter(Boolean)
-                .join(" · ") ||
-                "교재 정보를 읽지 못했어요. 이름으로 검색해 주세요."}
-            </p>
-            {identity.warning && <p>{identity.warning}</p>}
-            <small>아래 후보의 저자·개정판을 확인하고 선택해 주세요.</small>
-          </div>
         )}
         {error && (
           <p role="alert" className="storage-warning">
@@ -316,113 +313,128 @@ export function TextbookFinder({
           </p>
         )}
       </div>
-      <div className="section-heading">
-        <h2>교과서 {results.length}종</h2>
-        <small className="muted">선택 → 단원·범위 확인 → 등록</small>
-      </div>
-      {!results.length && (
-        <div className="panel empty-state">
-          <BookOpen size={30} />
-          <h3>아직 일치하는 교과서가 없어요</h3>
-          <p className="muted">
-            검색어와 필터를 확인해 주세요. 다른 저자나 개정판의 목차를 대신
-            연결하지 않습니다.
-          </p>
-          <button
-            className="secondary-button"
-            disabled={busy || !query.trim()}
-            onClick={() => void requestBook()}
-          >
-            이 교재 추가 요청
-          </button>
-          <button
-            className="secondary-button"
-            onClick={() => {
-              setQuery("");
-              setMatches(null);
-              setIdentity(null);
-              setSubject("");
-              setSchoolLevel("");
-              setGrade("");
-              setPublisher("");
-              setCurriculum("");
-            }}
-          >
-            전체 교과서 보기
-          </button>
-        </div>
-      )}
-      <div className="book-grid">
-        {results.map(({ book, reasons }) => (
-          <article className="panel book-card" key={book.id}>
-            <span className="tag">
-              {SUBJECT_NAMES[book.subject]} ·{" "}
-              {book.flexibleGrade ? "중학교 학년 공통" : gradeLabel(book, true)}{" "}
-              · {book.curriculum || book.edition?.match(/2015|2022/)?.[0]} 개정
-            </span>
-            <h2>{book.title}</h2>
-            <p className="muted">
-              {book.publisher}
-              {book.author ? ` · ${book.author}` : ""}
-            </p>
-            {reasons.length > 0 && (
-              <small className="textbook-reasons">
-                확인된 항목: {reasons.join(" · ")}
-              </small>
-            )}
-            <details>
-              <summary>등록된 {book.units.length}개 단원 보기</summary>
-              <ol className="book-units">
-                {book.units.map((u) => (
-                  <li key={u.id}>{u.title}</li>
-                ))}
-              </ol>
-            </details>
-            {book.sourceUrl && (
-              <a
-                className="tag"
-                href={book.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
+      {recognition ? (
+        <TextbookPhotoResults
+          photo={photo}
+          result={recognition}
+          registered={registered}
+          learnerGrade={learnerGrade}
+          onAdded={onAdded}
+          onSearch={searchAgain}
+        />
+      ) : (
+        <>
+          <div className="section-heading">
+            <h2>교과서 {results.length}종</h2>
+            <small className="muted">선택 → 단원·범위 확인 → 등록</small>
+          </div>
+          {!results.length && (
+            <div className="panel empty-state">
+              <BookOpen size={30} />
+              <h3>아직 일치하는 교과서가 없어요</h3>
+              <p className="muted">
+                검색어와 필터를 확인해 주세요. 다른 저자나 개정판의 목차를 대신
+                연결하지 않습니다.
+              </p>
+              <button
+                className="secondary-button"
+                disabled={busy || !query.trim()}
+                onClick={() => void requestBook()}
               >
-                출판사 공식 목차 ↗
-              </a>
-            )}
-            <button
-              className="primary-button"
-              disabled={busy || registered.includes(book.id)}
-              onClick={() => onSelect(book)}
-            >
-              {registered.includes(book.id)
-                ? "등록됨"
-                : "이 교과서 목차 불러오기"}
-              <ArrowRight size={16} />
-            </button>
-          </article>
-        ))}
-      </div>
-      {!query && !matches && (
-        <details className="panel">
-          <summary>교과서 없이 기초 학습 체험하기</summary>
-          <div className="workspace-actions">
-            {catalog
-              .filter(
-                (b) =>
-                  b.id.startsWith("foundation-") &&
-                  (!schoolLevel || schoolLevelOf(b) === schoolLevel),
-              )
-              .map((book) => (
+                이 교재 추가 요청
+              </button>
+              <button
+                className="secondary-button"
+                onClick={() => {
+                  setQuery("");
+                  setRecognition(null);
+                  setSubject("");
+                  setSchoolLevel("");
+                  setGrade("");
+                  setPublisher("");
+                  setCurriculum("");
+                }}
+              >
+                전체 교과서 보기
+              </button>
+            </div>
+          )}
+          <div className="book-grid">
+            {results.map(({ book, reasons }) => (
+              <article className="panel book-card" key={book.id}>
+                <span className="tag">
+                  {SUBJECT_NAMES[book.subject]} ·{" "}
+                  {book.flexibleGrade
+                    ? "중학교 학년 공통"
+                    : gradeLabel(book, true)}{" "}
+                  · {book.curriculum || book.edition?.match(/2015|2022/)?.[0]}{" "}
+                  개정
+                </span>
+                <h2>{book.title}</h2>
+                <p className="muted">
+                  {book.publisher}
+                  {book.author ? ` · ${book.author}` : ""}
+                </p>
+                {reasons.length > 0 && (
+                  <small className="textbook-reasons">
+                    확인된 항목: {reasons.join(" · ")}
+                  </small>
+                )}
+                <details>
+                  <summary>등록된 {book.units.length}개 단원 보기</summary>
+                  <ol className="book-units">
+                    {book.units.map((u) => (
+                      <li key={u.id}>{u.title}</li>
+                    ))}
+                  </ol>
+                </details>
+                {book.sourceUrl && (
+                  <a
+                    className="tag"
+                    href={book.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    출판사 공식 목차 ↗
+                  </a>
+                )}
                 <button
-                  className="secondary-button"
-                  key={book.id}
-                  disabled={registered.includes(book.id)}
+                  className="primary-button"
+                  disabled={busy || registered.includes(book.id)}
                   onClick={() => onSelect(book)}
                 >
-                  {book.title}
+                  {registered.includes(book.id)
+                    ? "등록됨"
+                    : "이 교과서 목차 불러오기"}
+                  <ArrowRight size={16} />
                 </button>
-              ))}
+              </article>
+            ))}
           </div>
-        </details>
+          {!query && (
+            <details className="panel">
+              <summary>교과서 없이 기초 학습 체험하기</summary>
+              <div className="workspace-actions">
+                {catalog
+                  .filter(
+                    (b) =>
+                      b.id.startsWith("foundation-") &&
+                      (!schoolLevel || schoolLevelOf(b) === schoolLevel),
+                  )
+                  .map((book) => (
+                    <button
+                      className="secondary-button"
+                      key={book.id}
+                      disabled={registered.includes(book.id)}
+                      onClick={() => onSelect(book)}
+                    >
+                      {book.title}
+                    </button>
+                  ))}
+              </div>
+            </details>
+          )}
+        </>
       )}
     </section>
   );
