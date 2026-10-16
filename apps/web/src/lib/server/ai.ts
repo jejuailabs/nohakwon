@@ -87,7 +87,12 @@ export async function aiJson(
   media?: { mime: string; data: Buffer },
   verify = false,
   effort?: "low" | "medium",
-): Promise<{ value: unknown; usage: AiUsage }> {
+  search?: { domains: string[] },
+): Promise<{
+  value: unknown;
+  usage: AiUsage;
+  sources: { title: string; url: string }[];
+}> {
   if (!aiConfigured())
     throw new AccountError(
       503,
@@ -140,6 +145,20 @@ export async function aiJson(
         model,
         store: false,
         reasoning: { effort: effort ?? (verify ? "medium" : "low") },
+        ...(search
+          ? {
+              tools: [
+                {
+                  type: "web_search",
+                  filters: { allowed_domains: search.domains },
+                  search_context_size: "medium",
+                },
+              ],
+              tool_choice: "required",
+              max_tool_calls: 3,
+              include: ["web_search_call.action.sources"],
+            }
+          : {}),
         max_output_tokens: 12000,
         input: [
           {
@@ -221,7 +240,26 @@ export async function aiJson(
       "이 자료는 AI가 처리하지 못했어요. 내용을 확인해 주세요.",
     );
   try {
+    const sources = (Array.isArray(raw.output) ? raw.output : [])
+      .flatMap((part: any) => [
+        ...(part.type === "web_search_call"
+          ? (part.action?.sources ?? [])
+          : []),
+        ...(part.type === "message"
+          ? (part.content ?? []).flatMap((c: any) =>
+              (c.annotations ?? []).filter(
+                (a: any) => a.type === "url_citation",
+              ),
+            )
+          : []),
+      ])
+      .filter((s: any) => typeof s.url === "string")
+      .map((s: any) => ({
+        title: String(s.title ?? "출처"),
+        url: s.url as string,
+      }));
     return {
+      sources,
       value: JSON.parse(
         chunks
           .filter((c: { type: string }) => c.type === "output_text")

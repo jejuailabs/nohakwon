@@ -65,6 +65,8 @@ import {
   type UnitPlan,
 } from "@/lib/adaptive-learning";
 import { selectAdaptiveQuestions } from "@/lib/assignment-selection";
+import { canPrepareCurriculum } from "@/lib/learning-material";
+import { resolveLearningMaterial } from "./learning-material";
 
 export function isAdmin(user: DecodedIdToken) {
   return ["owner", "admin", "editor", "reviewer"].includes(user.nohakwonRole);
@@ -343,7 +345,7 @@ export async function queueJob(
     unit = book?.units.find((u) => u.id === unitId);
   if (!book || !unit)
     throw new AccountError(404, "교재와 단원을 확인해 주세요.");
-  if (!unit.source)
+  if (!unit.source && !canPrepareCurriculum(book))
     throw new AccountError(422, "이 단원의 학습 본문을 먼저 등록해 주세요.");
   const lockId = createHash("sha256")
       .update(`${bookId}:${unitId}:${unitRevision(book, unit)}`)
@@ -414,12 +416,24 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
     const book = (
         await ref.collection("books").doc(job.bookId).get()
       ).data() as Book | undefined,
-      unit = book?.units.find((u) => u.id === job.unitId);
-    if (!book || !unit || unitRevision(book, unit) !== job.revision)
+      registeredUnit = book?.units.find((u) => u.id === job.unitId);
+    if (
+      !book ||
+      !registeredUnit ||
+      unitRevision(book, registeredUnit) !== job.revision
+    )
       throw new AccountError(
         409,
         "교재가 수정됐어요. 새 내용으로 다시 출제해 주세요.",
       );
+    const { unit, provenance } = await resolveLearningMaterial(
+      uid,
+      ref,
+      book,
+      registeredUnit,
+      (stage) => jobRef.update({ stage }),
+    );
+    await jobRef.update({ stage: "개념·유형 학습지도를 준비하고 있어요." });
     await ensureExposureIndex(ref);
     const [allBank, adaptive, learningSnapshot] = await Promise.all([
       loadBank(ref),
@@ -435,6 +449,7 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
     let plan = planFor(book, unit, adaptive);
     if (!plan) {
       plan = await generateUnitPlan(uid, book, unit, oldQuestions.length > 0);
+      Object.assign(plan, provenance);
       plan.id = identityHash(
         `${book.id}:${unit.id}:${unitRevision(book, unit)}`,
       );
@@ -500,12 +515,31 @@ export async function runJob(uid: string, studentId: string, jobId: string) {
       });
       return;
     }
+    await jobRef.update({
+      stage: "유형별 새 문제를 만들고 정답·근거를 검증하고 있어요.",
+    });
     const output = await generateQuestions(uid, book, unit, {
       targets,
       exclude: oldQuestions.map((q) => q.prompt),
     });
+    // Preserve failed checks, and make one bounded attempt with new variants.
+    // Neither a zero-result first batch nor a retry relaxes the answer checks.
+    if (!output.questions.some((q) => q.status === "approved")) {
+      await jobRef.update({
+        stage: "검증한 문제가 부족해 다른 새 변형을 준비하고 있어요.",
+      });
+      const retry = await generateQuestions(uid, book, unit, {
+        targets,
+        exclude: [...oldQuestions, ...output.questions].map((q) => q.prompt),
+      });
+      output.questions.push(...retry.questions);
+      output.usage.inputTokens += retry.usage.inputTokens;
+      output.usage.outputTokens += retry.usage.outputTokens;
+      output.usage.estimatedUsd += retry.usage.estimatedUsd;
+    }
     const accepted: BankQuestion[] = [];
     for (const q of output.questions) {
+      Object.assign(q, provenance);
       if (
         [...oldQuestions, ...accepted].some((existing) =>
           duplicateQuestion(existing, q),
@@ -640,7 +674,7 @@ export async function replenishQuestions(
             learningUnit(book, state, config.minimumNewPerConcept, adaptive),
           ].filter((u): u is NonNullable<typeof u> => !!u);
     for (const unit of units.slice(0, 3)) {
-      if (!unit.source) continue;
+      if (!unit.source && !canPrepareCurriculum(book)) continue;
       const last = j.docs
         .map((d) => d.data())
         .find(
@@ -651,7 +685,8 @@ export async function replenishQuestions(
         );
       if (
         last &&
-        (last.status === "failed" || last.accepted === 0) &&
+        (last.status === "failed" ||
+          (last.status === "completed" && last.accepted === 0)) &&
         Date.now() - Date.parse(last.createdAt) < 30 * 60000
       )
         continue;
@@ -805,6 +840,9 @@ function pendingHistory(
     fingerprint: fingerprint(q),
     skillType: q.skillType ?? "기본 확인",
     phase: "awaiting-understanding",
+    ...(q.sourceKind
+      ? { sourceKind: q.sourceKind, references: q.references ?? [] }
+      : {}),
     ...(a.context?.[q.id] ?? {}),
     ...(a.reasons?.[q.id] ? { selectionReason: a.reasons[q.id] } : {}),
   };
@@ -1369,6 +1407,9 @@ export async function assessQuestion(uid: string, raw: unknown) {
       assignmentId: aid,
       skillType: q.skillType ?? "기본 확인",
       fingerprint: fingerprint(q),
+      ...(q.sourceKind
+        ? { sourceKind: q.sourceKind, references: q.references ?? [] }
+        : {}),
       ...(a.context?.[q.id] ?? {
         bookTitle: book.title,
         unitTitle: book.units.find((u) => u.id === q.unitId)?.title ?? "",

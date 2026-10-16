@@ -64,6 +64,7 @@ import {
   companionStyle,
 } from "./adventure";
 import { LearningHistory } from "./learning-history";
+import { useLearningLauncher, LearningLaunchDialog } from "./learning-launcher";
 
 const NAV = [
   { id: "today", label: "오늘의 학습", Icon: Home },
@@ -125,6 +126,7 @@ export function LearningWorkspace() {
       setError((e as Error).message);
     }
   }, []);
+  const launcher = useLearningLauncher(setAssignment, refresh);
   useEffect(() => {
     void refresh();
     const sync = () => {
@@ -187,18 +189,8 @@ export function LearningWorkspace() {
     questionId?: string,
     options: { concept?: string; skillType?: string; unitId?: string } = {},
   ) {
-    await action(async () =>
-      setAssignment(
-        await accountRequest<StudyAssignment>("/api/learn", "POST", {
-          action: "start",
-          mode,
-          requestId: crypto.randomUUID(),
-          ...options,
-          ...(bookId ? { bookId } : {}),
-          ...(questionId ? { questionId } : {}),
-        }),
-      ),
-    );
+    setError("");
+    launcher.start(mode, bookId, questionId, options);
   }
   if (!data)
     return (
@@ -336,6 +328,11 @@ export function LearningWorkspace() {
               </Link>
             )}
           </nav>
+          <LearningLaunchDialog
+            launch={launcher.launch}
+            onClose={launcher.close}
+            onBooks={() => navigate("books")}
+          />
           <main id="main" className="main-content workspace-main">
             {data.entitlement.status === "trial" &&
               data.entitlement.daysLeft <= 1 && (

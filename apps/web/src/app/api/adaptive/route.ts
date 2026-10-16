@@ -41,7 +41,16 @@ export async function POST(request: Request) {
           409,
           "교재가 변경됐어요. 화면을 새로고침한 뒤 학습지도를 수정해 주세요.",
         );
-      if (!unit.source && !book.id.startsWith("foundation-"))
+      const planRef = ref
+        .collection("unitPlans")
+        .doc(identityHash(`${bid}:${unitId}:${unitRevision(book, unit)}`));
+      const previousPlan = (await tx.get(planRef)).data() as
+        UnitPlan | undefined;
+      if (
+        !unit.source &&
+        !book.id.startsWith("foundation-") &&
+        previousPlan?.sourceKind !== "curriculum"
+      )
         throw new AccountError(
           422,
           "학습지도의 범위가 될 본문을 먼저 등록해 주세요.",
@@ -54,8 +63,14 @@ export async function POST(request: Request) {
         skills,
         origin: "editor",
         createdAt: new Date().toISOString(),
+        ...(previousPlan?.sourceKind
+          ? {
+              sourceKind: previousPlan.sourceKind,
+              references: previousPlan.references ?? [],
+            }
+          : {}),
       };
-      tx.set(ref.collection("unitPlans").doc(plan.id), plan);
+      tx.set(planRef, plan);
       return plan;
     });
     return json({ plan });

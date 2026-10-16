@@ -227,6 +227,28 @@ export function ServerStudy({
                   )}
                 </div>
               </div>
+              {q.sourceKind === "curriculum" && (
+                <div className="workspace-notice small">
+                  <p>
+                    이 단원의 공통 개념 연습 · 교과서 원문을 사용한 문제가
+                    아닙니다.
+                  </p>
+                  <p>
+                    {q.references?.map((ref, i) => (
+                      <span key={ref.url}>
+                        {i > 0 ? " · " : ""}
+                        <a
+                          href={ref.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {ref.title}
+                        </a>
+                      </span>
+                    ))}
+                  </p>
+                </div>
+              )}
               <div className="row-between small">
                 <span>{q.concept}</span>
                 <span>

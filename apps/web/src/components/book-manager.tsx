@@ -24,6 +24,8 @@ import {
 } from "./adventure";
 import { AdaptiveMap } from "./adaptive-map";
 import type { AdaptiveSnapshot } from "@/lib/adaptive-learning";
+import { planFor } from "@/lib/adaptive-learning";
+import { canPrepareCurriculum } from "@/lib/learning-material";
 
 type Props = {
   books: Book[];
@@ -300,9 +302,16 @@ export function BookManager({
                     <li key={unit.id}>
                       <span>{unit.title}</span>
                       <small>
-                        {unit.source ? "본문 등록됨" : "목차만 등록됨"}
+                        {unit.source
+                          ? "본문 등록됨"
+                          : planFor(book, unit, adaptive)?.sourceKind ===
+                              "curriculum"
+                            ? "개념 학습 준비됨"
+                            : canPrepareCurriculum(book)
+                              ? "개념 학습 자동 준비"
+                              : "목차만 등록됨"}
                       </small>
-                      {unit.source && (
+                      {(unit.source || canPrepareCurriculum(book)) && (
                         <button
                           disabled={!!busy || !aiConfigured}
                           onClick={() =>
@@ -813,7 +822,7 @@ export function BookManager({
                         : job.status === "failed"
                           ? job.error
                           : job.status === "running"
-                            ? "문제 생성·재검증 중"
+                            ? job.stage || "문제 생성·재검증 중"
                             : "처리 대기 중"}
                     </p>
                   </div>

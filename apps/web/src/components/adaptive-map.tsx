@@ -12,6 +12,7 @@ import type { Book, Unit } from "@/lib/learning";
 import { accountRequest } from "./account-provider";
 import { SubjectCompanion } from "./adventure";
 import { Localize } from "./localize";
+import { canPrepareCurriculum } from "@/lib/learning-material";
 
 export const MASTERY_LABELS = {
   learning: "학습 중",
@@ -40,9 +41,9 @@ export function AdaptiveMap({
         <div className="workspace-notice">
           <strong>10문제는 한 회차의 상한이에요.</strong>
           <p>
-            등록한 본문을 개념·유형으로 나누고, 서로 다른 새 문제와 다른 날짜의
-            풀이로 확인해요. 단원마다 필요한 문제 수는 달라집니다. 확인을 마친
-            단원에서 나중에 어려움이 생기면 보강으로 따로 다뤄요.
+            본문이나 확인된 단원 개념을 유형으로 나누고, 서로 다른 새 문제와
+            다른 날짜의 풀이로 확인해요. 단원마다 필요한 문제 수는 달라집니다.
+            확인을 마친 단원에서 나중에 어려움이 생기면 보강으로 따로 다뤄요.
           </p>
           <p className="small muted">
             {`현재 운영 기준: 서로 다른 문항 ${ADAPTIVE_POLICY.distinct}개 이상 · 최근 ${ADAPTIVE_POLICY.recentCorrect}개 정답과 ‘알겠어요’ · 서로 다른 ${ADAPTIVE_POLICY.successfulDays}일. 학습 효과를 보장하는 고정 기준이 아니며 운영 중 조정할 수 있어요.`}
@@ -60,7 +61,7 @@ export function AdaptiveMap({
                 <SubjectCompanion subject={book.subject} />
                 <h2>{book.title}</h2>
               </div>
-              <span className="tag">등록한 본문 범위 기준</span>
+              <span className="tag">본문·단원 개념 범위 기준</span>
             </div>
             {book.units.map((unit) => (
               <UnitMap
@@ -132,9 +133,11 @@ function UnitMap({
         {plan ? (
           <>
             <p className="small muted">
-              {plan.origin === "ai"
-                ? "등록 본문에서 AI가 분석한 학습지도"
-                : "직접 정한 개념·유형 학습지도"}{" "}
+              {plan.sourceKind === "curriculum"
+                ? "공개 자료로 확인한 단원 개념 학습지도"
+                : plan.origin === "ai"
+                  ? "등록 본문에서 AI가 분석한 학습지도"
+                  : "직접 정한 개념·유형 학습지도"}{" "}
               ·{" "}
               <span>{`초기 문제은행 준비 목표 ${coverage.initialBankTarget}문항`}</span>{" "}
               ·{" "}
@@ -143,6 +146,22 @@ function UnitMap({
                 아닙니다.
               </span>
             </p>
+            {plan.sourceKind === "curriculum" && (
+              <p className="workspace-notice small">
+                교과서 원문을 수집한 것이 아니라, 확인된 개념을 자체 예문으로
+                연습해요.{" "}
+                {plan.references?.map((ref) => (
+                  <a
+                    key={ref.url}
+                    href={ref.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {ref.title}{" "}
+                  </a>
+                ))}
+              </p>
+            )}
             <div className="skill-rows">
               {coverage.rows.map((row) => (
                 <div
@@ -186,7 +205,9 @@ function UnitMap({
           <p className="muted">
             {unit.source
               ? "본문을 분석해 필요한 개념과 유형을 정한 뒤, 부족한 유형부터 문제를 준비해요."
-              : "목차만으로 세부 내용을 추측하지 않아요. 목차·본문·범위 편집에서 이 단원의 본문이나 학습 노트를 등록해 주세요."}
+              : canPrepareCurriculum(book)
+                ? "시작하면 공개 자료로 단원 범위를 확인하고 개념 문제를 자동으로 준비해요. 교과서 작품·지문에 관한 문제는 본문을 추가하면 풀 수 있어요."
+                : "목차만으로 세부 내용을 추측하지 않아요. 목차·본문·범위 편집에서 이 단원의 본문이나 학습 노트를 등록해 주세요."}
           </p>
         )}
         {editing && (
@@ -246,7 +267,10 @@ function UnitMap({
             disabled={
               busy ||
               !book.active ||
-              (!unit.source && !plan && !book.id.startsWith("foundation-"))
+              (!unit.source &&
+                !plan &&
+                !book.id.startsWith("foundation-") &&
+                !canPrepareCurriculum(book))
             }
             onClick={() => onExtra(book.id, unit.id)}
           >
@@ -254,7 +278,11 @@ function UnitMap({
           </button>
           <button
             className="secondary-button"
-            disabled={busy || !unit.source || !aiConfigured}
+            disabled={
+              busy ||
+              (!unit.source && !canPrepareCurriculum(book)) ||
+              !aiConfigured
+            }
             onClick={() =>
               void act(async () => {
                 await accountRequest("/api/jobs", "POST", {

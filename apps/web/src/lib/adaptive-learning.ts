@@ -1,5 +1,11 @@
 import type { Confidence } from "@nohakwon/core";
-import type { BankQuestion, Book, LearnMode, Unit } from "./learning";
+import type {
+  BankQuestion,
+  Book,
+  LearnMode,
+  Unit,
+  MaterialProvenance,
+} from "./learning";
 
 // Operational defaults, not a validated educational assessment or a fixed unit quota.
 export const ADAPTIVE_POLICY = {
@@ -17,7 +23,7 @@ export function unitRevision(book: Book, unit: Unit | undefined) {
 export function unitContent(unit: Unit) {
   return JSON.stringify([unit.concepts, unit.source, unit.standardCodes ?? []]);
 }
-export type UnitPlan = {
+export type UnitPlan = MaterialProvenance & {
   id: string;
   bookId: string;
   unitId: string;

@@ -217,3 +217,31 @@
     gap: 7px;
   }
 }
+.learning-launch {
+  max-width: 640px;
+}
+.learning-launch h2 {
+  margin: 24px 0;
+}
+.learning-launch p {
+  line-height: 1.8;
+}
+.learning-launch .workspace-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.launch-spinner {
+  flex: none;
+  animation: launch-spin 1.5s linear infinite;
+}
+@keyframes launch-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launch-spinner {
+    animation: none;
+  }
+}

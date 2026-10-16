@@ -36,6 +36,7 @@ export async function GET() {
         "unitPlans",
         "skillProgress",
         "questionExposures",
+        "learningMaterials",
       ]) {
         const rows = await student.ref.collection(name).get();
         content[name] = rows.docs.map((d) => ({ id: d.id, ...d.data() }));

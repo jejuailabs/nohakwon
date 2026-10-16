@@ -220,6 +220,21 @@ function HistoryCard({ entry: r, book }: { entry: HistoryEntry; book?: Book }) {
         {r.skillType ? ` · ${r.skillType}` : ""}
       </p>
       <h2 data-localize="off">{r.prompt}</h2>
+      {r.sourceKind === "curriculum" && (
+        <p className="small muted">
+          단원 공통 개념 연습 · 자체 제작 예문{" "}
+          {r.references?.map((ref) => (
+            <a
+              key={ref.url}
+              href={ref.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {ref.title}{" "}
+            </a>
+          ))}
+        </p>
+      )}
       <p>
         나의 답:{" "}
         <span data-localize="off">{answerLabel(r.answer, r.choices)}</span> ·

@@ -28,6 +28,11 @@ export type Unit = {
   standardCodes?: string[];
   revision?: number;
 };
+export type MaterialReference = { title: string; url: string };
+export type MaterialProvenance = {
+  sourceKind?: "uploaded" | "curriculum";
+  references?: MaterialReference[];
+};
 export type Book = {
   id: string;
   title: string;
@@ -52,7 +57,7 @@ export type Book = {
   revision: number;
   origin: "upload" | "catalog";
 };
-export type BankQuestion = {
+export type BankQuestion = MaterialProvenance & {
   id: string;
   bookId: string;
   unitId: string;
@@ -88,7 +93,8 @@ export type ServedQuestion = Pick<
   | "difficulty"
   | "kind"
   | "skillType"
-> & { selectionReason?: SelectionReason };
+> &
+  MaterialProvenance & { selectionReason?: SelectionReason };
 export type LearnMode =
   | "daily"
   | "extra"
@@ -97,7 +103,7 @@ export type LearnMode =
   | "assessment"
   | "practice"
   | "exam";
-export type Result = {
+export type Result = MaterialProvenance & {
   id: string;
   questionId: string;
   bookId: string;
@@ -223,6 +229,11 @@ export type Job = {
   inputTokens: number;
   outputTokens: number;
   estimatedUsd: number;
+  stage?: string;
+};
+export type LearningPreparation = {
+  preparing: true;
+  jobs: Job[];
 };
 export type Report = {
   count: number;
@@ -490,6 +501,9 @@ export function publicQuestion(q: BankQuestion): ServedQuestion {
     difficulty: q.difficulty,
     kind: q.kind ?? "mcq",
     skillType: q.skillType ?? "기본 확인",
+    ...(q.sourceKind
+      ? { sourceKind: q.sourceKind, references: q.references ?? [] }
+      : {}),
   };
 }
 export function normalizeShortAnswer(value: string) {
