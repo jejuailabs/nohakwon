@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { accountRequest } from "./account-provider";
 import { Localize } from "./localize";
+import { CatalogPreparationPanel } from "./catalog-preparation-panel";
 import {
   SUBJECT_NAMES,
   type Report,
@@ -63,6 +64,7 @@ export function AdminOperations({ studentId }: { studentId: string }) {
   return (
     <Localize>
       <div className="workspace-stack">
+        <CatalogPreparationPanel />
         {error && <p role="alert">{error}</p>}
         <section className="panel">
           <h2>정기 작업</h2>

@@ -3,6 +3,8 @@ import { adminDb } from "@/lib/firebase/admin";
 import { chargeSubscription } from "./billing-service";
 import { saveWeeklyReport } from "./reports";
 import { runJob } from "./workspace";
+import { bootstrapCatalogPreparation } from "./catalog-preparation";
+import { dispatchCatalogPools } from "./catalog-queue";
 // A bounded, resumable sweep. No emails or external notifications are sent.
 export async function runMaintenance() {
   const db = adminDb(),
@@ -20,6 +22,9 @@ export async function runMaintenance() {
     payments = 0,
     failed = 0;
   try {
+    // Also discovers newly published books and recovers unpublished queue outbox entries.
+    await bootstrapCatalogPreparation();
+    const catalog = await dispatchCatalogPools();
     let query = db.collection("students").orderBy("__name__").limit(30);
     if (state.cursor) query = query.startAfter(state.cursor);
     let students = await query.get();
@@ -109,7 +114,7 @@ export async function runMaintenance() {
       payments,
       failed,
     });
-    return { students: students.size, reports, recovered, payments, failed };
+    return { students: students.size, reports, recovered, payments, failed, catalog };
   } catch (error) {
     await lock.update({ lockedUntil: 0 });
     throw error;

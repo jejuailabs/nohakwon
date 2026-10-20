@@ -8,18 +8,26 @@ async function main() {
   if (process.env.FIREBASE_ADMIN_PROJECT_ID !== "barum-10aad")
     throw Error("Unexpected test project");
   const { adminDb } = await import("../apps/web/src/lib/firebase/admin");
-  const { saveBook, addCatalogBooks, runJob } =
-    await import("../apps/web/src/lib/server/workspace");
-  const { startLearning } =
-    await import("../apps/web/src/lib/server/learning-start");
-  const { resolveLearningMaterial } =
-    await import("../apps/web/src/lib/server/learning-material");
+  const { saveBook, addCatalogBooks } = await import(
+    "../apps/web/src/lib/server/workspace"
+  );
+  const { runCatalogPoolStep } = await import(
+    "../apps/web/src/lib/server/catalog-preparation"
+  );
+  const { startLearning } = await import(
+    "../apps/web/src/lib/server/learning-start"
+  );
+  const { resolveLearningMaterial } = await import(
+    "../apps/web/src/lib/server/learning-material"
+  );
   const { aiConfigured } = await import("../apps/web/src/lib/server/ai");
   const { entitlement } = await import("../apps/web/src/lib/server/workspace");
-  const { canPrepareCurriculum } =
-    await import("../apps/web/src/lib/learning-material");
-  const { learningUnit, DEFAULT_STATE } =
-    await import("../apps/web/src/lib/learning");
+  const { canPrepareCurriculum } = await import(
+    "../apps/web/src/lib/learning-material"
+  );
+  const { learningUnit, DEFAULT_STATE } = await import(
+    "../apps/web/src/lib/learning"
+  );
   assert.ok(
     aiConfigured(),
     "Live catalog learning requires the configured OpenAI key",
@@ -116,39 +124,39 @@ async function main() {
         requestId: randomUUID(),
       };
       const preparing = await startLearning(uid, request);
-      assert.equal(preparing.status, 202);
-      assert.ok("preparing" in preparing.payload);
-      assert.equal(preparing.jobs.length, 1);
-      const again = await startLearning(uid, request);
-      assert.equal(again.jobs[0].id, preparing.jobs[0].id);
+      assert.ok([200, 202].includes(preparing.status));
+      const poolId = preparing.catalogJobs[0];
+      assert.ok(poolId);
+      if (preparing.status === 202) {
+        assert.ok("preparing" in preparing.payload);
+        const again = await startLearning(uid, request);
+        assert.equal(again.catalogJobs[0], poolId);
+        for (let step = 0; step < 18; step++) {
+          const state = (
+            await db.collection("catalogPools").doc(poolId).get()
+          ).data()!;
+          if (!["queued", "running"].includes(state.status)) break;
+          assert.ok(state.retryAt <= Date.now(), state.error);
+          await runCatalogPoolStep(poolId);
+        }
+      }
+      const pool = (
+        await db.collection("catalogPools").doc(poolId).get()
+      ).data()!;
+      assert.equal(pool.status, "ready", `${book.subject}: ${pool.error}`);
+      const job = { accepted: pool.approved, rejected: pool.rejected };
+      assert.ok(
+        job.accepted >= 10,
+        `${book.subject}: fewer than ten approved questions`,
+      );
       assert.equal(
         (await ref.collection("jobs").where("bookId", "==", book.id).get())
           .size,
-        1,
+        0,
       );
       console.log(
-        `PASS ${book.subject}: first start returns preparation; repeat requests share one job`,
+        `PASS ${book.subject}: ready shared stock or one resumable public preparation job; no per-learner generation`,
       );
-      await runJob(uid, sid, preparing.jobs[0].id);
-      const job = (
-        await ref.collection("jobs").doc(preparing.jobs[0].id).get()
-      ).data()!;
-      assert.equal(job.status, "completed", `${book.subject}: ${job.error}`);
-      if (!job.accepted) {
-        const generated = await ref
-          .collection("questions")
-          .where("bookId", "==", book.id)
-          .get();
-        console.log(
-          "Pending checks",
-          generated.docs.map((d) => ({
-            concept: d.data().concept,
-            type: d.data().skillType,
-            reason: d.data().reviewReason,
-          })),
-        );
-      }
-      assert.ok(job.accepted > 0, `${book.subject}: no approved questions`);
       const ready = await startLearning(uid, request);
       assert.equal(ready.status, 200);
       assert.ok("questions" in ready.payload);

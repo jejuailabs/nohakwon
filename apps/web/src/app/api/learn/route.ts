@@ -12,6 +12,7 @@ import { after } from "next/server";
 import { AccountError } from "@/lib/account";
 import { id, object } from "@/lib/learning";
 import { startLearning } from "@/lib/server/learning-start";
+import { dispatchCatalogPools } from "@/lib/server/catalog-queue";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 export async function POST(request: Request) {
@@ -22,6 +23,8 @@ export async function POST(request: Request) {
     switch (v.action) {
       case "start": {
         const result = await startLearning(user.uid, v);
+        if (result.catalogJobs.length)
+          after(async () => { await dispatchCatalogPools(result.catalogJobs, 0); });
         if (result.jobs.length)
           after(async () => {
             await Promise.allSettled(

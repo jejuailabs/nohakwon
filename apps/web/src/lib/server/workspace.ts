@@ -67,6 +67,7 @@ import {
 import { selectAdaptiveQuestions } from "@/lib/assignment-selection";
 import { canPrepareCurriculum } from "@/lib/learning-material";
 import { resolveLearningMaterial } from "./learning-material";
+import { hydrateCatalogUnit } from "./catalog-preparation";
 
 export function isAdmin(user: DecodedIdToken) {
   return ["owner", "admin", "editor", "reviewer"].includes(user.nohakwonRole);
@@ -236,7 +237,7 @@ async function seedCatalogQuestions(ref: DocumentReference, book: Book) {
       .get()
   ).docs
     .map((d) => d.data() as BankQuestion)
-    .filter((q) => q.status === "approved");
+    .filter((q) => q.status === "approved" && !q.poolId && q.grade === book.grade && schoolLevelOf(q) === schoolLevelOf(book));
   const questions = [...starterQuestions(book), ...shared];
   if (questions.length) {
     const batch = adminDb().batch();
@@ -269,6 +270,8 @@ async function seedCatalogQuestions(ref: DocumentReference, book: Book) {
       }
     await batch.commit();
   }
+  const unit = book.units.find((u) => u.id === book.currentUnit);
+  if (unit) await hydrateCatalogUnit(ref, book, unit);
 }
 
 /** Validate every selection before one transaction adds the complete confirmed list. */

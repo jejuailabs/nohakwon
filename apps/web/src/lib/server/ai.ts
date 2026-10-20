@@ -21,6 +21,7 @@ import {
   type Unit,
 } from "@/lib/learning";
 import { seoulDate } from "@nohakwon/core";
+import { CATALOG_AI_UID, CATALOG_PREPARATION } from "@/lib/catalog-preparation";
 import { type TextbookIdentity } from "@/lib/matching";
 import {
   parseTextbookRecognition,
@@ -101,9 +102,14 @@ export async function aiJson(
   const db = adminDb(),
     quotaRef = db.collection("aiQuotas").doc(`${uid}-${seoulDate()}`);
   const config = (await db.doc("settings/learning").get()).data();
-  const quota = Number.isInteger(config?.aiDailyCalls)
-    ? config!.aiDailyCalls
-    : DEFAULT_CONFIG.aiDailyCalls;
+  // Public catalog preparation has a separate bounded service quota. It never
+  // spends a learner's daily allowance and cannot be selected by a client request.
+  const quota =
+    uid === CATALOG_AI_UID
+      ? CATALOG_PREPARATION.dailyAiCalls
+      : Number.isInteger(config?.aiDailyCalls)
+        ? config!.aiDailyCalls
+        : DEFAULT_CONFIG.aiDailyCalls;
   await db.runTransaction(async (tx) => {
     const count = (await tx.get(quotaRef)).data()?.count ?? 0;
     if (count >= quota)

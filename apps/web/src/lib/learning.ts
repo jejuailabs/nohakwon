@@ -59,6 +59,7 @@ export type Book = {
 };
 export type BankQuestion = MaterialProvenance & {
   id: string;
+  poolId?: string;
   bookId: string;
   unitId: string;
   concept: string;

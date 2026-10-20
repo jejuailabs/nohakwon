@@ -13,10 +13,12 @@ import {
 import { requireUser } from "./session";
 import { textbookCatalog, catalogTextbook } from "./textbook-catalog";
 import { schoolLevelOf } from "@/lib/education";
+import type { CatalogPool } from "@/lib/catalog-preparation";
 export const ADMIN_ROLES = ["owner", "admin", "editor", "reviewer"];
 export async function adminRole(uid: string) {
   return (await adminAuth().getUser(uid)).customClaims?.nohakwonRole as
-    string | undefined;
+    | string
+    | undefined;
 }
 export async function requireAdmin(roles = ADMIN_ROLES) {
   const user = await requireUser(),
@@ -157,6 +159,12 @@ export async function adminMutation(uid: string, role: string, value: unknown) {
     if (role === "reviewer" && q.status === "pending")
       throw new AccountError(403, "검수 결과를 선택해 주세요.");
     const previous = (await ref.get()).data();
+    const pool =
+      !sid && previous?.poolId
+        ? ((
+            await db.collection("catalogPools").doc(previous.poolId).get()
+          ).data() as CatalogPool | undefined)
+        : undefined;
     if (!previous && role === "reviewer")
       throw new AccountError(403, "검수자는 기존 문항만 검토할 수 있어요.");
     const book = sid
@@ -172,20 +180,57 @@ export async function adminMutation(uid: string, role: string, value: unknown) {
     if (
       !book ||
       schoolLevelOf(book) !== schoolLevelOf(q) ||
-      book.grade !== q.grade ||
+      (pool?.grade ?? book.grade) !== q.grade ||
       book.subject !== q.subject ||
       !book.units.some(
         (u: { id: string; concepts: string[] }) =>
-          u.id === q.unitId && u.concepts.includes(q.concept),
+          u.id === q.unitId &&
+          (pool?.plan
+            ? pool.unitId === q.unitId &&
+              pool.plan.skills.some(
+                (s) => s.concept === q.concept && s.type === q.skillType,
+              )
+            : u.concepts.includes(q.concept)),
       )
     )
       throw new AccountError(400, "문항의 교재·단원·개념이 일치하지 않습니다.");
     await ref.set({
       ...q,
+      ...(pool
+        ? {
+            poolId: pool.id,
+            sourceKind: previous!.sourceKind,
+            references: previous!.references ?? [],
+          }
+        : {}),
       revision: book.revision,
       reviewedBy: uid,
       reviewedAt: new Date().toISOString(),
     });
+    if (pool) {
+      const approved = (
+        await db.collection("questionBank").where("poolId", "==", pool.id).get()
+      ).docs.filter((d) => d.data().status === "approved").length;
+      await db
+        .collection("catalogPools")
+        .doc(pool.id)
+        .update({
+          approved,
+          ...(approved >= pool.target
+            ? {
+                status: "ready",
+                error: "",
+                stage: "검증된 학습 문제가 준비됐어요.",
+              }
+            : pool.status === "ready"
+              ? {
+                  status: "blocked",
+                  error:
+                    "검수로 준비 문항이 줄었어요. 추가 검토·출제가 필요합니다.",
+                }
+              : {}),
+        });
+    }
     await audit(uid, "review-question", `${sid || "shared"}/${q.id}`, {
       status: q.status,
     });

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@nohakwon/core": "*",
+    "@vercel/queue": "^0.8.0",
     "firebase": "^12.19.0",
     "firebase-admin": "^14.5.0",
     "lucide-react": "^0.468.0",
