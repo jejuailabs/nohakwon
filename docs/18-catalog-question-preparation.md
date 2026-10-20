@@ -18,6 +18,7 @@
 - 학습자별 `questions`와 `unitPlans`에는 검증한 사본만 저장한다. `questionExposures`, `assignments`, `answerEvents`, `attempts`, `skillProgress`, 복습·포인트는 계속 개인별로 분리한다. 기존 출제·회차 예약의 중복 방지 규칙을 사용한다.
 - 기존에 개인화·수정한 유형 지도를 공용 지도로 덮어쓰지 않는다. 공용 준비는 개인 진도나 답안을 생성하지 않는다.
 - 교과서 본문이 없으면 공식 공개 자료로 확인한 공통 개념과 자체 예문만 사용하며 해당 표시와 출처를 유지한다. 실제 작품·지문 독해를 원하면 본문이 필요하다. 출처를 확인하지 못하면 `blocked`로 표시하고 사유를 운영 화면에 남긴다.
+- 학습지도와 문항의 근거 인용은 [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)의 enum으로 실제 원문 발췌 중에서만 선택한다. 원문 문장을 바꿔 적어 반복 탈락하는 것을 방지하며, 인용 대조와 독립 정답 검증은 그대로 유지한다.
 - 비상 수학1(이진호, 2022)의 다음 단원 범위는 [공식 비바샘 세부 목차](https://v.vivasam.com/educourse/index.do?lnbCode=106424&textbookCd=106424)를 직접 대조해 사전 등록했다. 저자·개정·학년·단원명이 맞는 경우에만 이 범위를 사용하며 자체 개념 설명을 생성한 뒤 별도 검증한다.
 
 ## 내구성 작업 큐

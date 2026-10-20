@@ -22,6 +22,7 @@ import {
 } from "@/lib/learning";
 import { seoulDate } from "@nohakwon/core";
 import { CATALOG_AI_UID, CATALOG_PREPARATION } from "@/lib/catalog-preparation";
+import { sourceEvidenceOptions } from "@/lib/source-evidence";
 import { type TextbookIdentity } from "@/lib/matching";
 import {
   parseTextbookRecognition,
@@ -401,7 +402,7 @@ export async function generateUnitPlan(
         items: schema({
           concept: explicit ? { type: "string", enum: unit.concepts } : string,
           skillType: string,
-          evidence: string,
+          evidence: { type: "string", enum: sourceEvidenceOptions(unit.source) },
         }),
       },
     }),
@@ -486,6 +487,7 @@ export async function generateQuestions(
           ...qSchema,
           properties: {
             ...qSchema.properties,
+            evidence: { type: "string", enum: sourceEvidenceOptions(unit.source) },
             concept: { type: "string", enum: concepts },
           },
         },
